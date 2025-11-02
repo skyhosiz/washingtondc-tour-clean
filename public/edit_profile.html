@@ -3,233 +3,179 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Edit Profile</title>
-
+<title>Edit Profile | Washington D.C.</title>
 <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600;700&display=swap" rel="stylesheet">
 
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
-
 body{
   font-family:'Kanit',sans-serif;
   background:radial-gradient(circle,#1c1a33,#0b0814);
-  color:white;
-  min-height:100vh;
+  color:white; min-height:100vh;
 }
 
+/* NAVBAR */
 .navbar{
-  position:fixed; top:0; left:0;
-  width:100%; height:70px;
+  position:fixed;top:0;left:0;width:100%;height:70px;
   background:rgba(0,0,0,.75);
-  padding:14px 24px;
-  display:flex; justify-content:space-between; align-items:center;
-  z-index:999; backdrop-filter:blur(8px);
+  display:flex;justify-content:space-between;align-items:center;
+  padding:14px 24px;z-index:999;backdrop-filter:blur(8px);
 }
 .brand{
-  font-size:22px; font-weight:700;
+  font-size:22px;font-weight:700;
   background:linear-gradient(90deg,#ffd089,#ff8a25);
-  -webkit-background-clip:text; color:transparent;
+  -webkit-background-clip:text;color:transparent;
 }
-.nav-right{display:flex;align-items:center;gap:12px;}
 .nav-btn{
-  background:#ffb55b;color:#222;
-  padding:8px 14px; border:none; border-radius:8px;
-  cursor:pointer; font-size:14px; font-weight:600;
+  background:#ffb55b;
+  padding:8px 14px;border:none;border-radius:8px;
+  cursor:pointer;font-size:14px;font-weight:600;color:#000;
+  transition:.25s;
 }
-.nav-btn:hover{filter:brightness(1.12);transform:translateY(-1px);}
+.nav-btn:hover{transform:translateY(-1px);filter:brightness(1.12);}
+.btn-danger{background:#d9534f;color:#fff}
 
+/* CARD */
 .container{
-  max-width:450px;
-  margin:auto;
-  padding-top:120px;
-  text-align:center;
+  max-width:450px;margin:auto;
+  padding-top:120px;text-align:center;
 }
-
 .card{
   background:rgba(255,255,255,0.08);
-  padding:30px;
-  border-radius:18px;
+  padding:30px;border-radius:18px;
   box-shadow:0 0 20px rgba(255,150,60,0.45);
 }
 
-.profile-img-wrapper {
-  position: relative;
-  width: 120px;
-  height: 120px;
-  margin: auto;
-  margin-bottom: 16px;
-  cursor: pointer;
+/* PROFILE IMAGE */
+.profile-img-wrapper{
+  position:relative;
+  width:120px;height:120px;
+  margin:auto 0 16px;cursor:pointer;
 }
-
-.profile-img {
-  width: 100%;
-  height: 100%;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 3px solid #ff9a3c;
-  transition: .25s;
+.profile-img{
+  width:100%;height:100%;border-radius:50%;
+  object-fit:cover;border:3px solid #ff9a3c;
+  transition:.25s;
 }
-
-.profile-img-wrapper:hover .profile-img {
-  transform: scale(1.05);
-  filter: brightness(1.1);
+.profile-img-wrapper:hover .profile-img{transform:scale(1.05);filter:brightness(1.1);}
+.edit-icon{
+  position:absolute;bottom:-5px;right:-5px;
+  background:#ff952e;color:#000;font-size:12px;
+  padding:6px 12px;border-radius:10px;
+  opacity:0;pointer-events:none;transition:.25s;
 }
+.profile-img-wrapper:hover .edit-icon{opacity:1;transform:translateY(-3px)}
 
-.edit-icon {
-  position: absolute;
-  bottom: -5px;
-  right: -5px;
-  background: #ff952e;
-  color: #000;
-  font-size: 12px;
-  font-weight: 700;
-  padding: 6px 12px;
-  border-radius: 10px;
-  opacity: 0;
-  pointer-events: none;
-  transition: .25s;
-}
-
-.profile-img-wrapper:hover .edit-icon {
-  opacity: 1;
-  transform: translateY(-3px);
-}
-
+/* INPUT */
 input{
-  width:100%; padding:11px;
-  margin:8px 0; border-radius:10px;
-  border:none; font-size:16px; outline:none;
+  width:100%;padding:12px;margin:8px 0;
+  border-radius:10px;border:none;
+  font-size:16px;outline:none;
 }
 
+/* BUTTONS */
 .btn-save{
-  width:100%; padding:13px;
-  background:#ff952e; color:#000;
-  font-weight:700; border:none;
-  border-radius:10px; cursor:pointer;
-  margin-top:16px; font-size:18px;
+  width:100%; padding:13px; margin-top:16px;
+  background:#ff952e;color:#000;
+  font-weight:700;border:none;border-radius:10px;
+  font-size:18px;cursor:pointer;transition:.25s;
 }
-.btn-save:hover{transform:translateY(-3px);filter:brightness(1.12);}
+.btn-save:hover{transform:translateY(-3px);filter:brightness(1.1)}
 
 .back-btn{
-  width:100%; margin-top:10px;
-  background:#666; color:#fff;
-  padding:11px; border-radius:10px;
-  cursor:pointer; font-weight:600;
+  width:100%;padding:11px;margin-top:10px;
+  background:#666;color:#fff;border:none;
+  border-radius:10px;cursor:pointer;font-weight:600;
+  transition:.25s;
 }
-.back-btn:hover{transform:translateY(-3px);filter:brightness(1.1);}
+.back-btn:hover{transform:translateY(-3px);filter:brightness(1.1)}
 </style>
 </head>
 
 <body>
 
-
 <div class="navbar">
   <div class="brand">Edit Profile</div>
-  <div class="nav-right">
+  <div>
     <button class="nav-btn" onclick="location.href='profile.html'">PROFILE</button>
-    <button class="nav-btn" style="background:#d9534f;color:#fff;" onclick="logout()">LOGOUT</button>
+    <button class="nav-btn btn-danger" onclick="logout()">LOGOUT</button>
   </div>
 </div>
 
 <div class="container">
   <div class="card">
 
-    <div class="profile-img-wrapper">
-      <label for="imgUpload">
-        <img id="profileImg" class="profile-img" src="pic/default.png">
-        <span class="edit-icon">📷 Edit</span>
-      </label>
-    </div>
+    <label for="imgUpload" class="profile-img-wrapper">
+      <img id="profileImg" class="profile-img" src="pic/default.png">
+      <span class="edit-icon">📷 Edit</span>
+    </label>
     <input type="file" id="imgUpload" accept="image/*" hidden>
 
-    <input type="text" id="nameInput" placeholder="ชื่อผู้ใช้ใหม่">
-    <input type="email" id="emailInput" placeholder="อีเมลใหม่">
-    <input type="password" id="passInput" placeholder="รหัสผ่านใหม่">
+    <input type="text" id="nameInput" placeholder="Loading...">
 
-    <button class="btn-save" onclick="saveProfile()">✅ บันทึกข้อมูล</button>
+    <button class="btn-save" onclick="saveEdit()">✅ บันทึกข้อมูล</button>
     <button class="back-btn" onclick="location.href='profile.html'">← ย้อนกลับ</button>
 
   </div>
 </div>
 
-<script src="js/auth.js"></script>
-
 <script>
-async function loadUserData(){
-  const res = await fetch("/profile", {
+const API_BASE = location.hostname === "localhost"
+ ? "http://localhost:3000"
+ : "https://washingtondc-tour-clean.onrender.com";
+
+/* ✅ Protect Page */
+if(!localStorage.getItem("token")){
+  alert("กรุณาเข้าสู่ระบบก่อน");
+  location.href="login.html";
+}
+
+/* ✅ ดึงข้อมูลสดจาก Server */
+async function loadUser(){
+  const r = await fetch(`${API_BASE}/api/auth/profile`, {
     headers:{ Authorization:"Bearer "+localStorage.getItem("token") }
   });
-  const data = await res.json();
-
+  const data = await r.json();
   if(data.status!=="success") return logout();
 
+  localStorage.setItem("user",JSON.stringify(data.user));
+
+  profileImg.src = data.user.profileImg || "pic/default.png";
   nameInput.placeholder = data.user.username;
-  emailInput.placeholder = data.user.email;
-  profileImg.src =
-    data.user.profileImg && data.user.profileImg !== ""
-    ? data.user.profileImg
-    : "pic/default.png";
 }
-loadUserData();
+loadUser();
 
-
-imgUpload.addEventListener("change", async()=>{
-
+/* ✅ Preview รูป */
+imgUpload.addEventListener("change", ()=>{
   const file = imgUpload.files[0];
-  if(!file) return;
+  if(file) profileImg.src = URL.createObjectURL(file);
+});
 
-  const formData = new FormData();
-  formData.append("image", file);
+/* ✅ Save */
+async function saveEdit(){
+  const fd = new FormData();
+  if(nameInput.value.trim()) fd.append("username", nameInput.value.trim());
+  if(imgUpload.files[0]) fd.append("profileImg", imgUpload.files[0]);
 
-  const res = await fetch("/uploadProfilePic",{
-    method:"POST",
+  const res = await fetch(`${API_BASE}/api/auth/profile`, {
+    method:"PUT",
     headers:{ Authorization:"Bearer "+localStorage.getItem("token") },
-    body:formData
+    body:fd
   });
 
   const data = await res.json();
-
   if(data.status==="success"){
-    profileImg.src = data.profileImg;
-
-    const refresh = await fetch("/profile", {
-      headers:{ Authorization:"Bearer "+localStorage.getItem("token") }
-    });
-    const newProfile = await refresh.json();
-    localStorage.setItem("user", JSON.stringify(newProfile.user));
-
-    alert("✅ เปลี่ยนรูปโปรไฟล์แล้ว!");
-  }
-});
-
-
-async function saveProfile(){
-  const body = {};
-  if(nameInput.value.trim()) body.username = nameInput.value;
-  if(emailInput.value.trim()) body.email = emailInput.value;
-  if(passInput.value.trim()) body.password = passInput.value;
-
-  const res = await fetch("/updateProfile",{
-    method:"POST",
-    headers:{
-      "Content-Type":"application/json",
-      Authorization: "Bearer "+localStorage.getItem("token")
-    },
-    body:JSON.stringify(body)
-  });
-
-  const r = await res.json();
-  if(r.status==="success"){
-
-    const refresh = await fetch("/profile",{
-      headers:{Authorization:"Bearer "+localStorage.getItem("token")}
-    });
-    const updated = await refresh.json();
-    localStorage.setItem("user", JSON.stringify(updated.user));
-
+    localStorage.setItem("user", JSON.stringify(data.user));
     alert("✅ อัปเดตสำเร็จ!");
-    location.href = "profile.html";
+    location.href="profile.html";
+  }else{
+    alert("❌ อัปเดตผิดพลาด");
   }
+}
+
+function logout(){
+  localStorage.clear();
+  location.href="login.html";
 }
 </script>
 

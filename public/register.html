@@ -27,54 +27,36 @@ body{
     box-shadow:0 0 38px rgba(255,140,30,0.28);
     animation:fadein .7s ease-out;
 }
-@keyframes fadein {
-    from { opacity:0; transform:translateY(18px); }
-    to { opacity:1; transform:translateY(0); }
+@keyframes fadein{
+    from{opacity:0;transform:translateY(18px);}
+    to{opacity:1;transform:translateY(0);}
 }
 h2{
-    font-size:34px;
-    margin-bottom:20px;
+    font-size:34px;margin-bottom:20px;
     background:linear-gradient(90deg,#ffd089,#ff8a25);
     -webkit-background-clip:text;
-    color:transparent;
-    font-weight:800;
+    color:transparent;font-weight:800;
 }
 input{
-    width:100%; padding:12px;
-    margin:10px 0;
-    border-radius:10px;
-    border:none;
-    font-size:17px;
-    color:#333;
+    width:100%;padding:12px;margin:10px 0;
+    border-radius:10px;border:none;
+    font-size:17px;color:#333;
 }
 button{
-    width:100%; padding:12px;
+    width:100%;padding:12px;
     background:linear-gradient(90deg,#ffe29c,#ff8522);
-    border:none; border-radius:12px;
-    font-size:18px;
-    font-weight:bold;
-    cursor:pointer;
-    margin-top:12px;
-    transition:.25s;
-    color:#222;
+    border:none;border-radius:12px;
+    font-size:18px;font-weight:bold;
+    cursor:pointer;margin-top:12px;
+    transition:.25s;color:#222;
 }
-button:hover{
-    transform:scale(1.05);
-    box-shadow:0 0 22px rgba(255,140,30,0.85);
-}
-.login-box{
-    margin-top:18px;
-    font-size:15px;
-}
+button:hover{transform:scale(1.05);box-shadow:0 0 22px rgba(255,140,30,0.85);}
+.login-box{margin-top:18px;font-size:15px;}
 .login-box a{
-    display:inline-block;
-    margin-left:6px;
-    padding:4px 12px;
-    background:#ff7a00;
-    border-radius:8px;
-    color:white;
-    text-decoration:none;
-    font-weight:700;
+    display:inline-block;margin-left:6px;
+    padding:4px 12px;background:#ff7a00;
+    border-radius:8px;color:white;
+    text-decoration:none;font-weight:700;
 }
 .login-box a:hover{background:#ff9831;}
 </style>
@@ -110,25 +92,25 @@ async function register(){
     if(!username || !email || !password)
         return alert("กรอกข้อมูลให้ครบ!");
 
-    try {
-        const res = await fetch(`${API_BASE}/register`, {
-            method: "POST",
-            headers: {"Content-Type": "application/json"},
-            body: JSON.stringify({ username, email, password })
+    try{
+        const res = await fetch(`${API_BASE}/api/auth/register`, {
+            method:"POST",
+            headers:{"Content-Type":"application/json"},
+            body:JSON.stringify({username,email,password})
         });
 
-        const data = await res.json().catch(() => null);
+        const data = await res.json().catch(()=>null);
 
-        if (!res.ok) {
-            throw new Error(data?.message || "ระบบผิดพลาด ❌");
+        if(data?.status === "success"){
+            alert("✅ สมัครสมาชิกสำเร็จ!");
+            return setTimeout(()=>location.href="login.html",800);
         }
 
-        alert("✅ สมัครสมาชิกสำเร็จ!");
-        setTimeout(() => location.href = "login.html", 800);
+        alert(data?.message || "❌ สมัครไม่สำเร็จ!");
 
-    } catch(err){
-        console.error("Register error:", err);
-        alert("❌ สมัครไม่สำเร็จ: " + err.message);
+    }catch(err){
+        console.error("Register error:",err);
+        alert("🚨 ระบบมีปัญหา ลองใหม่อีกที!");
     }
 }
 </script>

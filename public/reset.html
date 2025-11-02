@@ -85,10 +85,11 @@ async function resetPassword() {
 
         if(data?.status === "success"){
             alert("✅ รีเซ็ตรหัสผ่านสำเร็จ!");
-            setTimeout(()=>location.href="login.html", 1000);
-        } else {
-            alert(data?.message || "❌ ลิงก์หมดอายุ/ไม่ถูกต้อง");
+            return setTimeout(()=>location.href="login.html", 1000);
         }
+
+        alert(data?.message || "❌ ลิงก์หมดอายุ/ไม่ถูกต้อง");
+
     } catch(err){
         console.error(err);
         alert("🚨 ระบบมีปัญหา กรุณาลองใหม่");

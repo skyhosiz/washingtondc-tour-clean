@@ -97,29 +97,31 @@ async function login() {
     const email = document.getElementById("email").value.trim();
     const password = document.getElementById("password").value.trim();
 
-    if(!email || !password)
+    if (!email || !password)
         return alert("กรอกข้อมูลให้ครบก่อนครับ 😎");
 
     try {
-        const res = await fetch(`${API_BASE}/login`, {
-            method:"POST",
-            headers:{ "Content-Type":"application/json" },
-            body:JSON.stringify({ email, password })
+        const res = await fetch(`${API_BASE}/api/auth/login`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email, password })
         });
 
-        const data = await res.json().catch(()=>null);
-        if(!data) return alert("⚠️ ระบบตอบกลับไม่ถูกต้อง");
+        const data = await res.json().catch(() => null);
+        if (!data)
+            return alert("⚠️ เซิร์ฟเวอร์ตอบกลับข้อมูลไม่ถูกต้อง");
 
-        if(data.status === "success"){
+        if (data.status === "success") {
             localStorage.setItem("token", data.token);
             localStorage.setItem("user", JSON.stringify(data.user));
-            return location.href="index.html";
+            return location.href = "index.html";
         }
+
         alert(data.message || "❌ บัญชีหรือรหัสผ่านผิดครับ");
 
-    } catch(err){
+    } catch (err) {
         console.error(err);
-        alert("🚨 เซิร์ฟเวอร์ล่มหรอเนี่ย ลองใหม่อีกที!");
+        alert("🚨 เซิร์ฟเวอร์มีปัญหา ลองใหม่ครับ!");
     }
 }
 </script>

@@ -64,24 +64,24 @@ a{ display:inline-block; margin-top:14px; font-size:15px; color:#ffd28a; text-de
 </div>
 
 <script>
+localStorage.removeItem("token");
+localStorage.removeItem("user");
 
-const API_BASE = location.hostname === "localhost"
-  ? "http://localhost:3000"
-  : "https://washingtondc-tour-clean.onrender.com";
+const API_BASE =
+    location.hostname === "localhost"
+        ? "http://localhost:3000"
+        : "https://washingtondc-tour-clean.onrender.com";
 
-
-function isEmail(s){ return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s); }
-
+function isEmail(s){
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s);
+}
 
 async function sendReset(){
-    const emailInput = document.getElementById("email");
+    const email = document.getElementById("email").value.trim();
     const btn = document.getElementById("sendBtn");
-    const email = emailInput.value.trim();
 
     if(!email) return alert("⚠️ กรุณากรอกอีเมล");
     if(!isEmail(email)) return alert("⚠️ รูปแบบอีเมลไม่ถูกต้อง");
-
-    try { localStorage.removeItem("token"); localStorage.removeItem("user"); } catch {}
 
     btn.disabled = true;
     const oldText = btn.textContent;
@@ -89,23 +89,23 @@ async function sendReset(){
 
     try {
         const res = await fetch(`${API_BASE}/api/auth/forgot`, {
-            method:"POST",
-            headers:{ "Content-Type":"application/json" },
-            body:JSON.stringify({ email })
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email })
         });
 
-        const data = await res.json();
-        
-        if (res.ok && data.status === "success") {
+        const data = await res.json().catch(()=>null);
+
+        if(data?.status === "success"){
             alert("✅ ส่งอีเมลรีเซ็ตรหัสผ่านแล้ว! กรุณาตรวจสอบกล่องจดหมาย ✉️");
-            setTimeout(()=> location.href = "login.html", 1200);
-        } else {
-            alert(data.message || "❌ ไม่สามารถส่งอีเมลได้ ลองใหม่อีกครั้ง");
+            return setTimeout(() => location.href="login.html", 1200);
         }
+
+        alert(data?.message || "❌ ไม่สามารถส่งอีเมลได้ ลองใหม่อีกครั้ง");
 
     } catch(err){
         console.error(err);
-        alert("🚨 ระบบมีปัญหา ลองใหม่อีกครั้ง\n" + err.message);
+        alert("🚨 ระบบมีปัญหา กรุณาลองใหม่อีกครั้ง");
     } finally {
         btn.disabled = false;
         btn.textContent = oldText;
