@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Register | Washington D.C.</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600;800&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{
+    font-family:'Kanit',sans-serif;
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background:url("pic/dc_sunset.png") no-repeat center center/cover;
+}
+
+/* กล่อง Register */
+.reg-container{
+    width:420px;
+    background:rgba(10,0,25,0.83);
+    border-radius:26px;
+    padding:38px;
+    text-align:center;
+    color:white;
+    box-shadow:0 0 38px rgba(255,140,30,0.28);
+    animation:fadein .7s ease-out;
+}
+
+@keyframes fadein {
+    from { opacity:.0; transform:translateY(18px); }
+    to { opacity:1; transform:translateY(0); }
+}
+
+/* หัวข้อ */
+h2{
+    font-size:34px;
+    margin-bottom:20px;
+    background:linear-gradient(90deg,#ffd089,#ff8a25);
+    -webkit-background-clip:text;
+    color:transparent;
+    font-weight:800;
+}
+
+/* Input */
+input{
+    width:100%;
+    padding:12px;
+    margin:10px 0;
+    border-radius:10px;
+    border:none;
+    font-size:17px;
+    color:#333;
+}
+
+/* ปุ่ม */
+button{
+    width:100%;
+    padding:12px;
+    background:linear-gradient(90deg,#ffe29c,#ff8522);
+    border:none;
+    border-radius:12px;
+    font-size:18px;
+    font-weight:bold;
+    cursor:pointer;
+    margin-top:12px;
+    transition:.25s;
+}
+button:hover{
+    transform:scale(1.05);
+    box-shadow:0 0 22px rgba(255,140,30,0.85);
+}
+
+/* ลิงก์ Login */
+.login-box{
+    margin-top:18px;
+    font-size:15px;
+}
+.login-box a{
+    display:inline-block;
+    margin-left:6px;
+    padding:4px 12px;
+    background:#ff7a00;
+    border-radius:8px;
+    color:white;
+    text-decoration:none;
+    font-weight:700;
+}
+.login-box a:hover{background:#ff9831;}
+</style>
+</head>
+
+<body>
+
+<div class="reg-container">
+    <h2>สร้างบัญชี</h2>
+
+    <input type="text" id="username" placeholder="ชื่อผู้ใช้">
+    <input type="email" id="email" placeholder="อีเมล">
+    <input type="password" id="password" placeholder="รหัสผ่าน">
+
+    <button onclick="register()">สมัครสมาชิก</button>
+
+    <div class="login-box">
+        มีบัญชีแล้ว? <a href="login.html">เข้าสู่ระบบ</a>
+    </div>
+</div>
+
+<script src="js/auth.js"></script>
+<script src="js/navbar.js"></script>
+
+<script>
+async function register(){
+    const username = document.getElementById("username").value.trim();
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value.trim();
+
+    if(!username || !email || !password)
+        return alert("กรอกข้อมูลให้ครบ!");
+
+    const res = await fetch("/register", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({ username, email, password })
+    });
+
+    const data = await res.json();
+    alert(data.message || "สมัครสำเร็จ ✅");
+
+    if(data.status === "success"){
+        window.location.href = "login.html";
+    }
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<title>Forgot Password | Washington D.C.</title>
+<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600;800&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{
+    font-family:'Kanit',sans-serif;
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    overflow:hidden;
+    position:relative;
+}
+.bg{
+    position:fixed; inset:0;
+    background:url("pic/dc_sunset.png") center/cover no-repeat;
+    z-index:-2;
+}
+.overlay{
+    position:fixed; inset:0;
+    background:rgba(0,0,0,0.35);
+    backdrop-filter:blur(2px);
+    z-index:-1;
+}
+.box{
+    width:410px;
+    background:rgba(10,0,25,0.85);
+    padding:36px;
+    border-radius:24px;
+    text-align:center;
+    color:white;
+    box-shadow:0 0 40px rgba(255,140,30,.35);
+}
+h2{
+    font-size:30px;
+    margin-bottom:16px;
+    font-weight:800;
+    background:linear-gradient(90deg,#ffd089,#ff8a25);
+    -webkit-background-clip:text;
+    color:transparent;
+    text-shadow:0 0 10px rgba(255,140,50,0.4);
+}
+input{
+    width:100%; padding:12px;
+    margin:10px 0;
+    border-radius:10px; border:none;
+    font-size:17px; color:#222;
+}
+button{
+    width:100%; padding:12px;
+    background:linear-gradient(90deg,#ffe29c,#ff8522);
+    border:none; border-radius:12px;
+    font-size:18px; font-weight:bold;
+    cursor:pointer; margin-top:10px;
+}
+a{ display:inline-block; margin-top:14px;
+    font-size:15px; color:#ffd28a; text-decoration:none;}
+</style>
+</head>
+<body>
+
+<div class="bg"></div>
+<div class="overlay"></div>
+
+<div class="box">
+    <h2>กู้คืนรหัสผ่าน</h2>
+    <input type="email" id="email" placeholder="อีเมลที่ลงทะเบียนไว้">
+    <button onclick="sendReset()">ส่งลิงก์รีเซ็ต</button>
+    <a href="login.html">กลับไป Login</a>
+</div>
+
+<script>
+async function sendReset(){
+    const email = document.getElementById("email").value.trim();
+    if(!email) return alert("กรอกอีเมลก่อน!");
+
+    const res = await fetch("/forgot", {
+        method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({ email })
+    });
+
+    const data = await res.json();
+
+    if(data.status === "success"){
+        alert("✅ ส่งอีเมลรีเซ็ตรหัสผ่านแล้ว! กรุณาตรวจสอบอีเมล");
+        setTimeout(()=>location.href="login.html",1000);
+    } else {
+        alert(data.message || "เกิดข้อผิดพลาด ลองใหม่อีกครั้ง");
+    }
+}
+</script>
+
+</body>
+</html>

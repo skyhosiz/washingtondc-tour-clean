@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DC Local Food</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600;800&display=swap" rel="stylesheet">
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body {
+    background: #0f0f0f;
+    font-family: 'Kanit', sans-serif;
+    color: #fff;
+    overflow-x: hidden;
+}
+
+/* ✅ Navbar Fixed */
+.navbar{
+  position:fixed;
+  top:0; left:0;
+  width:100%;
+  height:65px;
+  padding:14px 25px;
+  background:rgba(0,0,0,0.78);
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  z-index:999;
+  backdrop-filter:blur(8px);
+}
+.nav-left{display:flex;align-items:center;gap:12px;}
+.brand{
+  font-size:20px;font-weight:700;
+  background:linear-gradient(90deg,#ffd089,#ff8a25);
+  -webkit-background-clip:text;color:transparent;
+}
+.nav-right{display:flex;align-items:center;gap:12px;}
+#nav-username{font-size:15px}
+
+/* ✅ Back Button */
+.btn--ghost {
+  background: rgba(0,0,0,0.25);
+  color:#ffd089;
+  border:1px solid rgba(255,210,137,0.25);
+  padding:8px 15px;
+  border-radius:8px;
+  cursor:pointer;
+  font-size:15px;
+  transition:.25s;
+}
+.btn--ghost:hover {
+  background: rgba(255,210,137,0.15);
+  border-color:rgba(255,210,137,0.4);
+  transform:translateY(-2px);
+}
+
+/* ✅ Logout */
+.logout-btn{
+  background:#ff7a45;border:none;
+  padding:8px 14px;border-radius:8px;
+  cursor:pointer;font-family:'Kanit';
+}
+.logout-btn:hover{filter:brightness(1.15);}
+
+/* ✅ Push Content */
+.pushdown{height:75px;}
+
+/* 🔥 Background Slideshow */
+.bg-slideshow {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 200%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    z-index: -3;
+    filter: blur(18px) brightness(55%);
+    animation: slideBG 35s linear infinite;
+}
+@keyframes slideBG {
+    0% { background-image: url('pic/Half-Smoke.png'); transform: translateX(0); }
+    20% { background-image: url('pic/JumboSlicePizza.png'); }
+    40% { background-image: url('pic/CrabCakeBurger.png'); }
+    60% { background-image: url('pic/Chicken&Waffle.png'); }
+    80% { background-image: url('pic/DistrictDoughnut.png'); }
+    100% { background-image: url('pic/burger.png'); transform: translateX(-35%); }
+}
+
+.bg-overlay {
+    position: fixed;
+    width: 100%;height:100%;
+    top:0;left:0;
+    background: rgba(0,0,0,.65);
+    z-index: -2;
+}
+
+/* ✅ Title */
+h2 {
+    text-align: center;
+    font-size: 55px;
+    font-weight: 800;
+    background: linear-gradient(90deg, #ffd785, #ff952e);
+    -webkit-background-clip: text;
+    color: transparent;
+    text-shadow: 0 0 25px rgba(255,150,50,0.7),
+                 0 0 60px rgba(255,110,20,0.8);
+    letter-spacing: 1px;
+    margin: 40px 0 50px;
+}
+h2::after {
+    content: "";
+    width: 260px;height: 4px;
+    background: linear-gradient(90deg,#ff9a3c,#ffd89b,#ff9a3c);
+    display: block;margin: 12px auto 0;border-radius: 2px;
+}
+
+/* ✅ Food Cards */
+.big-card {
+    width:92%;
+    margin:0 auto 65px;
+    border-radius:22px;
+    background:#181818cc;
+    backdrop-filter: blur(6px);
+    display:flex;
+    gap:25px;
+    padding:22px;
+    align-items:center;
+    opacity:0;
+    transform: translateY(40px) scale(.96);
+    transition: opacity .9s ease, transform .9s ease;
+    will-change:opacity,transform;
+}
+.big-card.show {
+    opacity:1;
+    transform:translateY(0) scale(1);
+}
+.big-card:hover {
+    transform:translateY(-8px) scale(1.03);
+    transition:.25s;
+}
+
+.big-card img {
+    width:48%;
+    height:300px;
+    border-radius:16px;
+    object-fit:cover;
+    transition:.35s;
+}
+.big-card:hover img {
+    transform:scale(1.05);
+    filter:brightness(1.12);
+}
+
+.food-info { width:50%; }
+.food-info h3 {
+    font-size:38px;margin-bottom:8px;
+    background:linear-gradient(90deg,#ffcf76,#ff8a28);
+    -webkit-background-clip:text;color:transparent;
+}
+.desc {
+    font-size:20px;line-height:1.45;
+    margin-bottom:10px;color:#ffe1bb;
+}
+.place { opacity:.85;font-size:18px;margin-bottom:8px; }
+.rating-price { color:#ffaa44;margin-bottom:12px;font-size:20px; }
+
+.btn-map {
+    padding:10px 25px;background:#ff8a28;
+    color:#000;text-decoration:none;
+    border-radius:10px;font-weight:bold;
+    display:inline-block;margin-top:10px;
+    transition:.2s;
+}
+.btn-map:hover {
+    background:#ffd089;
+    transform:scale(1.08);
+}
+</style>
+</head>
+
+<body>
+
+<!-- ✅ Navbar -->
+<div class="navbar">
+  <div class="nav-left">
+    <button class="btn--ghost" onclick="location.href='index.html'">← Back</button>
+    <div class="brand">Washington D.C.</div>
+  </div>
+  <div class="nav-right">
+    <span id="nav-username"></span>
+    <button class="logout-btn" onclick="logout()">Logout</button>
+  </div>
+</div>
+<div class="pushdown"></div>
+
+<div class="bg-slideshow"></div>
+<div class="bg-overlay"></div>
+
+<h2>Washington D.C. • Local Food 🍔🔥</h2>
+
+<div class="big-card">
+    <img src="pic/Half-Smoke.png">
+    <div class="food-info">
+        <h3>Half-Smoke</h3>
+        <p class="desc">ไส้กรอกรมควันสุดลือชื่อ ราดซอสชิลลี่สูตรลับถึงใจ!</p>
+        <div class="place">Ben’s Chili Bowl</div>
+        <div class="rating-price">⭐⭐⭐⭐ 💲💲</div>
+        <a class="btn-map" target="_blank" href="https://maps.google.com/?q=Ben’s Chili Bowl Washington DC">View Location</a>
+    </div>
+</div>
+
+<div class="big-card">
+    <img src="pic/JumboSlicePizza.png">
+    <div class="food-info">
+        <h3>Jumbo Slice Pizza</h3>
+        <p class="desc">พิซซ่าแผ่นใหญ่มโหฬาร ชีสทะลัก กินทีฟินยาวถึงบ้าน!</p>
+        <div class="place">Adams Morgan</div>
+        <div class="rating-price">⭐⭐⭐ 💲</div>
+        <a class="btn-map" target="_blank" href="https://maps.google.com/?q=Jumbo Slice Pizza Adams Morgan DC">View Location</a>
+    </div>
+</div>
+
+<div class="big-card">
+    <img src="pic/CrabCakeBurger.png">
+    <div class="food-info">
+        <h3>Crab Cake Burger</h3>
+        <p class="desc">ปูสดเด้งสุดพรีเมียม ย่างกำลังดีในทุกคำ!</p>
+        <div class="place">Luke’s Lobster</div>
+        <div class="rating-price">⭐⭐⭐⭐⭐ 💲💲💲</div>
+        <a class="btn-map" target="_blank" href="https://maps.google.com/?q=Luke’s Lobster DC">View Location</a>
+    </div>
+</div>
+
+<div class="big-card">
+    <img src="pic/Chicken&Waffle.png">
+    <div class="food-info">
+        <h3>Chicken & Waffle</h3>
+        <p class="desc">ไก่ทอดกรอบฉ่ำ + วาฟเฟิลนุ่มละลาย ปังยิ่งกว่าคู่รักซีรีส์!</p>
+        <div class="place">Ooohh’s & Aahh’s</div>
+        <div class="rating-price">⭐⭐⭐⭐ 💲💲</div>
+        <a class="btn-map" target="_blank" href="https://www.oohhsnaahhs.com/">View Location</a>
+    </div>
+</div>
+
+<div class="big-card">
+    <img src="pic/DistrictDoughnut.png">
+    <div class="food-info">
+        <h3>District Doughnut</h3>
+        <p class="desc">โดนัทฟูอุ่น ๆ หวานกำลังดี ฟินจนต้องสั่งอีก!</p>
+        <div class="place">The Wharf</div>
+        <div class="rating-price">⭐⭐⭐⭐ 💲💲</div>
+        <a class="btn-map" target="_blank" href="https://maps.google.com/?q=District Doughnut DC">View Location</a>
+    </div>
+</div>
+
+<div class="big-card">
+    <img src="pic/burger.png">
+    <div class="food-info">
+        <h3>Cheese Burger</h3>
+        <p class="desc">เนื้อฉ่ำหนักชีส ยิ่งกินยิ่งหลงรักเมืองนี้ 🍔❤️</p>
+        <div class="place">Cheese Burger D.C.</div>
+        <div class="rating-price">⭐⭐⭐⭐⭐ 💲💲💲</div>
+        <a class="btn-map" target="_blank" href="https://maps.google.com/?q=Cheese Burger DC">View Location</a>
+    </div>
+</div>
+
+<script src="js/auth.js"></script>
+
+<script>
+// ✅ Reveal Animation เมื่อ Scroll เห็น
+const cards = document.querySelectorAll(".big-card");
+const observer = new IntersectionObserver(entries=>{
+  entries.forEach(entry=>{
+    if(entry.isIntersecting){
+      entry.target.classList.add("show");
+      observer.unobserve(entry.target);
+    }
+  });
+},{threshold:0.25});
+
+cards.forEach(card => observer.observe(card));
+</script>
+
+</body>
+</html>

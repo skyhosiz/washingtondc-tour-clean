@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>History & Story | Washington D.C.</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600;800&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{
+    font-family:'Kanit',sans-serif;
+    background:#0b031a;
+    color:white;
+    overflow-x:hidden;
+    padding-bottom:50px;
+}
+
+/* ✅ Navbar */
+.navbar{
+  position:fixed;
+  top:0; left:0;
+  width:100%;
+  height:65px;
+  padding:14px 25px;
+  background:rgba(0,0,0,0.75);
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  z-index:999;
+  backdrop-filter:blur(8px);
+}
+.nav-left{display:flex;align-items:center;gap:14px;}
+.brand{
+  font-size:20px;font-weight:700;
+  background:linear-gradient(90deg,#ffd089,#ff8a25);
+  -webkit-background-clip:text;color:transparent;
+}
+.btn--ghost{
+  background:rgba(0,0,0,0.25);
+  color:#ffd089;
+  border:1px solid rgba(255,210,137,0.25);
+  padding:8px 15px;
+  border-radius:8px;
+  cursor:pointer;
+}
+.btn--ghost:hover{
+  background:rgba(255,210,137,0.15);
+  transform:translateY(-2px);
+  border-color:rgba(255,210,137,0.4);
+}
+.nav-right{display:flex;align-items:center;gap:12px;}
+.logout-btn{
+  background:#ff7a45;border:none;
+  padding:8px 14px;border-radius:8px;
+  cursor:pointer;
+}
+.logout-btn:hover{filter:brightness(1.15);}
+.pushdown{height:70px;}
+
+/* ✅ Animated background */
+.circuit-bg,.circuit-lines{
+    position:fixed;inset:0;pointer-events:none;z-index:-20;
+}
+.circuit-bg{
+    background:
+        repeating-linear-gradient(90deg,rgba(100,0,180,0.15) 0px,rgba(100,0,180,0.15) 2px,transparent 2px,transparent 120px),
+        repeating-linear-gradient(0deg,rgba(100,0,180,0.15) 0px,rgba(100,0,180,0.15) 2px,transparent 2px,transparent 120px);
+    filter:blur(.6px);
+}
+.circuit-lines::before,.circuit-lines::after{
+    content:"";position:absolute;width:160%;height:160%;top:-30%;left:-30%;
+    background-image:linear-gradient(110deg,rgba(0,255,255,.5),rgba(140,0,255,.45) 50%,rgba(0,255,255,.45));
+    background-size:600% 600%;opacity:.12;mix-blend-mode:screen;
+    animation:flow 12s linear infinite;
+}
+.circuit-lines::after{animation-duration:17s;}
+@keyframes flow{
+    0%{background-position:0% 50%;}
+    50%{background-position:100% 50%;}
+    100%{background-position:0% 50%;}
+}
+
+/* ✅ Title */
+h1{
+    text-align:center;
+    font-size:62px;
+    margin:20px 0 10px;
+    background:linear-gradient(90deg,#ffd28a,#ff8e28);
+    -webkit-background-clip:text;color:transparent;
+}
+h1::after{
+    content:"";
+    width:260px;height:4px;
+    margin:15px auto;
+    display:block;
+    background:linear-gradient(90deg,#ffbf66,#ffe9b2,#ffbf66);
+    border-radius:2px;
+}
+
+/* ✅ Sections Cards */
+.section{
+    width:90%;
+    background:linear-gradient(145deg,#1b1333,#2a1b55);
+    border-radius:22px;
+    margin:45px auto;
+    padding:25px;
+    display:flex;
+    align-items:center;
+    gap:25px;
+    box-shadow:0 0 20px rgba(255,150,60,.1);
+    position:relative;
+    
+    /* ✨ Smooth Reveal effect */
+    opacity:0;
+    transform:translateY(40px) scale(.95);
+    transition:opacity .8s ease, transform .8s ease;
+}
+.section.visible{
+    opacity:1;
+    transform:translateY(0) scale(1);
+}
+
+.section img{
+    width:45%;
+    height:300px;
+    border-radius:18px;
+    object-fit:cover;
+    transition:transform .9s ease, filter .45s ease;
+}
+.section.visible img{
+    transform:scale(1.015);
+}
+
+.section:hover img{
+    transform:scale(1.07);
+    filter:brightness(1.12);
+}
+.section:hover{
+    transform:translateY(-8px) scale(1.02);
+    box-shadow:0 0 40px rgba(175,125,255,.38);
+}
+
+.title{
+    font-size:39px;
+    background:linear-gradient(90deg,#ffe1a7,#ff7f14);
+    -webkit-background-clip:text;color:transparent;
+    margin-bottom:12px;
+}
+.desc{font-size:18px;opacity:.92;line-height:1.5;}
+
+@media(max-width:820px){
+    .section{flex-direction:column;}
+    .section img{width:100%;height:240px;}
+    h1{font-size:48px;}
+}
+</style>
+</head>
+
+<body>
+
+<div class="navbar">
+  <div class="nav-left">
+    <button class="btn--ghost" onclick="location.href='index.html'">← Back</button>
+    <div class="brand">Washington D.C.</div>
+  </div>
+  <div class="nav-right">
+    <span id="nav-username"></span>
+    <button class="logout-btn" onclick="logout()">Logout</button>
+  </div>
+</div>
+<div class="pushdown"></div>
+
+<div class="circuit-bg"></div>
+<div class="circuit-lines"></div>
+
+<h1>History & Story</h1>
+
+<!-- ✅ Sections -->
+<div class="section"><img src="pic/His/HIS.png"><div><div class="title">Birth of Washington D.C.</div><p class="desc">เมืองหลวงที่ถูกออกแบบอย่างตั้งใจให้เป็นสัญลักษณ์แห่งประชาธิปไตย ตั้งแต่ปี 1790</p></div></div>
+<div class="section"><img src="pic/His/map.png"><div><div class="title">The Original District Map</div><p class="desc">แผนผังกริดเชื่อมโยงศูนย์กลางอำนาจและสิทธิของประชาชนอย่างเท่าเทียม</p></div></div>
+<div class="section"><img src="pic/His/DSWERT.png"><div><div class="title">Historic Public Buildings</div><p class="desc">โครงสร้างรัฐยุคแรก เริ่มต้นฐานรากสู่มหานครศูนย์กลางโลก</p></div></div>
+<div class="section"><img src="pic/His/DDD.png"><div><div class="title">I Have A Dream — 1963</div><p class="desc">มาร์ติน ลูเธอร์ คิง จูเนียร์ จุดไฟเพื่อความเท่าเทียมแก่คนทั้งโลกที่นี่</p></div></div>
+<div class="section"><img src="pic/His/DWSD.png"><div><div class="title">Washington Monument</div><p class="desc">โอบกอดอดีตของ George Washington ด้วยหินสูงกว่า 169 เมตร</p></div></div>
+<div class="section"><img src="pic/His/HYT.png"><div><div class="title">The Monument Through Time</div><p class="desc">วิวแห่งพลังศรัทธา ที่เปลี่ยนไปทุกฤดูกาล แต่สง่างามเสมอ</p></div></div>
+<div class="section"><img src="pic/His/musem.png"><div><div class="title">Lincoln Memorial</div><p class="desc">สถานที่ประกาศความเสมอภาคของมนุษย์ สะท้อนเสียงแห่งประชาชน</p></div></div>
+<div class="section"><img src="pic/His/FPSD.png"><div><div class="title">The White House</div><p class="desc">สัญลักษณ์ของอำนาจบริหาร ที่ขับเคลื่อนโลกทุกลมหายใจ</p></div></div>
+<div class="section"><img src="pic/His/fwa.png"><div><div class="title">U.S. Capitol</div><p class="desc">แหล่งปะทะของความคิด เพื่อสร้างอนาคตประเทศ</p></div></div>
+<div class="section"><img src="pic/His/PNG.png"><div><div class="title">Capitol Night View</div><p class="desc">สภาไม่ได้ทำงานแค่กลางวัน … ความหวังเดินหน้าตลอดคืน</p></div></div>
+<div class="section"><img src="pic/His/WC.png"><div><div class="title">Pentagon</div><p class="desc">กำแพงป้องกันประเทศที่ทั้งโลกจับตามอง</p></div></div>
+<div class="section"><img src="pic/His/DDDDDD.png"><div><div class="title">Defense Intelligence</div><p class="desc">ฐานบัญชาการลับ ๆ ที่เรารู้แค่ว่า “สำคัญมาก”</p></div></div>
+<div class="section"><img src="pic/His/smithsonian-museum-natural-history.png"><div><div class="title">Smithsonian Museum</div><p class="desc">พิพิธภัณฑ์ที่ใหญ่สุดแห่งหนึ่งของมนุษยชาติ เก็บเรื่องราวจากดาวโลกไว้ครบ</p></div></div>
+<div class="section"><img src="pic/His/PEP.png"><div><div class="title">Modern DC Streets</div><p class="desc">อดีตที่เข้มแข็งผลักดันสู่ปัจจุบันที่เต็มไปด้วยชีวิตและวัฒนธรรม</p></div></div>
+<div class="section"><img src="pic/His/TOTAL.png"><div><div class="title">Street Art Voices</div><p class="desc">ศิลปะบนกำแพงคือกล้องขยายเสียงของประชาชน</p></div></div>
+<div class="section"><img src="pic/His/pughf.png"><div><div class="title">D.C. Sunset</div><p class="desc">จบวันด้วยภาพที่เตือนว่า เสรีภาพต้องสวยงามและเข้มแข็งที่สุด</p></div></div>
+
+<script src="js/auth.js"></script>
+
+<!-- ✅ Scroll Motion Controlled -->
+<script>
+const sections = document.querySelectorAll(".section");
+
+const observer = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      e.target.classList.add("visible");
+    }
+  });
+},{threshold:0.15});
+
+sections.forEach(s=>observer.observe(s));
+</script>
+
+</body>
+</html>

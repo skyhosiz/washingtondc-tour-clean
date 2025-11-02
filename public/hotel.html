@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hotel in Washington D.C.</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Kanit:wght@300;400;600&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+
+body{
+  font-family:'Kanit', sans-serif;
+  background:#0f0f14;
+  color:white;
+  overflow-x:hidden;
+}
+
+/* ✅ Navbar เหมือนหน้าอื่นทั้งหมด */
+.navbar{
+  position:fixed;
+  top:0; left:0;
+  width:100%;
+  height:65px;
+  padding:14px 24px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  z-index:9999;
+  background:rgba(0,0,0,.65);
+  backdrop-filter:blur(6px);
+}
+
+.nav-left{display:flex;align-items:center;gap:14px;}
+
+.brand{
+  font-size:20px;
+  font-weight:700;
+  background:linear-gradient(90deg,#ffd089,#ff8a25);
+  -webkit-background-clip:text;
+  color:transparent;
+}
+
+.btn--ghost{
+  padding:8px 14px;
+  border-radius:8px;
+  border:1px solid rgba(255,210,137,.25);
+  background:rgba(255,208,137,.12);
+  color:#ffd089;
+  cursor:pointer;
+  transition:.2s;
+}
+.btn--ghost:hover{
+  background:rgba(255,208,137,.3);
+  transform:translateY(-2px);
+}
+
+.nav-right{display:flex;align-items:center;gap:12px;}
+.logout-btn{
+  background:#d9534f;
+  border:none;
+  padding:8px 14px;
+  border-radius:10px;
+  color:#fff;
+  cursor:pointer;
+  font-weight:700;
+}
+.logout-btn:hover{background:#ff7773;}
+
+.pushdown{height:80px;}
+
+/* Hero */
+.hero{
+  height:100vh;
+  background:url('pic/hotel.png') center/cover no-repeat;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  text-align:center;
+  position:relative;
+}
+.hero::before{
+  content:"";
+  position:absolute;inset:0;
+  background:rgba(0,0,0,.38);
+  backdrop-filter: blur(3px);
+}
+.hero-content{
+  position:relative;
+  max-width:780px;
+  animation:fadeUp 1s ease;
+}
+h1{
+  font-family:'Playfair Display';
+  font-size:68px;
+  color:#eacda3;
+  text-shadow:0 0 20px rgba(255,207,150,.4);
+}
+h2{
+  font-size:24px;margin:14px 0 22px;
+  opacity:.94;
+}
+
+/* ✅ Buttons */
+.btnBox{
+  margin-top:25px;
+  display:flex;
+  justify-content:center;
+  gap:20px;
+}
+.btn{
+  padding:14px 32px;
+  border:none;
+  cursor:pointer;
+  border-radius:14px;
+  font-size:17px;
+  font-weight:700;
+  box-shadow:0 4px 18px rgba(0,0,0,.35);
+  transition:.25s;
+}
+
+/* Back → Yellow */
+.btn-back{
+  background:#ffb84a;color:#222;
+}
+.btn-back:hover{
+  background:#ffd78c;
+  transform:translateY(-3px) scale(1.05);
+}
+
+/* Book → Red */
+.btn-web{
+  background:#e35a5a;color:#fff;
+}
+.btn-web:hover{
+  background:#ff8585;
+  transform:translateY(-3px) scale(1.05);
+}
+
+/* Paragraph Section */
+.info{
+  padding:90px 15%;
+  font-size:20px;
+  line-height:1.7;
+  color:#d8d8d8;
+  text-align:center;
+}
+
+/* Animation */
+@keyframes fadeUp{
+  from{opacity:0; transform:translateY(40px);}
+  to{opacity:1; transform:translateY(0);}
+}
+
+/* Footer */
+footer{
+  padding:40px 0;
+  text-align:center;
+  background:#0f0f14;
+  opacity:.85;
+  font-size:15px;
+}
+</style>
+
+</head>
+<body>
+
+<!-- ✅ Navbar Version Standard -->
+<div class="navbar">
+  <div class="nav-left">
+    <button class="btn--ghost" onclick="location.href='index.html'">← Back</button>
+    <div class="brand">Washington D.C.</div>
+  </div>
+  <div class="nav-right">
+    <span id="nav-username"></span>
+    <button class="logout-btn" onclick="logout()">Logout</button>
+  </div>
+</div>
+<div class="pushdown"></div>
+
+<section class="hero">
+  <div class="hero-content">
+    <h1>HOTEL IN D.C.</h1>
+    <h2>Premium Stay Near Washington Landmarks</h2>
+
+    <div class="btnBox">
+      <button class="btn btn-back" onclick="location.href='index.html'">← Back to Home</button>
+      <button class="btn btn-web" onclick="window.open('https://www.booking.com/city/us/washington.html','_blank')">🏨 Book Hotel →</button>
+    </div>
+
+  </div>
+</section>
+
+<section class="info">
+  โรงแรมในกรุงวอชิงตัน ดี.ซี. ตั้งอยู่ในย่านใจกลางเมือง
+  รายล้อมด้วยสถานที่ท่องเที่ยวระดับโลก  
+  สะดวกสบายทั้งการท่องเที่ยวและการพักผ่อนระดับพรีเมียม
+</section>
+
+<footer>
+© 2025 Washington D.C. Tourism — Hotel in D.C. | Developed by FlukeTON
+</footer>
+
+<script src="js/auth.js"></script>
+<script src="js/navbar.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<title>Reset Password | Washington D.C.</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Kanit', sans-serif;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+    background: url("pic/dc_sunset.png") center/cover no-repeat fixed;
+    color: white;
+    overflow: hidden;
+    position: relative;
+}
+
+.overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.48);
+    backdrop-filter: blur(2px);
+    z-index: 0;
+}
+
+.box {
+    position: relative;
+    width: 100%;
+    max-width: 420px;
+    padding: 36px 32px 32px;
+    background: rgba(10,0,25,0.85);
+    border-radius: 20px;
+    text-align: center;
+    box-shadow: 0 0 25px rgba(250,150,50,.42);
+    transform: translateY(-40px); /* ✅ ดันขึ้นให้ตรงตา */
+    z-index: 1;
+}
+
+h2 {
+    margin-bottom: 20px;
+    background: linear-gradient(90deg,#ffcf76,#ff8a28);
+    -webkit-background-clip: text;
+    color: transparent;
+    font-size: 28px;
+    font-weight: 900;
+    text-shadow: 0 0 12px rgba(255,150,50,0.45);
+}
+
+input {
+    width: 100%;
+    padding: 15px;
+    margin: 8px 0;
+    border-radius: 12px;
+    border: none;
+    font-size: 17px;
+    outline: none;
+}
+
+button {
+    width: 100%;
+    padding: 15px;
+    margin-top: 12px;
+    background: linear-gradient(90deg,#ffcf76,#ff8a28);
+    border: none;
+    border-radius: 12px;
+    font-size: 19px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+button:hover {
+    transform: scale(1.05);
+}
+</style>
+</head>
+
+<body>
+
+<div class="overlay"></div>
+
+<div class="box">
+    <h2>ตั้งรหัสผ่านใหม่</h2>
+
+    <input type="password" id="pass" placeholder="รหัสผ่านใหม่">
+    <input type="password" id="repass" placeholder="ยืนยันรหัสผ่านใหม่">
+
+    <button onclick="resetPassword()">บันทึกรหัสผ่านใหม่</button>
+</div>
+
+<script>
+async function resetPassword() {
+    const token = new URLSearchParams(window.location.search).get("token");
+    if (!token) return alert("ลิงก์หมดอายุหรือไม่ถูกต้อง");
+
+    const p = document.getElementById("pass").value.trim();
+    const rp = document.getElementById("repass").value.trim();
+
+    if (!p || !rp) return alert("กรอกข้อมูลให้ครบ");
+    if (p !== rp) return alert("รหัสผ่านไม่ตรงกัน");
+
+    const res = await fetch("/reset", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ token, password: p })
+    });
+
+    const data = await res.json();
+    alert(data.message);
+
+    if (data.status === "success") {
+        setTimeout(() => location.href = "login.html", 1000);
+    }
+}
+</script>
+
+</body>
+</html>
