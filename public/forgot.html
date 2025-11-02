@@ -81,7 +81,6 @@ async function sendReset(){
     if(!email) return alert("⚠️ กรุณากรอกอีเมล");
     if(!isEmail(email)) return alert("⚠️ รูปแบบอีเมลไม่ถูกต้อง");
 
- 
     try { localStorage.removeItem("token"); localStorage.removeItem("user"); } catch {}
 
     btn.disabled = true;
@@ -89,24 +88,19 @@ async function sendReset(){
     btn.textContent = "กำลังส่ง...";
 
     try {
-        const res = await fetch(`${API_BASE}/forgot`, {
+        const res = await fetch(`${API_BASE}/api/auth/forgot`, {
             method:"POST",
             headers:{ "Content-Type":"application/json" },
             body:JSON.stringify({ email })
         });
 
- 
-        let data = null, text = null;
-        try { data = await res.json(); }
-        catch { text = await res.text(); }
-
-       
-        if (data && data.status === "success") {
+        const data = await res.json();
+        
+        if (res.ok && data.status === "success") {
             alert("✅ ส่งอีเมลรีเซ็ตรหัสผ่านแล้ว! กรุณาตรวจสอบกล่องจดหมาย ✉️");
             setTimeout(()=> location.href = "login.html", 1200);
         } else {
-            const msg = data?.message || "❌ ไม่สามารถส่งอีเมลได้ ลองใหม่อีกครั้ง";
-            alert(msg);
+            alert(data.message || "❌ ไม่สามารถส่งอีเมลได้ ลองใหม่อีกครั้ง");
         }
 
     } catch(err){
