@@ -17,51 +17,61 @@ body{
     align-items:center;
     background:url("pic/dc_sunset.png") no-repeat center center/cover;
 }
+
 .login-container{
     width:420px;
-    background:rgba(10,0,25,0.83);
+    background:rgba(10,0,25,0.85);
     border-radius:26px;
     padding:38px;
     text-align:center;
     color:white;
-    box-shadow:0 0 38px rgba(255,140,30,0.28);
-    animation:fadein .7s ease-out;
+    box-shadow:0 0 38px rgba(255,140,30,0.35);
+    animation:fadein .6s ease-out;
 }
 @keyframes fadein{
     from{opacity:0;transform:translateY(18px);}
     to{opacity:1;transform:translateY(0);}
 }
+
 h2{
     font-size:34px;margin-bottom:22px;
     background:linear-gradient(90deg,#ffd089,#ff8a25);
-    -webkit-background-clip:text;
-    color:transparent;font-weight:800;
+    -webkit-background-clip:text;color:transparent;
+    font-weight:800;
 }
+
 input{
-    width:100%;padding:12px;margin:10px 0;
-    border-radius:10px;border:none;
+    width:100%;padding:13px;margin:10px 0;
+    border-radius:10px;border:none;outline:none;
     font-size:17px;color:#333;
 }
+
 button{
-    width:100%;padding:12px;
+    width:100%;padding:13px;
     background:linear-gradient(90deg,#ffe29c,#ff8522);
     border:none;border-radius:12px;
     font-size:18px;font-weight:bold;
     cursor:pointer;margin-top:12px;
-    transition:.25s;
+    transition:.25s;color:#222;
 }
-button:hover{transform:scale(1.05);box-shadow:0 0 22px rgba(255,140,30,0.85);}
+button:hover{
+    transform:scale(1.05);
+    box-shadow:0 0 26px rgba(255,140,30,0.85);
+}
+
 .forgot{
     display:block;text-align:right;
     margin-top:0;margin-bottom:10px;
     font-size:14px;color:#ffd28a;
 }
+
 .register-box{margin-top:18px;font-size:15px;}
 .register-box a{
     display:inline-block;margin-left:6px;
     padding:4px 12px;background:#ff7a00;
     border-radius:8px;color:white;
     text-decoration:none;font-weight:700;
+    transition:0.2s;
 }
 .register-box a:hover{background:#ff9831;}
 </style>
@@ -72,21 +82,23 @@ button:hover{transform:scale(1.05);box-shadow:0 0 22px rgba(255,140,30,0.85);}
 <div class="login-container">
     <h2>เข้าสู่ระบบ</h2>
 
-    <input type="email" id="email" placeholder="อีเมล">
-    <input type="password" id="password" placeholder="รหัสผ่าน">
+    <form id="loginForm" onsubmit="return false;">
+        <input type="email" id="email" placeholder="อีเมล" autocomplete="email">
+        <input type="password" id="password" placeholder="รหัสผ่าน" autocomplete="current-password">
 
-    <a class="forgot" href="forgot.html">ลืมรหัสผ่าน?</a>
+        <a class="forgot" href="forgot.html">ลืมรหัสผ่าน?</a>
 
-    <button onclick="login()">Login</button>
+        <button type="submit" onclick="login()">Login</button>
 
-    <div class="register-box">
-        ยังไม่มีบัญชี? <a href="register.html">สมัครสมาชิก</a>
-    </div>
+        <div class="register-box">
+            ยังไม่มีบัญชี? <a href="register.html">สมัครสมาชิก</a>
+        </div>
+    </form>
 </div>
 
 <script>
-localStorage.removeItem("token");
-localStorage.removeItem("user");
+// ✅ Clear token every time เมื่อมาหน้านี้
+localStorage.clear();
 
 const API_BASE =
     location.hostname === "localhost"
@@ -107,9 +119,7 @@ async function login() {
             body: JSON.stringify({ email, password })
         });
 
-        const data = await res.json().catch(() => null);
-        if (!data)
-            return alert("⚠️ เซิร์ฟเวอร์ตอบกลับข้อมูลไม่ถูกต้อง");
+        const data = await res.json();
 
         if (data.status === "success") {
             localStorage.setItem("token", data.token);
@@ -117,13 +127,18 @@ async function login() {
             return location.href = "index.html";
         }
 
-        alert(data.message || "❌ บัญชีหรือรหัสผ่านผิดครับ");
+        alert(data.message || "❌ รหัสผ่านผิด!");
 
     } catch (err) {
         console.error(err);
-        alert("🚨 เซิร์ฟเวอร์มีปัญหา ลองใหม่ครับ!");
+        alert("🚨 เซิร์ฟเวอร์ไม่ตอบสนอง ลองใหม่อีกครั้งครับ");
     }
 }
+
+// ✅ Enter เพื่อ Login (UX ดีขึ้น)
+document.getElementById("loginForm").addEventListener("keypress", e => {
+    if (e.key === "Enter") login();
+});
 </script>
 
 </body>

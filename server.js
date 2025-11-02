@@ -19,7 +19,9 @@ const cloudinary = require("cloudinary").v2;
 
 const app = express();
 
-/* ✅ Security */
+/* =========================
+   Security & Core
+========================= */
 app.disable("x-powered-by");
 app.use(helmet());
 app.use(cors({ origin: "*" }));
@@ -28,13 +30,18 @@ app.use(express.urlencoded({ extended: true }));
 
 if (process.env.NODE_ENV !== "production") app.use(morgan("dev"));
 
-/* ✅ Static */
+/* Static */
 app.use(express.static(path.join(__dirname, "public")));
 
-/* ✅ Rate Limit */
+/* Rate limit (เบา ๆ ให้ production วิ่งได้) */
 app.use(rateLimit({ windowMs: 15 * 60 * 1000, max: 200 }));
 
-/* ✅ MongoDB */
+/* Health check */
+app.get("/ping", (_req, res) => res.json({ ok: true }));
+
+/* =========================
+   MongoDB
+========================= */
 mongoose
   .connect(process.env.MONGO_URI)
   .then(() => console.log("✅ MongoDB Connected"))
@@ -43,7 +50,9 @@ mongoose
     process.exit(1);
   });
 
-/* ✅ User Model */
+/* =========================
+   User Model
+========================= */
 const User = mongoose.model(
   "User",
   new mongoose.Schema({
@@ -54,7 +63,9 @@ const User = mongoose.model(
   })
 );
 
-/* ✅ JWT */
+/* =========================
+   JWT Helpers
+========================= */
 const signToken = (uid) =>
   jwt.sign({ uid }, process.env.JWT_SECRET, { expiresIn: "7d" });
 
@@ -69,11 +80,15 @@ function authRequired(req, res, next) {
   }
 }
 
-/* ✅ Validation */
+/* =========================
+   Validation Schemas
+========================= */
 const emailSchema = z.string().email("อีเมลไม่ถูกต้อง");
 const pwSchema = z.string().min(6, "รหัสผ่าน >= 6 ตัว");
 
-/* ✅ Cloudinary */
+/* =========================
+   Cloudinary
+========================= */
 cloudinary.config({
   cloud_name: process.env.CLOUD_NAME,
   api_key: process.env.CLOUD_API_KEY,
@@ -86,7 +101,9 @@ const upload = multer({
   }),
 });
 
-/* ✅ Send Reset Email */
+/* =========================
+   Email (Brevo)
+========================= */
 async function sendResetEmail(email, token) {
   const link = `${process.env.CLIENT_URL}/reset.html?token=${token}`;
   await fetch("https://api.brevo.com/v3/smtp/email", {
@@ -104,8 +121,9 @@ async function sendResetEmail(email, token) {
   });
 }
 
-/* ✅ AUTH Routes */
-
+/* =========================
+   AUTH Routes
+========================= */
 // REGISTER
 app.post("/api/auth/register", async (req, res) => {
   const valid = z
@@ -189,13 +207,13 @@ app.post("/api/auth/reset", async (req, res) => {
   }
 });
 
-// PROFILE
-app.get("/api/auth/profile", authRequired, async (req, res) => {
-  const u = await User.findById(req.uid).lean();
+// PROFILE (GET)
+app.get("/api/auth/profile", authRequired, async (_req, res) => {
+  const u = await User.findById(_req.uid).lean();
   res.json({ status: "success", user: u });
 });
 
-// UPDATE
+// PROFILE (UPDATE username + image)
 app.put("/api/auth/profile", authRequired, upload.single("profileImg"), async (req, res) => {
   const update = {
     username: req.body.username || undefined,
@@ -205,12 +223,16 @@ app.put("/api/auth/profile", authRequired, upload.single("profileImg"), async (r
   res.json({ status: "success", user: u });
 });
 
-/* ✅ Default */
+/* =========================
+   Default Page
+========================= */
 app.get("/", (_, res) =>
   res.sendFile(path.join(__dirname, "public", "login.html"))
 );
 
-/* ✅ Start */
+/* =========================
+   Start
+========================= */
 app.listen(process.env.PORT || 10000, () =>
   console.log(`🚀 Server Online → ${process.env.CLIENT_URL}`)
 );
