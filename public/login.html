@@ -11,15 +11,20 @@
 *{margin:0;padding:0;box-sizing:border-box;}
 body{
     font-family:'Kanit',sans-serif;
-    height:100vh; display:flex;
-    justify-content:center; align-items:center;
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
     background:url("pic/dc_sunset.png") no-repeat center center/cover;
 }
 
 .login-container{
-    width:420px; background:rgba(10,0,25,0.85);
-    border-radius:26px; padding:38px;
-    text-align:center; color:white;
+    width:420px;
+    background:rgba(10,0,25,0.85);
+    border-radius:26px;
+    padding:38px;
+    text-align:center;
+    color:white;
     box-shadow:0 0 38px rgba(255,140,30,0.35);
     animation:fadein .6s ease-out;
 }
@@ -31,7 +36,8 @@ body{
 h2{
     font-size:34px;margin-bottom:22px;
     background:linear-gradient(90deg,#ffd089,#ff8a25);
-    -webkit-background-clip:text;color:transparent;font-weight:800;
+    -webkit-background-clip:text;color:transparent;
+    font-weight:800;
 }
 
 input{
@@ -55,14 +61,17 @@ button:hover{
 
 .forgot{
     display:block;text-align:right;
-    font-size:14px;margin-bottom:10px;color:#ffd28a;
+    margin-top:0;margin-bottom:10px;
+    font-size:14px;color:#ffd28a;
 }
 
 .register-box{margin-top:18px;font-size:15px;}
 .register-box a{
+    display:inline-block;margin-left:6px;
     padding:4px 12px;background:#ff7a00;
-    border-radius:8px;color:white;font-weight:700;
-    text-decoration:none; transition:.2s;
+    border-radius:8px;color:white;
+    text-decoration:none;font-weight:700;
+    transition:0.2s;
 }
 .register-box a:hover{background:#ff9831;}
 </style>
@@ -72,23 +81,24 @@ button:hover{
 
 <div class="login-container">
     <h2>เข้าสู่ระบบ</h2>
+
     <form id="loginForm" onsubmit="return false;">
         <input type="email" id="email" placeholder="อีเมล" autocomplete="email">
         <input type="password" id="password" placeholder="รหัสผ่าน" autocomplete="current-password">
+
         <a class="forgot" href="forgot.html">ลืมรหัสผ่าน?</a>
-        <button onclick="login()">Login</button>
+
+        <button type="submit" onclick="login()">Login</button>
+
         <div class="register-box">
             ยังไม่มีบัญชี? <a href="register.html">สมัครสมาชิก</a>
         </div>
     </form>
 </div>
 
-<!-- ✅ Auth Guard -->
-<script src="auth.js"></script>
-
 <script>
-localStorage.removeItem("token");
-localStorage.removeItem("user");
+// ✅ Clear token every time เมื่อมาหน้านี้
+localStorage.clear();
 
 const API_BASE =
     location.hostname === "localhost"
@@ -110,6 +120,7 @@ async function login() {
         });
 
         const data = await res.json();
+
         if (data.status === "success") {
             localStorage.setItem("token", data.token);
             localStorage.setItem("user", JSON.stringify(data.user));
@@ -124,6 +135,7 @@ async function login() {
     }
 }
 
+// ✅ Enter เพื่อ Login (UX ดีขึ้น)
 document.getElementById("loginForm").addEventListener("keypress", e => {
     if (e.key === "Enter") login();
 });

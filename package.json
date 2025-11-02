@@ -1,7 +1,7 @@
 {
   "name": "washingtondc",
   "version": "1.0.0",
-  "description": "Washington DC Travel Auth + MongoDB + Brevo Email",
+  "description": "Washington DC Travel Auth + MongoDB + Brevo Email + Cloudinary Profile Upload",
   "main": "server.js",
   "type": "commonjs",
   "scripts": {
@@ -17,6 +17,8 @@
     "mongoose": "^8.19.2",
     "multer": "^2.0.2",
     "multer-storage-cloudinary": "^4.0.0",
-    "node-fetch": "^2.7.0"
+    "node-fetch": "^2.7.0",
+    "zod": "^4.1.12",
+    "morgan": "^1.10.1"
   }
 }
