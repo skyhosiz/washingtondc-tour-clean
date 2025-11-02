@@ -227,7 +227,10 @@ app.get("/api/auth/profile", authRequired, async (req, res) => {
 /* =============================
    DEFAULT (serve login)
 ============================= */
-app.get("/", (_, res) => res.sendFile(path.join(__dirname, "public", "login.html")));
+app.use((req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
 
 /* =============================
    START
