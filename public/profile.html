@@ -1,92 +1,45 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Your Profile | Washington D.C.</title>
-<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600;700&display=swap" rel="stylesheet">
-
+<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600;700&display=swap" rel="stylesheet" />
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
-body{
-    font-family:'Kanit',sans-serif;
-    background:radial-gradient(circle,#1c1a33,#0b0814);
-    color:white; min-height:100vh;
-}
-
-/* ✅ NAVBAR */
-.navbar{
-  position:fixed; top:0; left:0;
-  width:100%; height:70px;
-  padding:14px 24px;
-  background:rgba(0,0,0,0.75);
-  display:flex; justify-content:space-between; align-items:center;
-  backdrop-filter:blur(8px); z-index:99;
-}
-.brand{
-  font-size:22px;font-weight:700;
-  background:linear-gradient(90deg,#ffd089,#ff8a25);
-  -webkit-background-clip:text;color:transparent;
-}
+body{font-family:'Kanit',sans-serif;background:radial-gradient(circle,#1c1a33,#0b0814);color:#fff;min-height:100vh;}
+.navbar{position:fixed;top:0;left:0;width:100%;height:70px;padding:14px 24px;background:rgba(0,0,0,.75);display:flex;justify-content:space-between;align-items:center;backdrop-filter:blur(8px);z-index:99;}
+.brand{font-size:22px;font-weight:700;background:linear-gradient(90deg,#ffd089,#ff8a25);-webkit-background-clip:text;color:transparent;}
 .nav-right{display:flex;align-items:center;gap:12px;}
-.nav-btn{
-  padding:8px 14px;border:none;border-radius:8px;
-  cursor:pointer;font-size:14px;font-weight:700;
-  transition:.25s;
-}
+.nav-btn{padding:8px 14px;border:none;border-radius:8px;cursor:pointer;font-size:14px;font-weight:700;transition:.25s}
 .btn-profile{background:#ffb55b;color:#222;}
 .btn-logout{background:#d9534f;color:#fff;}
 .nav-btn:hover{filter:brightness(1.12);transform:translateY(-2px)}
-
-/* ✅ CARD */
-.container{
-  display:flex;justify-content:center;align-items:center;
-  min-height:100vh;padding-top:70px;
-}
-.card{
-  width:350px;background:rgba(255,255,255,0.08);
-  backdrop-filter:blur(10px);
-  padding:35px;border-radius:20px;
-  text-align:center;
-  box-shadow:0 0 22px rgba(255,150,60,0.4);
-}
-.profile-img{
-  width:120px;height:120px;border-radius:50%;
-  border:3px solid #ff952e;object-fit:cover;
-  margin:0 auto 15px;
-}
-h2{
-  font-size:26px;
-  background:linear-gradient(90deg,#ffd785,#ff952e);
-  -webkit-background-clip:text;color:transparent;
-}
+.container{display:flex;justify-content:center;align-items:center;min-height:100vh;padding-top:70px;}
+.card{width:350px;background:rgba(255,255,255,.08);backdrop-filter:blur(10px);padding:35px;border-radius:20px;text-align:center;box-shadow:0 0 22px rgba(255,150,60,.4);}
+.profile-img{width:120px;height:120px;border-radius:50%;border:3px solid #ff952e;object-fit:cover;margin:0 auto 15px;}
+h2{font-size:26px;background:linear-gradient(90deg,#ffd785,#ff952e);-webkit-background-clip:text;color:transparent;}
 .user-email{font-size:17px;opacity:.9;margin-bottom:25px}
-.btn{
-  width:100%;padding:13px;margin:10px 0;
-  border:none;border-radius:10px;
-  font-size:17px;cursor:pointer;font-weight:600;
-  transition:.25s;
-}
+.btn{width:100%;padding:13px;margin:10px 0;border:none;border-radius:10px;font-size:17px;cursor:pointer;font-weight:600;transition:.25s}
 .edit-btn{background:#ff952e;color:#000;}
 .logout2-btn{background:#d43f3f;color:#fff;}
 .back-btn{background:#777;}
 .btn:hover{filter:brightness(1.12);transform:translateY(-3px);}
 </style>
 </head>
-
 <body>
 
 <div class="navbar">
   <div class="brand">Washington D.C.</div>
   <div class="nav-right">
-    <button class="nav-btn btn-profile">PROFILE</button>
+    <button class="nav-btn btn-profile" onclick="location.href='profile.html'">PROFILE</button>
     <button class="nav-btn btn-logout" onclick="logout()">LOGOUT</button>
   </div>
 </div>
 
 <div class="container">
   <div class="card">
-    <img id="profileImg" class="profile-img" src="pic/default.png">
+    <img id="profileImg" class="profile-img" src="pic/default.png" alt="profile" />
     <h2 id="profileName">Loading…</h2>
     <div class="user-email" id="profileEmail">Loading…</div>
 
@@ -101,45 +54,55 @@ const API_BASE = location.hostname === "localhost"
   ? "http://localhost:3000"
   : "https://washingtondc-tour-clean.onrender.com";
 
-// ✅ Protect Page
-function protectPage(){
+// ✅ Guard: เช็ก token หลัง DOM โหลดเสร็จ
+document.addEventListener("DOMContentLoaded", () => {
   const token = localStorage.getItem("token");
-  if(!token) return location.href="login.html";
-}
+  if (!token) return location.href = "login.html";
+  fetchProfile();
+});
 
-// ✅ Load Fresh Profile From Server
+// แสดงข้อมูลแคชก่อน
+(function showCachedIfAny(){
+  const cached = JSON.parse(localStorage.getItem("user") || "null");
+  if (cached) showProfile(cached);
+})();
+
+// ✅ ดึงสดจาก server
 async function fetchProfile(){
   const token = localStorage.getItem("token");
   try{
-    const res = await fetch(`${API_BASE}/api/auth/profile`,{
-      headers:{ Authorization:"Bearer "+token }
+    const res = await fetch(`${API_BASE}/api/auth/profile`, {
+      headers: { "Authorization": "Bearer " + token }
     });
-    const data = await res.json();
 
-    if(data.status!=="success") return logout();
+    if (res.status === 401 || res.status === 403) {
+      return (location.href = "login.html");
+    }
 
-    localStorage.setItem("user",JSON.stringify(data.user));
-    showProfile(data.user);
-  }catch(err){console.error(err);logout();}
+    const data = await res.json().catch(() => null);
+
+    if (data && data.status === "success" && data.user){
+      localStorage.setItem("user", JSON.stringify(data.user));
+      showProfile(data.user);
+    } else {
+      console.warn("⚠️ ใช้ข้อมูลแคชชั่วคราว");
+    }
+  } catch (err){
+    console.error("Fetch profile failed:", err);
+  }
 }
 
-// ✅ Update UI
 function showProfile(u){
   document.getElementById("profileName").textContent = u.username || "-";
   document.getElementById("profileEmail").textContent = u.email || "-";
   document.getElementById("profileImg").src = u.profileImg || "pic/default.png";
 }
 
-// ✅ Logout
 function logout(){
   localStorage.removeItem("token");
   localStorage.removeItem("user");
-  location.href="login.html";
+  location.href = "login.html";
 }
-
-// ✅ Run
-protectPage();
-fetchProfile();
 </script>
 
 </body>

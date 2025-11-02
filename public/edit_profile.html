@@ -124,57 +124,75 @@ const API_BASE = location.hostname === "localhost"
  ? "http://localhost:3000"
  : "https://washingtondc-tour-clean.onrender.com";
 
-/* ✅ Protect Page */
-if(!localStorage.getItem("token")){
-  alert("กรุณาเข้าสู่ระบบก่อน");
-  location.href="login.html";
+/* ✅ Guard */
+document.addEventListener("DOMContentLoaded", () => {
+  const token = localStorage.getItem("token");
+  if (!token) return location.href = "login.html";
+  showCachedIfAny();
+  loadUser();
+});
+
+/* ✅ Load cached UI first */
+function showCachedIfAny(){
+  const user = JSON.parse(localStorage.getItem("user") || "null");
+  if (!user) return;
+  profileImg.src = user.profileImg || "pic/default.png";
+  nameInput.placeholder = user.username;
 }
 
-/* ✅ ดึงข้อมูลสดจาก Server */
+/* ✅ Load fresh */
 async function loadUser(){
-  const r = await fetch(`${API_BASE}/api/auth/profile`, {
-    headers:{ Authorization:"Bearer "+localStorage.getItem("token") }
-  });
-  const data = await r.json();
-  if(data.status!=="success") return logout();
-
-  localStorage.setItem("user",JSON.stringify(data.user));
-
-  profileImg.src = data.user.profileImg || "pic/default.png";
-  nameInput.placeholder = data.user.username;
+  try {
+    const r = await fetch(`${API_BASE}/api/auth/profile`, {
+      headers:{ Authorization:"Bearer "+localStorage.getItem("token") }
+    });
+    if(r.status === 401 || r.status === 403){
+      return location.href="login.html";
+    }
+    const data = await r.json();
+    if(data.status!=="success") return;
+    localStorage.setItem("user", JSON.stringify(data.user));
+    showCachedIfAny();
+  } catch(err){
+    console.error(err);
+  }
 }
-loadUser();
 
-/* ✅ Preview รูป */
+/* ✅ Preview image */
 imgUpload.addEventListener("change", ()=>{
   const file = imgUpload.files[0];
   if(file) profileImg.src = URL.createObjectURL(file);
 });
 
-/* ✅ Save */
+/* ✅ Save Edit */
 async function saveEdit(){
   const fd = new FormData();
   if(nameInput.value.trim()) fd.append("username", nameInput.value.trim());
   if(imgUpload.files[0]) fd.append("profileImg", imgUpload.files[0]);
 
-  const res = await fetch(`${API_BASE}/api/auth/profile`, {
-    method:"PUT",
-    headers:{ Authorization:"Bearer "+localStorage.getItem("token") },
-    body:fd
-  });
-
-  const data = await res.json();
-  if(data.status==="success"){
-    localStorage.setItem("user", JSON.stringify(data.user));
-    alert("✅ อัปเดตสำเร็จ!");
-    location.href="profile.html";
-  }else{
-    alert("❌ อัปเดตผิดพลาด");
+  try {
+    const res = await fetch(`${API_BASE}/api/auth/profile`, {
+      method:"PUT",
+      headers:{ Authorization:"Bearer "+localStorage.getItem("token") },
+      body:fd
+    });
+    const data = await res.json();
+    if(data.status==="success"){
+      localStorage.setItem("user", JSON.stringify(data.user));
+      alert("✅ อัปเดตสำเร็จ!");
+      location.href="profile.html";
+    } else {
+      alert("❌ อัปเดตผิดพลาด");
+    }
+  } catch(err){
+    alert("⚠ เกิดข้อผิดพลาด");
   }
 }
 
+/* ✅ Logout */
 function logout(){
-  localStorage.clear();
+  localStorage.removeItem("token");
+  localStorage.removeItem("user");
   location.href="login.html";
 }
 </script>
