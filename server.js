@@ -1,11 +1,11 @@
 require("dotenv").config();
+import fetch from "node-fetch"; // ✅ ใช้ Brevo API
 const express = require("express");
 const path = require("path");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const nodemailer = require("nodemailer");
 const cloudinary = require("cloudinary").v2;
 const multer = require("multer");
 const { CloudinaryStorage } = require("multer-storage-cloudinary");
@@ -13,11 +13,11 @@ const { CloudinaryStorage } = require("multer-storage-cloudinary");
 const app = express();
 
 /************************************
- ✅ ENV CHECK
+ ✅ ENV CHECK (ไม่ต้องใช้ SMTP แล้ว)
 *************************************/
 const requiredEnv = [
-  "JWT_SECRET", "RESET_PASSWORD_SECRET", "MONGO_URI", "CLIENT_URL",
-  "SMTP_HOST", "SMTP_PORT", "SMTP_USER", "SMTP_PASS", "SENDER_EMAIL"
+  "JWT_SECRET", "RESET_PASSWORD_SECRET", "MONGO_URI",
+  "CLIENT_URL", "BREVO_API_KEY", "SENDER_EMAIL"
 ];
 
 requiredEnv.forEach(v => {
@@ -32,10 +32,7 @@ const {
   RESET_PASSWORD_SECRET,
   MONGO_URI,
   CLIENT_URL,
-  SMTP_HOST,
-  SMTP_PORT,
-  SMTP_USER,
-  SMTP_PASS,
+  BREVO_API_KEY,
   SENDER_EMAIL
 } = process.env;
 
@@ -68,33 +65,19 @@ const userSchema = new mongoose.Schema({
 const User = mongoose.model("User", userSchema);
 
 /************************************
- ✅ AUTH HELPER
+ ✅ AUTH TOKEN
 *************************************/
 const signToken = uid =>
   jwt.sign({ uid }, JWT_SECRET, { expiresIn: "7d" });
 
-function auth(req, res, next) {
-  const token = req.headers.authorization?.replace("Bearer ", "");
-  if (!token) return res.json({ status: "unauthorized" });
-
-  try {
-    const decoded = jwt.verify(token, JWT_SECRET);
-    req.userId = decoded.uid;
-    next();
-  } catch {
-    return res.json({ status: "unauthorized" });
-  }
-}
-
 /************************************
- ✅ CLOUDINARY UPLOAD
+ ✅ UPLOAD (Cloudinary)
 *************************************/
 cloudinary.config({
   cloud_name: process.env.CLOUD_NAME,
   api_key: process.env.CLOUD_API_KEY,
   api_secret: process.env.CLOUD_API_SECRET
 });
-
 const storage = new CloudinaryStorage({
   cloudinary,
   params: { folder: "profile_pics" }
@@ -102,14 +85,40 @@ const storage = new CloudinaryStorage({
 const upload = multer({ storage });
 
 /************************************
- ✅ SMTP / EMAIL
+ ✅ ส่งอีเมลผ่าน Brevo API
 *************************************/
-const transporter = nodemailer.createTransport({
-  host: SMTP_HOST,
-  port: Number(SMTP_PORT),
-  secure: false,
-  auth: { user: SMTP_USER, pass: SMTP_PASS }
-});
+async function sendResetEmail(email, token) {
+  const resetUrl = `${CLIENT_URL}/reset.html?token=${token}`;
+
+  const data = {
+    sender: { email: SENDER_EMAIL, name: "Washington DC Travel" },
+    to: [{ email }],
+    subject: "🔐 รีเซ็ตรหัสผ่าน",
+    htmlContent: `
+      <h2>กู้คืนรหัสผ่าน</h2>
+      <p>คลิกที่ลิงก์เพื่อเปลี่ยนรหัสผ่านของคุณ</p>
+      <br>
+      <a href="${resetUrl}" 
+         style="background:#ff8a25;padding:10px;border-radius:8px;color:white;text-decoration:none">
+      รีเซ็ตรหัสผ่าน
+      </a>
+      <p>ลิงก์นี้หมดอายุภายใน 30 นาที ⏳</p>
+    `
+  };
+
+  const res = await fetch("https://api.brevo.com/v3/smtp/email", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "api-key": BREVO_API_KEY
+    },
+    body: JSON.stringify(data)
+  });
+
+  const result = await res.json();
+  console.log("📩 Brevo Response:", result);
+  return result;
+}
 
 /************************************
  ✅ REGISTER
@@ -156,34 +165,19 @@ app.post("/api/auth/login", async (req, res) => {
 });
 
 /************************************
- ✅ FORGOT PASSWORD EMAIL
+ ✅ FORGOT PASSWORD
 *************************************/
 app.post("/api/auth/forgot", async (req, res) => {
   const { email } = req.body;
   const u = await User.findOne({ email });
-  if (!u) return res.json({ status: "success" }); // ไม่ให้เดาอีเมล
+  if (!u) return res.json({ status: "success" }); // ป้องกันเดาอีเมล
 
   const token = jwt.sign({ uid: u._id }, RESET_PASSWORD_SECRET, {
     expiresIn: "30m"
   });
 
-  const resetUrl = `${CLIENT_URL}/reset.html?token=${token}`;
-
-  try {
-    await transporter.sendMail({
-      from: SENDER_EMAIL,
-      to: email,
-      subject: "🔐 Reset Password",
-      html: `
-      <p>📌 กดเพื่อเปลี่ยนรหัสผ่าน:</p>
-      <a href="${resetUrl}">${resetUrl}</a>
-      <p>หมดอายุใน 30 นาที ⏳</p>`
-    });
-    res.json({ status: "success" });
-  } catch (err) {
-    console.error("Email Error:", err.message);
-    res.json({ status: "error", message: "ส่งอีเมลไม่สำเร็จ" });
-  }
+  await sendResetEmail(email, token);
+  res.json({ status: "success" });
 });
 
 /************************************
@@ -204,13 +198,13 @@ app.post("/api/auth/reset", async (req, res) => {
 });
 
 /************************************
- ✅ SERVER ROUTE DEFAULT
+ ✅ DEFAULT ROUTE
 *************************************/
 app.get("/", (_, res) =>
   res.sendFile(path.join(__dirname, "public", "login.html"))
 );
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 10000;
 app.listen(port, () =>
   console.log(`🚀 Server Online → http://localhost:${port}`)
 );
