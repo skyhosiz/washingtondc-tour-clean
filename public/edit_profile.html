@@ -7,192 +7,136 @@
 <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600;700&display=swap" rel="stylesheet">
 
 <style>
-*{margin:0;padding:0;box-sizing:border-box;}
+*{margin:0;padding:0;box-sizing:border-box}
 body{
   font-family:'Kanit',sans-serif;
   background:radial-gradient(circle,#1c1a33,#0b0814);
-  color:white; min-height:100vh;
+  color:#fff;min-height:100vh;
 }
-
-/* NAVBAR */
+/* Navbar */
 .navbar{
   position:fixed;top:0;left:0;width:100%;height:70px;
-  background:rgba(0,0,0,.75);
+  background:rgba(0,0,0,.7);backdrop-filter:blur(8px);
   display:flex;justify-content:space-between;align-items:center;
-  padding:14px 24px;z-index:999;backdrop-filter:blur(8px);
-}
-.brand{
-  font-size:22px;font-weight:700;
-  background:linear-gradient(90deg,#ffd089,#ff8a25);
-  -webkit-background-clip:text;color:transparent;
+  padding:14px 24px;z-index:99;
 }
 .nav-btn{
-  background:#ffb55b;
-  padding:8px 14px;border:none;border-radius:8px;
-  cursor:pointer;font-size:14px;font-weight:600;color:#000;
-  transition:.25s;
+  background:#d9534f;color:#fff;padding:8px 14px;
+  border:none;border-radius:8px;font-size:14px;font-weight:600;
+  cursor:pointer;transition:.25s;
 }
-.nav-btn:hover{transform:translateY(-1px);filter:brightness(1.12);}
-.btn-danger{background:#d9534f;color:#fff}
-
-/* CARD */
-.container{
-  max-width:450px;margin:auto;
-  padding-top:120px;text-align:center;
-}
+.nav-btn:hover{transform:translateY(-2px);filter:brightness(1.1)}
+.brand{font-size:22px;font-weight:700}
+/* Container + Card */
+.container{max-width:450px;margin:auto;padding-top:120px;text-align:center}
 .card{
-  background:rgba(255,255,255,0.08);
-  padding:30px;border-radius:18px;
-  box-shadow:0 0 20px rgba(255,150,60,0.45);
+  background:rgba(255,255,255,.08);
+  padding:28px;border-radius:18px;
+  box-shadow:0 0 20px rgba(255,150,60,.45);
 }
-
-/* PROFILE IMAGE */
-.profile-img-wrapper{
-  position:relative;
-  width:120px;height:120px;
-  margin:auto 0 16px;cursor:pointer;
-}
+/* Profile Image */
+.profile-img-wrapper{position:relative;width:120px;height:120px;margin:8px auto;cursor:pointer}
 .profile-img{
   width:100%;height:100%;border-radius:50%;
-  object-fit:cover;border:3px solid #ff9a3c;
-  transition:.25s;
+  object-fit:cover;border:3px solid #ff9a3c;transition:.25s;
 }
-.profile-img-wrapper:hover .profile-img{transform:scale(1.05);filter:brightness(1.1);}
-.edit-icon{
-  position:absolute;bottom:-5px;right:-5px;
-  background:#ff952e;color:#000;font-size:12px;
-  padding:6px 12px;border-radius:10px;
-  opacity:0;pointer-events:none;transition:.25s;
+.profile-img-wrapper:hover .profile-img{transform:scale(1.05)}
+input{width:100%;padding:12px;margin:10px 0;border-radius:10px;border:none;font-size:16px}
+.btn-save,.back-btn{
+  width:100%;padding:12px;margin-top:12px;border:none;
+  border-radius:10px;font-size:17px;font-weight:700;cursor:pointer;transition:.25s;
 }
-.profile-img-wrapper:hover .edit-icon{opacity:1;transform:translateY(-3px)}
-
-/* INPUT */
-input{
-  width:100%;padding:12px;margin:8px 0;
-  border-radius:10px;border:none;
-  font-size:16px;outline:none;
-}
-
-/* BUTTONS */
-.btn-save{
-  width:100%; padding:13px; margin-top:16px;
-  background:#ff952e;color:#000;
-  font-weight:700;border:none;border-radius:10px;
-  font-size:18px;cursor:pointer;transition:.25s;
-}
-.btn-save:hover{transform:translateY(-3px);filter:brightness(1.1)}
-
-.back-btn{
-  width:100%;padding:11px;margin-top:10px;
-  background:#666;color:#fff;border:none;
-  border-radius:10px;cursor:pointer;font-weight:600;
-  transition:.25s;
-}
-.back-btn:hover{transform:translateY(-3px);filter:brightness(1.1)}
+.btn-save{background:#ff952e;color:#000}
+.btn-save:hover{filter:brightness(1.1);transform:translateY(-2px)}
+.back-btn{background:#666;color:#fff}
+.back-btn:hover{filter:brightness(1.1);transform:translateY(-2px)}
 </style>
 </head>
 
 <body>
-
 <div class="navbar">
   <div class="brand">Edit Profile</div>
-  <div>
-    <button class="nav-btn" onclick="location.href='profile.html'">PROFILE</button>
-    <button class="nav-btn btn-danger" onclick="logout()">LOGOUT</button>
-  </div>
+  <button class="nav-btn" onclick="logout()">LOGOUT</button>
 </div>
 
 <div class="container">
-  <div class="card">
+<div class="card">
+  <label for="imgUpload" class="profile-img-wrapper">
+    <img id="profileImg" class="profile-img" src="pic/default.png" alt="profile"/>
+  </label>
+  <input type="file" id="imgUpload" accept="image/*" hidden>
 
-    <label for="imgUpload" class="profile-img-wrapper">
-      <img id="profileImg" class="profile-img" src="pic/default.png">
-      <span class="edit-icon">📷 Edit</span>
-    </label>
-    <input type="file" id="imgUpload" accept="image/*" hidden>
+  <input type="text" id="nameInput" placeholder="Loading...">
 
-    <input type="text" id="nameInput" placeholder="Loading...">
-
-    <button class="btn-save" onclick="saveEdit()">✅ บันทึกข้อมูล</button>
-    <button class="back-btn" onclick="location.href='profile.html'">← ย้อนกลับ</button>
-
-  </div>
+  <button class="btn-save" onclick="saveEdit()">✅ บันทึกข้อมูล</button>
+  <button class="back-btn" onclick="location.href='profile.html'">⬅ ย้อนกลับ</button>
+</div>
 </div>
 
 <script>
 const API_BASE = location.hostname === "localhost"
- ? "http://localhost:3000"
- : "https://washingtondc-tour-clean.onrender.com";
+  ? "http://localhost:3000"
+  : "https://washingtondc-tour-clean.onrender.com";
 
-/* ✅ Guard */
+/* ✅ Guard Login */
 document.addEventListener("DOMContentLoaded", () => {
   const token = localStorage.getItem("token");
-  if (!token) return location.href = "login.html";
-  showCachedIfAny();
+  if (!token) return location.href="login.html";
+  loadCached();
   loadUser();
 });
 
-/* ✅ Load cached UI first */
-function showCachedIfAny(){
-  const user = JSON.parse(localStorage.getItem("user") || "null");
-  if (!user) return;
-  profileImg.src = user.profileImg || "pic/default.png";
-  nameInput.placeholder = user.username;
+/* ✅ Load Cached UI */
+function loadCached(){
+  const u = JSON.parse(localStorage.getItem("user")||"null");
+  if(!u) return;
+  profileImg.src = u.profileImg || "pic/default.png";
+  nameInput.value = u.username || "";
 }
 
-/* ✅ Load fresh */
+/* ✅ Load from Server */
 async function loadUser(){
-  try {
+  try{
     const r = await fetch(`${API_BASE}/api/auth/profile`, {
-      headers:{ Authorization:"Bearer "+localStorage.getItem("token") }
+      headers:{Authorization:"Bearer "+localStorage.getItem("token")}
     });
-    if(r.status === 401 || r.status === 403){
-      return location.href="login.html";
-    }
     const data = await r.json();
     if(data.status!=="success") return;
     localStorage.setItem("user", JSON.stringify(data.user));
-    showCachedIfAny();
-  } catch(err){
-    console.error(err);
-  }
+    loadCached();
+  }catch(e){console.log(e)}
 }
 
-/* ✅ Preview image */
-imgUpload.addEventListener("change", ()=>{
-  const file = imgUpload.files[0];
-  if(file) profileImg.src = URL.createObjectURL(file);
-});
+/* ✅ Choose Image Preview */
+imgUpload.addEventListener("change",()=>{
+  const f = imgUpload.files[0];
+  if(f) profileImg.src = URL.createObjectURL(f);
+})
 
-/* ✅ Save Edit */
+/* ✅ Save Edited Data */
 async function saveEdit(){
   const fd = new FormData();
   if(nameInput.value.trim()) fd.append("username", nameInput.value.trim());
   if(imgUpload.files[0]) fd.append("profileImg", imgUpload.files[0]);
 
-  try {
-    const res = await fetch(`${API_BASE}/api/auth/profile`, {
+  try{
+    const r = await fetch(`${API_BASE}/api/auth/profile`, {
       method:"PUT",
-      headers:{ Authorization:"Bearer "+localStorage.getItem("token") },
+      headers:{Authorization:"Bearer "+localStorage.getItem("token")},
       body:fd
     });
-    const data = await res.json();
+    const data = await r.json();
     if(data.status==="success"){
-      localStorage.setItem("user", JSON.stringify(data.user));
+      localStorage.setItem("user",JSON.stringify(data.user));
       alert("✅ อัปเดตสำเร็จ!");
       location.href="profile.html";
-    } else {
-      alert("❌ อัปเดตผิดพลาด");
-    }
-  } catch(err){
-    alert("⚠ เกิดข้อผิดพลาด");
-  }
+    }else alert("⚠ มีบางอย่างผิดพลาด");
+  }catch(e){alert("⚠ เกิดข้อผิดพลาด");}
 }
 
 /* ✅ Logout */
 function logout(){
-  localStorage.removeItem("token");
-  localStorage.removeItem("user");
+  localStorage.clear();
   location.href="login.html";
 }
 </script>

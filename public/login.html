@@ -2,143 +2,102 @@
 <html lang="th">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>Login | Washington D.C.</title>
-
-<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600;800&display=swap" rel="stylesheet">
-
+<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600;700&display=swap" rel="stylesheet">
 <style>
-*{margin:0;padding:0;box-sizing:border-box;}
+*{margin:0;padding:0;box-sizing:border-box}
 body{
-    font-family:'Kanit',sans-serif;
-    height:100vh;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    background:url("pic/dc_sunset.png") no-repeat center center/cover;
+  font-family:'Kanit',sans-serif;
+  background:url("pic/dc_sunset.png") center/cover no-repeat;
+  min-height:100vh;display:flex;justify-content:center;align-items:center;
 }
-
-.login-container{
-    width:420px;
-    background:rgba(10,0,25,0.85);
-    border-radius:26px;
-    padding:38px;
-    text-align:center;
-    color:white;
-    box-shadow:0 0 38px rgba(255,140,30,0.35);
-    animation:fadein .6s ease-out;
+.login-box{
+  width:420px;padding:38px;text-align:center;color:#fff;
+  background:rgba(10,0,25,.85);border-radius:26px;
+  box-shadow:0 0 38px rgba(255,140,30,.35);
+  animation:fadeIn .6s ease-out;
 }
-@keyframes fadein{
-    from{opacity:0;transform:translateY(18px);}
-    to{opacity:1;transform:translateY(0);}
+@keyframes fadeIn{
+  from{opacity:0;transform:translateY(18px)}
+  to{opacity:1;transform:translateY(0)}
 }
-
 h2{
-    font-size:34px;margin-bottom:22px;
-    background:linear-gradient(90deg,#ffd089,#ff8a25);
-    -webkit-background-clip:text;color:transparent;
-    font-weight:800;
+  font-size:34px;margin-bottom:22px;font-weight:800;
+  background:linear-gradient(90deg,#ffd089,#ff8a25);
+  -webkit-background-clip:text;color:transparent;
 }
-
-input{
-    width:100%;padding:13px;margin:10px 0;
-    border-radius:10px;border:none;outline:none;
-    font-size:17px;color:#333;
+input,button{
+  width:100%;border:none;border-radius:12px;
+  font-size:17px;margin:10px 0;padding:13px;
 }
-
 button{
-    width:100%;padding:13px;
-    background:linear-gradient(90deg,#ffe29c,#ff8522);
-    border:none;border-radius:12px;
-    font-size:18px;font-weight:bold;
-    cursor:pointer;margin-top:12px;
-    transition:.25s;color:#222;
+  font-weight:700;cursor:pointer;transition:.25s;color:#222;
+  background:linear-gradient(90deg,#ffe29c,#ff8522);
 }
 button:hover{
-    transform:scale(1.05);
-    box-shadow:0 0 26px rgba(255,140,30,0.85);
+  transform:scale(1.05);
+  box-shadow:0 0 26px rgba(255,140,30,.85);
 }
-
-.forgot{
-    display:block;text-align:right;
-    margin-top:0;margin-bottom:10px;
-    font-size:14px;color:#ffd28a;
-}
-
-.register-box{margin-top:18px;font-size:15px;}
+.forgot,.register-box{font-size:14px;margin-top:6px}
+.forgot a{color:#ffd28a;text-decoration:none}
 .register-box a{
-    display:inline-block;margin-left:6px;
-    padding:4px 12px;background:#ff7a00;
-    border-radius:8px;color:white;
-    text-decoration:none;font-weight:700;
-    transition:0.2s;
+  background:#ff7a00;color:#fff;padding:4px 12px;
+  border-radius:8px;text-decoration:none;font-weight:700
 }
-.register-box a:hover{background:#ff9831;}
+.register-box a:hover{background:#ff9831}
 </style>
 </head>
 
 <body>
+<div class="login-box">
+  <h2>เข้าสู่ระบบ</h2>
+  <form id="loginForm" onsubmit="return false;">
+    <input id="email" type="email" placeholder="อีเมล" autocomplete="email">
+    <input id="password" type="password" placeholder="รหัสผ่าน" autocomplete="current-password">
 
-<div class="login-container">
-    <h2>เข้าสู่ระบบ</h2>
+    <div class="forgot"><a href="forgot.html">ลืมรหัสผ่าน?</a></div>
+    <button onclick="login()">Login</button>
 
-    <form id="loginForm" onsubmit="return false;">
-        <input type="email" id="email" placeholder="อีเมล" autocomplete="email">
-        <input type="password" id="password" placeholder="รหัสผ่าน" autocomplete="current-password">
-
-        <a class="forgot" href="forgot.html">ลืมรหัสผ่าน?</a>
-
-        <button type="submit" onclick="login()">Login</button>
-
-        <div class="register-box">
-            ยังไม่มีบัญชี? <a href="register.html">สมัครสมาชิก</a>
-        </div>
-    </form>
+    <div class="register-box"><span>ยังไม่มีบัญชี?</span> <a href="register.html">สมัครสมาชิก</a></div>
+  </form>
 </div>
 
 <script>
+const API_BASE = location.hostname==="localhost"
+  ? "http://localhost:3000"
+  : "https://washingtondc-tour-clean.onrender.com";
 
+async function login(){
+  const email = emailEl.value.trim();
+  const password = passwordEl.value.trim();
+  if(!email || !password) return alert("กรอกข้อมูลให้ครบถ้วนครับ 😎");
 
-const API_BASE =
-    location.hostname === "localhost"
-        ? "http://localhost:3000"
-        : "https://washingtondc-tour-clean.onrender.com";
+  try{
+    const res = await fetch(`${API_BASE}/api/auth/login`, {
+      method:"POST",
+      headers:{ "Content-Type":"application/json" },
+      body:JSON.stringify({ email, password })
+    });
 
-async function login() {
-    const email = document.getElementById("email").value.trim();
-    const password = document.getElementById("password").value.trim();
-
-    if (!email || !password)
-        return alert("กรอกข้อมูลให้ครบก่อนครับ 😎");
-
-    try {
-        const res = await fetch(`${API_BASE}/api/auth/login`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ email, password })
-        });
-
-        const data = await res.json();
-
-        if (data.status === "success") {
-            localStorage.setItem("token", data.token);
-            localStorage.setItem("user", JSON.stringify(data.user));
-            return location.href = "index.html";
-        }
-
-        alert(data.message || "❌ รหัสผ่านผิด!");
-
-    } catch (err) {
-        console.error(err);
-        alert("🚨 เซิร์ฟเวอร์ไม่ตอบสนอง ลองใหม่อีกครั้งครับ");
+    const data = await res.json();
+    if(data.status==="success"){
+      localStorage.setItem("token",data.token);
+      localStorage.setItem("user",JSON.stringify(data.user));
+      return location.href="index.html";
     }
+    alert(data.message||"❌ รหัสผ่านผิด!");
+  }catch(e){
+    alert("📡 เซิร์ฟเวอร์ไม่ตอบสนอง ลองใหม่อีกครั้งครับ");
+  }
 }
 
-// ✅ Enter เพื่อ Login (UX ดีขึ้น)
-document.getElementById("loginForm").addEventListener("keypress", e => {
-    if (e.key === "Enter") login();
+// ✅ กด Enter เพื่อ Login
+const emailEl=document.getElementById("email");
+const passwordEl=document.getElementById("password");
+document.getElementById("loginForm").addEventListener("keypress",e=>{
+  if(e.key==="Enter") login();
 });
 </script>
-
 </body>
 </html>

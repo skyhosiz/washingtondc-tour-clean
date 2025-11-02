@@ -4,59 +4,47 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Register | Washington D.C.</title>
-
 <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600;800&display=swap" rel="stylesheet">
 
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
 body{
-    font-family:'Kanit',sans-serif;
-    height:100vh;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    background:url("pic/dc_sunset.png") no-repeat center center/cover;
+  font-family:'Kanit',sans-serif;
+  height:100vh;display:flex;justify-content:center;align-items:center;
+  background:url("pic/dc_sunset.png") no-repeat center/cover;
 }
 .reg-container{
-    width:420px;
-    background:rgba(10,0,25,0.83);
-    border-radius:26px;
-    padding:38px;
-    text-align:center;
-    color:white;
-    box-shadow:0 0 38px rgba(255,140,30,0.28);
-    animation:fadein .7s ease-out;
+  width:420px;
+  background:rgba(10,0,25,0.83);
+  border-radius:26px;padding:38px;text-align:center;color:white;
+  box-shadow:0 0 38px rgba(255,140,30,0.28);
+  animation:fadein .7s ease-out;
 }
-@keyframes fadein{
-    from{opacity:0;transform:translateY(18px);}
-    to{opacity:1;transform:translateY(0);}
-}
+@keyframes fadein{from{opacity:0;transform:translateY(18px);}to{opacity:1;transform:translateY(0);}}
+
 h2{
-    font-size:34px;margin-bottom:20px;
-    background:linear-gradient(90deg,#ffd089,#ff8a25);
-    -webkit-background-clip:text;
-    color:transparent;font-weight:800;
+  font-size:34px;margin-bottom:20px;font-weight:800;
+  background:linear-gradient(90deg,#ffd089,#ff8a25);
+  -webkit-background-clip:text;color:transparent;
 }
+
 input{
-    width:100%;padding:12px;margin:10px 0;
-    border-radius:10px;border:none;
-    font-size:17px;color:#333;
+  width:100%;padding:12px;border-radius:10px;
+  border:none;font-size:17px;margin:10px 0;color:#333;
 }
+
 button{
-    width:100%;padding:12px;
-    background:linear-gradient(90deg,#ffe29c,#ff8522);
-    border:none;border-radius:12px;
-    font-size:18px;font-weight:bold;
-    cursor:pointer;margin-top:12px;
-    transition:.25s;color:#222;
+  width:100%;padding:12px;margin-top:12px;
+  background:linear-gradient(90deg,#ffe29c,#ff8522);
+  border:none;border-radius:12px;font-size:18px;font-weight:bold;
+  cursor:pointer;transition:.25s;color:#222;
 }
-button:hover{transform:scale(1.05);box-shadow:0 0 22px rgba(255,140,30,0.85);}
+button:hover{transform:scale(1.05);}
+
 .login-box{margin-top:18px;font-size:15px;}
 .login-box a{
-    display:inline-block;margin-left:6px;
-    padding:4px 12px;background:#ff7a00;
-    border-radius:8px;color:white;
-    text-decoration:none;font-weight:700;
+  margin-left:6px;padding:4px 12px;background:#ff7a00;
+  border-radius:8px;text-decoration:none;color:white;font-weight:700;
 }
 .login-box a:hover{background:#ff9831;}
 </style>
@@ -65,53 +53,64 @@ button:hover{transform:scale(1.05);box-shadow:0 0 22px rgba(255,140,30,0.85);}
 <body>
 
 <div class="reg-container">
-    <h2>สร้างบัญชี</h2>
+  <h2>สร้างบัญชี</h2>
 
-    <input type="text" id="username" placeholder="ชื่อผู้ใช้">
-    <input type="email" id="email" placeholder="อีเมล">
-    <input type="password" id="password" placeholder="รหัสผ่าน">
+  <input type="text" id="username" placeholder="ชื่อผู้ใช้">
+  <input type="email" id="email" placeholder="อีเมล">
+  <input type="password" id="password" placeholder="รหัสผ่าน">
 
-    <button onclick="register()">สมัครสมาชิก</button>
+  <button onclick="register()">สมัครสมาชิก</button>
 
-    <div class="login-box">
-        มีบัญชีแล้ว? <a href="login.html">เข้าสู่ระบบ</a>
-    </div>
+  <div class="login-box">
+    มีบัญชีแล้ว? <a href="login.html">เข้าสู่ระบบ</a>
+  </div>
 </div>
 
 <script>
-const API_BASE =
-    location.hostname === "localhost"
-        ? "http://localhost:3000"
-        : "https://washingtondc-tour-clean.onrender.com";
+const API_BASE = (location.hostname === "localhost")
+  ? "http://localhost:3000"
+  : "https://washingtondc-tour-clean.onrender.com";
 
+// ✅ ถ้าล็อกอินอยู่ → อย่ามาหน้านี้
+if (localStorage.getItem("token")) {
+  location.href = "index.html";
+}
+
+// ✅ ฟังก์ชันสมัครสมาชิก
 async function register(){
-    const username = document.getElementById("username").value.trim();
-    const email = document.getElementById("email").value.trim();
-    const password = document.getElementById("password").value.trim();
+  const username = document.getElementById("username").value.trim()
+  const email = document.getElementById("email").value.trim()
+  const password = document.getElementById("password").value.trim()
 
-    if(!username || !email || !password)
-        return alert("กรอกข้อมูลให้ครบ!");
+  if(!username || !email || !password)
+    return alert("⚠️ กรุณากรอกข้อมูลให้ครบ!")
 
-    try{
-        const res = await fetch(`${API_BASE}/api/auth/register`, {
-            method:"POST",
-            headers:{"Content-Type":"application/json"},
-            body:JSON.stringify({username,email,password})
-        });
+  // ✅ Email regex
+  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+  if(!emailPattern.test(email))
+    return alert("📧 กรุณากรอกอีเมลให้ถูกต้อง")
 
-        const data = await res.json().catch(()=>null);
+  try{
+    const res = await fetch(`${API_BASE}/api/auth/register`, {
+      method:"POST",
+      headers:{ "Content-Type":"application/json" },
+      body:JSON.stringify({ username,email,password })
+    })
 
-        if(data?.status === "success"){
-            alert("✅ สมัครสมาชิกสำเร็จ!");
-            return setTimeout(()=>location.href="login.html",800);
-        }
+    const data = await res.json().catch(()=>null)
 
-        alert(data?.message || "❌ สมัครไม่สำเร็จ!");
-
-    }catch(err){
-        console.error("Register error:",err);
-        alert("🚨 ระบบมีปัญหา ลองใหม่อีกที!");
+    if(data?.status === "success"){
+      alert("✅ สมัครสมาชิกสำเร็จ!")
+      return setTimeout(()=> location.href="login.html", 500)
     }
+
+    // ✅ เคส email ซ้ำ / password สั้น
+    alert(data?.message || "❌ สมัครไม่สำเร็จ!")
+  }
+  catch(err){
+    console.error("Register Error:", err)
+    alert("🚨 เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง")
+  }
 }
 </script>
 

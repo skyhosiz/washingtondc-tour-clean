@@ -85,7 +85,7 @@ async function sendReset(){
 
     btn.disabled = true;
     const oldText = btn.textContent;
-    btn.textContent = "กำลังส่ง...";
+    btn.innerHTML = `<span class="loader"></span> กำลังส่ง...`;
 
     try {
         const res = await fetch(`${API_BASE}/api/auth/forgot`, {
