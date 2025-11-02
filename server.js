@@ -77,7 +77,6 @@ app.use(
 app.use(helmet({ crossOriginResourcePolicy: { policy: "cross-origin" } }));
 app.use(express.json({ limit: "100kb" }));
 app.use(express.urlencoded({ extended: true, limit: "100kb" }));
-app.use(mongoSanitize());
 app.use(xss());
 app.use(hpp());
 if (process.env.NODE_ENV !== "production") app.use(morgan("dev"));
