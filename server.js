@@ -1,4 +1,4 @@
-// ✅ Stable server.js — WashingtonDC Auth + Upload Profile
+// ✅ Stable server.js — WashingtonDC Auth + Profile Upload
 require("dotenv").config();
 const express = require("express");
 const path = require("path");
@@ -9,11 +9,10 @@ const jwt = require("jsonwebtoken");
 const fetch = require("node-fetch");
 const helmet = require("helmet");
 const rateLimit = require("express-rate-limit");
-const xss = require("xss-clean");
 const morgan = require("morgan");
 const { z } = require("zod");
 
-// ✅ Cloudinary Upload
+// ✅ Upload & Cloudinary
 const multer = require("multer");
 const { CloudinaryStorage } = require("multer-storage-cloudinary");
 const cloudinary = require("cloudinary").v2;
@@ -23,17 +22,14 @@ const app = express();
 /* ✅ Security */
 app.disable("x-powered-by");
 app.use(helmet());
-app.use(xss());
-app.use(express.json({ limit: "100kb" }));
+app.use(cors({ origin: "*" }));
+app.use(express.json({ limit: "200kb" }));
 app.use(express.urlencoded({ extended: true }));
 
 if (process.env.NODE_ENV !== "production") app.use(morgan("dev"));
 
 /* ✅ Static */
 app.use(express.static(path.join(__dirname, "public")));
-
-/* ✅ CORS */
-app.use(cors({ origin: "*" }));
 
 /* ✅ Rate Limit */
 app.use(rateLimit({ windowMs: 15 * 60 * 1000, max: 200 }));
@@ -58,7 +54,7 @@ const User = mongoose.model(
   })
 );
 
-/* ✅ JWT helper */
+/* ✅ JWT */
 const signToken = (uid) =>
   jwt.sign({ uid }, process.env.JWT_SECRET, { expiresIn: "7d" });
 
@@ -73,9 +69,9 @@ function authRequired(req, res, next) {
   }
 }
 
-/* ✅ Validation Schemas */
-const emailSchema = z.string().email("รูปแบบอีเมลไม่ถูกต้อง");
-const pwSchema = z.string().min(6, "6 ตัวขึ้นไป");
+/* ✅ Validation */
+const emailSchema = z.string().email("อีเมลไม่ถูกต้อง");
+const pwSchema = z.string().min(6, "รหัสผ่าน >= 6 ตัว");
 
 /* ✅ Cloudinary */
 cloudinary.config({
@@ -108,7 +104,7 @@ async function sendResetEmail(email, token) {
   });
 }
 
-/* ✅ Auth Routes */
+/* ✅ AUTH Routes */
 
 // REGISTER
 app.post("/api/auth/register", async (req, res) => {
@@ -121,7 +117,7 @@ app.post("/api/auth/register", async (req, res) => {
 
   const { username, email, password } = valid.data;
   if (await User.findOne({ email }))
-    return res.json({ status: "error", message: "อีเมลถูกใช้แล้ว!" });
+    return res.json({ status: "error", message: "อีเมลนี้ถูกใช้แล้ว!" });
 
   await User.create({
     username,
@@ -142,7 +138,6 @@ app.post("/api/auth/login", async (req, res) => {
     return res.json({ status: "error", message: "ข้อมูลไม่ถูกต้อง" });
 
   const { email, password } = valid.data;
-
   const u = await User.findOne({ email });
   if (!u || !(await bcrypt.compare(password, u.password)))
     return res.json({ status: "error", message: "ข้อมูลไม่ถูกต้อง" });
@@ -159,7 +154,7 @@ app.post("/api/auth/login", async (req, res) => {
   });
 });
 
-// FORGOT PASSWORD
+// FORGOT
 app.post("/api/auth/forgot", async (req, res) => {
   const valid = emailSchema.safeParse(req.body.email);
   if (!valid.success) return res.json({ status: "success" });
@@ -174,7 +169,7 @@ app.post("/api/auth/forgot", async (req, res) => {
   res.json({ status: "success" });
 });
 
-// RESET PASSWORD
+// RESET
 app.post("/api/auth/reset", async (req, res) => {
   const valid = z
     .object({ token: z.string(), password: pwSchema })
@@ -194,13 +189,13 @@ app.post("/api/auth/reset", async (req, res) => {
   }
 });
 
-// PROFILE INFO
+// PROFILE
 app.get("/api/auth/profile", authRequired, async (req, res) => {
   const u = await User.findById(req.uid).lean();
   res.json({ status: "success", user: u });
 });
 
-// UPDATE PROFILE + IMAGE
+// UPDATE
 app.put("/api/auth/profile", authRequired, upload.single("profileImg"), async (req, res) => {
   const update = {
     username: req.body.username || undefined,
