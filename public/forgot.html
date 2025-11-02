@@ -2,6 +2,7 @@
 <html lang="th">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Forgot Password | Washington D.C.</title>
 <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600;800&display=swap" rel="stylesheet">
 
@@ -9,12 +10,8 @@
 *{margin:0;padding:0;box-sizing:border-box;}
 body{
     font-family:'Kanit',sans-serif;
-    height:100vh;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    overflow:hidden;
-    position:relative;
+    height:100vh; display:flex; justify-content:center; align-items:center;
+    overflow:hidden; position:relative;
 }
 .bg{
     position:fixed; inset:0;
@@ -28,38 +25,29 @@ body{
     z-index:-1;
 }
 .box{
-    width:410px;
-    background:rgba(10,0,25,0.85);
-    padding:36px;
-    border-radius:24px;
-    text-align:center;
-    color:white;
+    width:410px; background:rgba(10,0,25,0.85);
+    padding:36px; border-radius:24px; text-align:center; color:white;
     box-shadow:0 0 40px rgba(255,140,30,.35);
 }
 h2{
-    font-size:30px;
-    margin-bottom:16px;
-    font-weight:800;
+    font-size:30px; margin-bottom:16px; font-weight:800;
     background:linear-gradient(90deg,#ffd089,#ff8a25);
-    -webkit-background-clip:text;
-    color:transparent;
+    -webkit-background-clip:text; color:transparent;
     text-shadow:0 0 10px rgba(255,140,50,0.4);
 }
 input{
-    width:100%; padding:12px;
-    margin:10px 0;
-    border-radius:10px; border:none;
-    font-size:17px; color:#222;
+    width:100%; padding:12px; margin:10px 0;
+    border-radius:10px; border:none; font-size:17px; color:#222;
 }
 button{
     width:100%; padding:12px;
     background:linear-gradient(90deg,#ffe29c,#ff8522);
-    border:none; border-radius:12px;
-    font-size:18px; font-weight:bold;
-    cursor:pointer; margin-top:10px;
+    border:none; border-radius:12px; font-size:18px; font-weight:bold;
+    cursor:pointer; margin-top:10px; color:#222; transition:.25s;
 }
-a{ display:inline-block; margin-top:14px;
-    font-size:15px; color:#ffd28a; text-decoration:none;}
+button:hover{ transform:scale(1.05); box-shadow:0 0 18px rgba(255,160,50,0.65); }
+a{ display:inline-block; margin-top:14px; font-size:15px; color:#ffd28a; text-decoration:none; }
+.small { font-size:13px; opacity:.9; margin-top:8px; }
 </style>
 </head>
 <body>
@@ -69,29 +57,64 @@ a{ display:inline-block; margin-top:14px;
 
 <div class="box">
     <h2>กู้คืนรหัสผ่าน</h2>
-    <input type="email" id="email" placeholder="อีเมลที่ลงทะเบียนไว้">
-    <button onclick="sendReset()">ส่งลิงก์รีเซ็ต</button>
+    <input type="email" id="email" placeholder="อีเมลที่ลงทะเบียนไว้" autocomplete="email" />
+    <button id="sendBtn" onclick="sendReset()">ส่งลิงก์รีเซ็ต</button>
+    <div class="small">เราจะส่งลิงก์รีเซ็ต (หมดอายุภายใน 30 นาที)</div>
     <a href="login.html">กลับไป Login</a>
 </div>
 
 <script>
+
+const API_BASE = location.hostname === "localhost"
+  ? "http://localhost:3000"
+  : "https://washingtondc-tour-clean.onrender.com";
+
+
+function isEmail(s){ return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s); }
+
+
 async function sendReset(){
-    const email = document.getElementById("email").value.trim();
-    if(!email) return alert("กรอกอีเมลก่อน!");
+    const emailInput = document.getElementById("email");
+    const btn = document.getElementById("sendBtn");
+    const email = emailInput.value.trim();
 
-    const res = await fetch("/forgot", {
-        method:"POST",
-        headers:{"Content-Type":"application/json"},
-        body:JSON.stringify({ email })
-    });
+    if(!email) return alert("⚠️ กรุณากรอกอีเมล");
+    if(!isEmail(email)) return alert("⚠️ รูปแบบอีเมลไม่ถูกต้อง");
 
-    const data = await res.json();
+ 
+    try { localStorage.removeItem("token"); localStorage.removeItem("user"); } catch {}
 
-    if(data.status === "success"){
-        alert("✅ ส่งอีเมลรีเซ็ตรหัสผ่านแล้ว! กรุณาตรวจสอบอีเมล");
-        setTimeout(()=>location.href="login.html",1000);
-    } else {
-        alert(data.message || "เกิดข้อผิดพลาด ลองใหม่อีกครั้ง");
+    btn.disabled = true;
+    const oldText = btn.textContent;
+    btn.textContent = "กำลังส่ง...";
+
+    try {
+        const res = await fetch(`${API_BASE}/forgot`, {
+            method:"POST",
+            headers:{ "Content-Type":"application/json" },
+            body:JSON.stringify({ email })
+        });
+
+ 
+        let data = null, text = null;
+        try { data = await res.json(); }
+        catch { text = await res.text(); }
+
+       
+        if (data && data.status === "success") {
+            alert("✅ ส่งอีเมลรีเซ็ตรหัสผ่านแล้ว! กรุณาตรวจสอบกล่องจดหมาย ✉️");
+            setTimeout(()=> location.href = "login.html", 1200);
+        } else {
+            const msg = data?.message || "❌ ไม่สามารถส่งอีเมลได้ ลองใหม่อีกครั้ง";
+            alert(msg);
+        }
+
+    } catch(err){
+        console.error(err);
+        alert("🚨 ระบบมีปัญหา ลองใหม่อีกครั้ง\n" + err.message);
+    } finally {
+        btn.disabled = false;
+        btn.textContent = oldText;
     }
 }
 </script>

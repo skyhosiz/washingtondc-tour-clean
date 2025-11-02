@@ -8,7 +8,6 @@
 <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600;800&display=swap" rel="stylesheet">
 
 <style>
-/* ... CSS ของนายเดิมทั้งหมด ... */
 *{margin:0;padding:0;box-sizing:border-box;}
 body{
     font-family:'Kanit',sans-serif;
@@ -28,64 +27,41 @@ body{
     box-shadow:0 0 38px rgba(255,140,30,0.28);
     animation:fadein .7s ease-out;
 }
-@keyframes fadein {
-    from { opacity:.0; transform:translateY(18px); }
-    to { opacity:1; transform:translateY(0); }
+@keyframes fadein{
+    from{opacity:0;transform:translateY(18px);}
+    to{opacity:1;transform:translateY(0);}
 }
 h2{
-    font-size:34px;
-    margin-bottom:22px;
+    font-size:34px;margin-bottom:22px;
     background:linear-gradient(90deg,#ffd089,#ff8a25);
     -webkit-background-clip:text;
-    color:transparent;
-    font-weight:800;
+    color:transparent;font-weight:800;
 }
 input{
-    width:100%;
-    padding:12px;
-    margin:10px 0;
-    border-radius:10px;
-    border:none;
-    font-size:17px;
-    color:#333;
+    width:100%;padding:12px;margin:10px 0;
+    border-radius:10px;border:none;
+    font-size:17px;color:#333;
 }
 button{
-    width:100%;
-    padding:12px;
+    width:100%;padding:12px;
     background:linear-gradient(90deg,#ffe29c,#ff8522);
-    border:none;
-    border-radius:12px;
-    font-size:18px;
-    font-weight:bold;
-    cursor:pointer;
-    margin-top:12px;
+    border:none;border-radius:12px;
+    font-size:18px;font-weight:bold;
+    cursor:pointer;margin-top:12px;
     transition:.25s;
 }
-button:hover{
-    transform:scale(1.05);
-    box-shadow:0 0 22px rgba(255,140,30,0.85);
-}
+button:hover{transform:scale(1.05);box-shadow:0 0 22px rgba(255,140,30,0.85);}
 .forgot{
-    display:block;
-    text-align:right;
-    margin-top:0px;
-    margin-bottom:10px;
-    font-size:14px;
-    color:#ffd28a;
+    display:block;text-align:right;
+    margin-top:0;margin-bottom:10px;
+    font-size:14px;color:#ffd28a;
 }
-.register-box{
-    margin-top:18px;
-    font-size:15px;
-}
+.register-box{margin-top:18px;font-size:15px;}
 .register-box a{
-    display:inline-block;
-    margin-left:6px;
-    padding:4px 12px;
-    background:#ff7a00;
-    border-radius:8px;
-    color:white;
-    text-decoration:none;
-    font-weight:700;
+    display:inline-block;margin-left:6px;
+    padding:4px 12px;background:#ff7a00;
+    border-radius:8px;color:white;
+    text-decoration:none;font-weight:700;
 }
 .register-box a:hover{background:#ff9831;}
 </style>
@@ -110,31 +86,40 @@ button:hover{
 
 <script>
 localStorage.removeItem("token");
-localStorage.removeItem("user"); // ✅ เคลียร์ user เก่า
+localStorage.removeItem("user");
+
+const API_BASE =
+    location.hostname === "localhost"
+        ? "http://localhost:3000"
+        : "https://washingtondc-tour-clean.onrender.com";
 
 async function login() {
     const email = document.getElementById("email").value.trim();
     const password = document.getElementById("password").value.trim();
 
-    if (!email || !password) {
+    if(!email || !password)
         return alert("กรอกข้อมูลให้ครบก่อนครับ 😎");
-    }
 
-    const res = await fetch("/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password })
-    });
+    try {
+        const res = await fetch(`${API_BASE}/login`, {
+            method:"POST",
+            headers:{ "Content-Type":"application/json" },
+            body:JSON.stringify({ email, password })
+        });
 
-    const data = await res.json();
+        const data = await res.json().catch(()=>null);
+        if(!data) return alert("⚠️ ระบบตอบกลับไม่ถูกต้อง");
 
-    if (data.status === "success") {
-        localStorage.setItem("token", data.token);
-        localStorage.setItem("user", JSON.stringify(data.user));
+        if(data.status === "success"){
+            localStorage.setItem("token", data.token);
+            localStorage.setItem("user", JSON.stringify(data.user));
+            return location.href="index.html";
+        }
+        alert(data.message || "❌ บัญชีหรือรหัสผ่านผิดครับ");
 
-        location.href = "index.html";
-    } else {
-        alert(data.message || "เข้าสู่ระบบล้มเหลว ❌");
+    } catch(err){
+        console.error(err);
+        alert("🚨 เซิร์ฟเวอร์ล่มหรอเนี่ย ลองใหม่อีกที!");
     }
 }
 </script>

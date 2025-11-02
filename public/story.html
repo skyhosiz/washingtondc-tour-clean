@@ -17,7 +17,6 @@ body{
     padding-bottom:50px;
 }
 
-/* ✅ Navbar */
 .navbar{
   position:fixed;
   top:0; left:0;
@@ -59,7 +58,6 @@ body{
 .logout-btn:hover{filter:brightness(1.15);}
 .pushdown{height:70px;}
 
-/* ✅ Animated background */
 .circuit-bg,.circuit-lines{
     position:fixed;inset:0;pointer-events:none;z-index:-20;
 }
@@ -82,7 +80,6 @@ body{
     100%{background-position:0% 50%;}
 }
 
-/* ✅ Title */
 h1{
     text-align:center;
     font-size:62px;
@@ -99,7 +96,6 @@ h1::after{
     border-radius:2px;
 }
 
-/* ✅ Sections Cards */
 .section{
     width:90%;
     background:linear-gradient(145deg,#1b1333,#2a1b55);
@@ -112,7 +108,6 @@ h1::after{
     box-shadow:0 0 20px rgba(255,150,60,.1);
     position:relative;
     
-    /* ✨ Smooth Reveal effect */
     opacity:0;
     transform:translateY(40px) scale(.95);
     transition:opacity .8s ease, transform .8s ease;
@@ -177,7 +172,6 @@ h1::after{
 
 <h1>History & Story</h1>
 
-<!-- ✅ Sections -->
 <div class="section"><img src="pic/His/HIS.png"><div><div class="title">Birth of Washington D.C.</div><p class="desc">เมืองหลวงที่ถูกออกแบบอย่างตั้งใจให้เป็นสัญลักษณ์แห่งประชาธิปไตย ตั้งแต่ปี 1790</p></div></div>
 <div class="section"><img src="pic/His/map.png"><div><div class="title">The Original District Map</div><p class="desc">แผนผังกริดเชื่อมโยงศูนย์กลางอำนาจและสิทธิของประชาชนอย่างเท่าเทียม</p></div></div>
 <div class="section"><img src="pic/His/DSWERT.png"><div><div class="title">Historic Public Buildings</div><p class="desc">โครงสร้างรัฐยุคแรก เริ่มต้นฐานรากสู่มหานครศูนย์กลางโลก</p></div></div>
@@ -197,7 +191,6 @@ h1::after{
 
 <script src="js/auth.js"></script>
 
-<!-- ✅ Scroll Motion Controlled -->
 <script>
 const sections = document.querySelectorAll(".section");
 

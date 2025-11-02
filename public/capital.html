@@ -16,7 +16,6 @@ body{
   overflow-x:hidden;
 }
 
-/* ✅ Navbar */
 .navbar{
   position:fixed;
   top:0; left:0;
@@ -101,7 +100,6 @@ body{
   margin-top:8px;
 }
 
-/* ✅ Buttons */
 .btnBox{
   margin-top:28px;
   display:flex;
@@ -127,7 +125,6 @@ body{
   transform:scale(1.08);
 }
 
-/* ✅ Info Smooth Fade on Scroll */
 .info{
   opacity:0;
   transform:translateY(45px);
@@ -193,7 +190,7 @@ footer{
 <script src="js/auth.js"></script>
 
 <script>
-// ✅ Smooth Scroll Reveal
+
 const info = document.querySelector('.info');
 const obs = new IntersectionObserver(e=>{
   if(e[0].isIntersecting){

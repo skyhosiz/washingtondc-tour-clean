@@ -134,7 +134,7 @@ h2 {
         <h2 id="profileName">Loading…</h2>
         <div class="user-email" id="profileEmail">Loading…</div>
 
-        <!-- ✅ ไปหน้าแก้ไขข้อมูล -->
+        <!--  ไปหน้าแก้ไขข้อมูล -->
         <button class="btn edit-btn" onclick="location.href='edit_profile.html'">แก้ไขข้อมูล</button>
 
         <button class="btn logout2-btn" onclick="logout()">LOGOUT</button>
@@ -145,7 +145,7 @@ h2 {
 <script src="js/auth.js"></script>
 
 <script>
-// ✅ โหลดข้อมูลผู้ใช้จริง
+//ข้อมูลผู้ใช้จริง
 async function loadProfile() {
     const token = localStorage.getItem("token");
     if (!token) return logout();

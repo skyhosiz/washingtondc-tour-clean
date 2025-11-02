@@ -16,7 +16,7 @@ body {
     overflow-x: hidden;
 }
 
-/* ✅ Navbar Fixed */
+
 .navbar{
   position:fixed;
   top:0; left:0;
@@ -39,7 +39,7 @@ body {
 .nav-right{display:flex;align-items:center;gap:12px;}
 #nav-username{font-size:15px}
 
-/* ✅ Back Button */
+
 .btn--ghost {
   background: rgba(0,0,0,0.25);
   color:#ffd089;
@@ -56,7 +56,7 @@ body {
   transform:translateY(-2px);
 }
 
-/* ✅ Logout */
+
 .logout-btn{
   background:#ff7a45;border:none;
   padding:8px 14px;border-radius:8px;
@@ -64,10 +64,10 @@ body {
 }
 .logout-btn:hover{filter:brightness(1.15);}
 
-/* ✅ Push Content */
+
 .pushdown{height:75px;}
 
-/* 🔥 Background Slideshow */
+
 .bg-slideshow {
     position: fixed;
     top: 0;
@@ -97,7 +97,7 @@ body {
     z-index: -2;
 }
 
-/* ✅ Title */
+
 h2 {
     text-align: center;
     font-size: 55px;
@@ -117,7 +117,7 @@ h2::after {
     display: block;margin: 12px auto 0;border-radius: 2px;
 }
 
-/* ✅ Food Cards */
+
 .big-card {
     width:92%;
     margin:0 auto 65px;
@@ -183,7 +183,7 @@ h2::after {
 
 <body>
 
-<!-- ✅ Navbar -->
+
 <div class="navbar">
   <div class="nav-left">
     <button class="btn--ghost" onclick="location.href='index.html'">← Back</button>
@@ -270,7 +270,7 @@ h2::after {
 <script src="js/auth.js"></script>
 
 <script>
-// ✅ Reveal Animation เมื่อ Scroll เห็น
+
 const cards = document.querySelectorAll(".big-card");
 const observer = new IntersectionObserver(entries=>{
   entries.forEach(entry=>{
