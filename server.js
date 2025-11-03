@@ -40,6 +40,7 @@ const {
   CLIENT_URL,
   BREVO_API_KEY,
   SENDER_EMAIL,
+  SMITHSONIAN_API_KEY,
 } = process.env;
 
 /* =============================
@@ -262,6 +263,33 @@ app.put("/api/auth/profile", authRequired, upload.single("profileImg"), async (r
   } catch (e) {
     console.error("PROFILE UPDATE ERROR:", e);
     res.status(500).json({ status: "error", message: "Server error during update" });
+  }
+});
+
+/* =============================
+   SMITHSONIAN API ROUTE
+============================= */
+app.get("/api/explore", authRequired, async (req, res) => {
+  try {
+    // 1. กำหนดคำค้นหา (ตัวอย่างนี้คือ "Washington DC")
+    const query = encodeURIComponent("Washington DC");
+    // 2. กำหนด Endpoint และใส่ Key ของเรา
+    const url = `https://api.si.edu/openaccess/api/v1.0/search?q=${query}&api_key=${SMITHSONIAN_API_KEY}`;
+
+    // 3. ยิง Request จาก "เซิร์ฟเวอร์" ของเราไปหา "เซิร์ฟเวอร์" Smithsonian
+    const apiResponse = await fetch(url);
+    if (!apiResponse.ok) {
+      throw new Error(`API call failed with status ${apiResponse.status}`);
+    }
+
+    const data = await apiResponse.json();
+
+    // 4. ส่งข้อมูลที่ได้กลับไปให้หน้าเว็บ (Frontend)
+    res.json({ status: "success", data: data.response });
+
+  } catch (err) {
+    console.error("SMITHSONIAN API ERROR:", err.message);
+    res.status(500).json({ status: "error", message: "Failed to fetch data" });
   }
 });
 // ------------------------------
