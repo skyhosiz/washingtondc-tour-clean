@@ -1,6 +1,7 @@
 // server.js — WashingtonDC Auth + SPA Route (Express 5 OK)
 require("dotenv").config();
 const express = require("express");
+const multer = require("multer"); // <--- 1. เพิ่ม Multer
 const path = require("path");
 const mongoose = require("mongoose");
 const cors = require("cors");
@@ -9,6 +10,11 @@ const jwt = require("jsonwebtoken");
 const fetch = require("node-fetch");
 
 const app = express();
+
+// --- 2. ตั้งค่า Multer สำหรับรับไฟล์ภาพใน Memory ---
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
+// ------------------------------------------
 
 /* =============================
    ENV CHECK
@@ -45,7 +51,7 @@ const allowed = [CLIENT_URL, "http://localhost:3000"];
 app.use(cors({
   origin: (origin, cb) =>
     !origin || allowed.includes(origin) ? cb(null, true) : cb(new Error("CORS blocked")),
-  methods: ["GET", "POST", "PUT", "OPTIONS"],
+  methods: ["GET", "POST", "PUT", "OPTIONS"], // <--- เพิ่ม "PUT" ตรงนี้ด้วย (เผื่อไว้)
   allowedHeaders: ["Content-Type", "Authorization"]
 }));
 
@@ -75,7 +81,7 @@ const userSchema = new mongoose.Schema({
   username: String,
   email: { type: String, unique: true },
   password: String,
-  profileImg: String,
+  profileImg: String, // เราจะเก็บเป็น Base64 Data URL
 });
 const User = mongoose.model("User", userSchema);
 
@@ -207,6 +213,58 @@ app.get("/api/auth/profile", authRequired, async (req, res) => {
   if (!u) return res.status(401).json({ status: "unauthorized" });
   res.json({ status: "success", user: u });
 });
+
+/* =============================
+   UPDATE PROFILE ROUTE (NEW!) 
+============================= */
+// --- 3. เพิ่ม Route นี้เข้าไป ---
+app.put("/api/auth/profile", authRequired, upload.single("profileImg"), async (req, res) => {
+  try {
+    const { username } = req.body;
+    const updateData = {};
+
+    // 1. อัปเดตชื่อ (ถ้ามี)
+    if (username && username.trim() !== "") {
+      updateData.username = username.trim();
+    }
+
+    // 2. อัปเดตรูป (ถ้ามี)
+    if (req.file) {
+      // แปลงไฟล์ภาพเป็น Base64 Data URL เพื่อเก็บเป็น String ใน MongoDB
+      const base64Img = `data:${req.file.mimetype};base64,${req.file.buffer.toString('base64')}`;
+      updateData.profileImg = base64Img;
+    }
+
+    // ถ้าไม่มีอะไรส่งมาเลย ก็ไม่ต้องทำอะไร
+    if (Object.keys(updateData).length === 0) {
+        // ส่งข้อมูลเดิมกลับไปก็ได้
+        const currentUser = await User.findById(req.uid).lean();
+        return res.json({ status: "success", user: currentUser });
+    }
+
+    // 3. ค้นหาและอัปเดต User ใน DB
+    const updatedUser = await User.findByIdAndUpdate(
+      req.uid,
+      { $set: updateData },
+      { new: true } // ให้ส่งข้อมูลใหม่ที่อัปเดตแล้วกลับมา
+    ).lean(); 
+    
+    if (!updatedUser) {
+      return res.status(404).json({ status: "error", message: "User not found" });
+    }
+
+    // 4. ส่งข้อมูล user ใหม่กลับไปให้หน้าเว็บ
+    res.json({
+      status: "success",
+      user: updatedUser 
+    });
+
+  } catch (e) {
+    console.error("PROFILE UPDATE ERROR:", e);
+    res.status(500).json({ status: "error", message: "Server error during update" });
+  }
+});
+// ------------------------------
 
 /* =============================
    SPA STATIC ROUTE ✅
