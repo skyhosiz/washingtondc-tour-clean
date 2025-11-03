@@ -184,7 +184,7 @@
           });
 
           const data = await res.json();
-          console.log("✅ API Data:", data);
+          console.log("✅ Smithsonian Data:", data);
 
           if (data.status === "success" && data.data.rows.length > 0) {
             loading.style.display = "none";
@@ -194,38 +194,47 @@
               const museum =
                 item.content?.unitCode || "Smithsonian Institution";
 
-              // 🧠 ใช้ Smithsonian IDS สำหรับภาพ
-              const recordId = item.url?.split(":")[1];
-              let imageUrl = recordId
-                ? `https://ids.si.edu/ids/deliveryService?id=${recordId}`
-                : "pic/default.png";
+              // 🧠 1️⃣ ลองดึงภาพจาก descriptiveNonRepeating ก่อน
+              let imageUrl =
+                item.content?.descriptiveNonRepeating?.online_media?.media?.[0]
+                  ?.thumbnail ||
+                item.content?.descriptiveNonRepeating?.online_media?.media?.[0]
+                  ?.content ||
+                item.content?.descriptiveNonRepeating?.online_media?.media?.[0]
+                  ?.resources?.[0]?.url ||
+                null;
 
-              // ✅ fallback หากไม่มีภาพ
+              // 🧠 2️⃣ ถ้าไม่มี ใช้ Smithsonian IDS โดยใช้ recordId
+              if (!imageUrl && item.url?.includes("edanmdm:")) {
+                const recordId = item.url.split(":")[1];
+                imageUrl = `https://ids.si.edu/ids/deliveryService?id=${recordId}`;
+              }
+
+              // 🧠 3️⃣ fallback สุดท้าย
               if (!imageUrl) imageUrl = "pic/default.png";
 
-              // 🌐 Smithsonian ลิงก์ดูเพิ่มเติม (เปิดได้ทุก record)
+              // 🌐 Smithsonian link (เปิดได้แน่นอน)
               const detailUrl = item.url
                 ? `https://collections.si.edu/search/results.htm?q=${encodeURIComponent(
                     item.url
                   )}`
                 : "#";
 
-              // 🧩 สร้างการ์ด
+              // 🧩 Create Card
               const card = document.createElement("div");
               card.className = "explore-card";
-
               card.innerHTML = `
                 <img src="${imageUrl}" alt="${title}"
-                     onload="this.classList.remove('loading')"
                      onerror="this.onerror=null;this.src='pic/default.png';"
-                     class="loading">
+                     loading="lazy">
                 <div class="card-content">
                   <h3 title="${item.title}">${title}</h3>
                   <p>${museum}</p>
-                  <a href="${detailUrl}" target="_blank" rel="noopener noreferrer">🔗 ดูเพิ่มเติม</a>
+                  <a href="${detailUrl}" target="_blank" rel="noopener noreferrer">
+                    🔗 ดูเพิ่มเติม
+                  </a>
                 </div>
               `;
-
               grid.appendChild(card);
             });
           } else {
@@ -237,8 +246,8 @@
         }
       }
 
-      // ✂️ ฟังก์ชันย่อชื่อให้สั้นและอ่านง่าย
-      function shortenTitle(text, max = 60) {
+      // ✂️ ทำชื่อให้สั้นและอ่านง่าย
+      function shortenTitle(text, max = 55) {
         return text.length > max ? text.slice(0, max) + "..." : text;
       }
     </script>
