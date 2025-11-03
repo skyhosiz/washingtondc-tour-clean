@@ -224,9 +224,7 @@ app.get("/api/auth/profile", authRequired, async (req, res) => {
   res.json({ status: "success", user });
 });
 
-/* =============================
-   DEFAULT (serve login)
-============================= */
+
 app.use((req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
