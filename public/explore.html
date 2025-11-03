@@ -184,45 +184,44 @@
           });
 
           const data = await res.json();
-          console.log("✅ Smithsonian Data:", data);
+          console.log("✅ Smithsonian API Base Data:", data);
 
           if (data.status === "success" && data.data.rows.length > 0) {
             loading.style.display = "none";
 
-            data.data.rows.forEach((item) => {
-              const title = shortenTitle(item.title || "Untitled Artwork");
-              const museum =
-                item.content?.unitCode || "Smithsonian Institution";
+            for (const item of data.data.rows) {
+              const title = shortenTitle(item.title || "Untitled");
+              const museum = item.unitCode || "Smithsonian Institution";
+              let imageUrl = "pic/default.png";
+              let detailUrl = "#";
 
-              // 🧠 1️⃣ ลองดึงภาพจาก descriptiveNonRepeating ก่อน
-              let imageUrl =
-                item.content?.descriptiveNonRepeating?.online_media?.media?.[0]
-                  ?.thumbnail ||
-                item.content?.descriptiveNonRepeating?.online_media?.media?.[0]
-                  ?.content ||
-                item.content?.descriptiveNonRepeating?.online_media?.media?.[0]
-                  ?.resources?.[0]?.url ||
-                null;
+              try {
+                // 🔗 ดึงข้อมูลภาพจาก Smithsonian API จริง
+                const recordRes = await fetch(
+                  `https://edan.si.edu/openaccess/api/v1.0/content/${item.id}`
+                );
+                const recordData = await recordRes.json();
 
-              // 🧠 2️⃣ ถ้าไม่มี ใช้ Smithsonian IDS โดยใช้ recordId
-              if (!imageUrl && item.url?.includes("edanmdm:")) {
-                const recordId = item.url.split(":")[1];
-                imageUrl = `https://ids.si.edu/ids/deliveryService?id=${recordId}`;
+                const media =
+                  recordData?.content?.descriptiveNonRepeating?.online_media
+                    ?.media || [];
+
+                if (media.length > 0) {
+                  imageUrl =
+                    media[0].content ||
+                    media[0].thumbnail ||
+                    media[0].resources?.[0]?.url ||
+                    "pic/default.png";
+                }
+
+                detailUrl = `https://collections.si.edu/search/detail/${item.id}`;
+              } catch (e) {
+                console.warn("⚠️ Smithsonian fetch failed:", e);
               }
 
-              // 🧠 3️⃣ fallback สุดท้าย
-              if (!imageUrl) imageUrl = "pic/default.png";
-
-              // 🌐 Smithsonian link (เปิดได้แน่นอน)
-              const detailUrl = item.url
-                ? `https://collections.si.edu/search/results.htm?q=${encodeURIComponent(
-                    item.url
-                  )}`
-                : "#";
-
-              // 🧩 Create Card
               const card = document.createElement("div");
               card.className = "explore-card";
+
               card.innerHTML = `
                 <img src="${imageUrl}" alt="${title}"
                      onerror="this.onerror=null;this.src='pic/default.png';"
@@ -236,7 +235,7 @@
                 </div>
               `;
               grid.appendChild(card);
-            });
+            }
           } else {
             loading.textContent = "No data found or error.";
           }
@@ -246,7 +245,6 @@
         }
       }
 
-      // ✂️ ทำชื่อให้สั้นและอ่านง่าย
       function shortenTitle(text, max = 55) {
         return text.length > max ? text.slice(0, max) + "..." : text;
       }
