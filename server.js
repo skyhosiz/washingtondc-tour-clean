@@ -225,9 +225,11 @@ app.get("/api/auth/profile", authRequired, async (req, res) => {
 });
 
 
-app.use((req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+// DEFAULT: รองรับทุกเส้นทาง (Express v5 compatible)
+app.get(/.*/, (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "index.html"));
 });
+
 
 
 /* =============================
