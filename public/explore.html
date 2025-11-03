@@ -127,7 +127,7 @@
       }
 
       .explore-card h3 {
-        font-size: 20px;
+        font-size: 18px;
         margin-bottom: 8px;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -136,9 +136,21 @@
       }
 
       .explore-card p {
-        font-size: 16px;
+        font-size: 15px;
         color: #ccc;
         font-weight: 300;
+      }
+
+      .explore-card a {
+        display: inline-block;
+        margin-top: 10px;
+        color: #ffb84d;
+        text-decoration: none;
+        font-weight: 500;
+      }
+
+      .explore-card a:hover {
+        text-decoration: underline;
       }
     </style>
   </head>
@@ -178,24 +190,39 @@
             loading.style.display = "none";
 
             data.data.rows.forEach((item) => {
-              const title = item.title || "Untitled Artwork";
+              const title = shortenTitle(item.title || "Untitled Artwork");
               const museum =
                 item.content?.unitCode || "Smithsonian Institution";
 
-              // 🧠 ดึง URL ภาพจากหลายแหล่งที่เป็นไปได้
+              // 🧠 ดึงภาพจาก descriptiveNonRepeating
               let imageUrl =
-                item.content?.online_media?.media?.[0]?.thumbnail ||
-                item.content?.online_media?.media?.[0]?.resources?.[0]?.url ||
-                item.content?.online_media?.resources?.[0]?.content ||
-                item.content?.descriptiveNonstandardDate?.online_media
-                  ?.resources?.[0]?.thumbnail?.url ||
+                item.content?.descriptiveNonRepeating?.online_media?.media?.[0]
+                  ?.thumbnail ||
+                item.content?.descriptiveNonRepeating?.online_media?.media?.[0]
+                  ?.resources?.[0]?.url ||
+                item.content?.descriptiveNonRepeating?.online_media?.media?.[0]
+                  ?.content ||
                 item.image_url ||
-                "pic/default.png";
+                null;
 
-              // ✅ ถ้า URL ไม่เต็ม เติมโดเมนให้ครบ
+              // 🪄 ถ้ายังไม่มี thumbnail → ดึงจาก recordId Smithsonian
+              if (!imageUrl && item.url?.startsWith("edanmdm:")) {
+                const recordId = item.url.split(":")[1];
+                imageUrl = `https://ids.si.edu/ids/deliveryService?id=${recordId}`;
+              }
+
+              // ✅ ถ้าไม่มีอีก ให้ fallback
+              if (!imageUrl) imageUrl = "pic/default.png";
+
+              // ✅ ถ้า URL ไม่เต็ม เติมโดเมน
               if (imageUrl && !imageUrl.startsWith("http")) {
                 imageUrl = `${API_BASE}/${imageUrl}`;
               }
+
+              // 🌐 URL Smithsonian (ดูเพิ่มเติม)
+              const detailUrl = item.url?.startsWith("edanmdm:")
+                ? `https://collections.si.edu/search/detail/${item.url.split(":")[1]}`
+                : "#";
 
               const card = document.createElement("div");
               card.className = "explore-card";
@@ -208,6 +235,7 @@
                 <div class="card-content">
                   <h3>${title}</h3>
                   <p>${museum}</p>
+                  <a href="${detailUrl}" target="_blank">🔗 ดูเพิ่มเติม</a>
                 </div>
               `;
 
@@ -220,6 +248,11 @@
           console.error("❌ Fetch Error:", err);
           loading.textContent = "⚠ Failed to load resources.";
         }
+      }
+
+      // ✂️ ฟังก์ชันย่อชื่อให้สั้นและอ่านง่าย
+      function shortenTitle(text, max = 60) {
+        return text.length > max ? text.slice(0, max) + "..." : text;
       }
     </script>
   </body>
