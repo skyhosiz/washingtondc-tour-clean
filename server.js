@@ -197,6 +197,44 @@ app.get("/api/explore", authRequired, async (req, res) => {
   }
 });
 
+
+/* =============================
+   🧍‍♂️ PROFILE UPDATE (PUT /api/auth/profile)
+============================= */
+
+app.put("/api/auth/profile", authRequired, upload.single("profileImg"), async (req, res) => {
+  try {
+    const user = await User.findById(req.uid);
+    if (!user) return res.status(404).json({ status: "error", message: "ไม่พบผู้ใช้" });
+
+    // ✅ อัปเดตชื่อผู้ใช้ถ้ามีส่งมา
+    if (req.body.username && req.body.username.trim() !== "") {
+      user.username = req.body.username.trim();
+    }
+
+    // ✅ อัปเดตรูปโปรไฟล์ถ้ามีไฟล์แนบ
+    if (req.file && req.file.path) {
+      user.profileImg = req.file.path;
+    }
+
+    await user.save();
+
+    res.json({
+      status: "success",
+      user: {
+        id: user._id,
+        username: user.username,
+        email: user.email,
+        profileImg: user.profileImg,
+      },
+    });
+  } catch (err) {
+    console.error("PROFILE UPDATE ERROR:", err.message);
+    res.status(500).json({ status: "error", message: "อัปเดตโปรไฟล์ล้มเหลว" });
+  }
+});
+
+
 /* =============================
    ✅ PROXY Smithsonian (FINAL FIX)
 ============================= */
