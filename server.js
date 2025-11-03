@@ -1,4 +1,4 @@
-// server.js — WashingtonDC minimal auth (login/register/forgot/reset + profile)
+// server.js — WashingtonDC Auth + SPA Route (Express 5 OK)
 require("dotenv").config();
 const express = require("express");
 const path = require("path");
@@ -41,20 +41,22 @@ const {
 ============================= */
 app.disable("x-powered-by");
 
-const allowed = [CLIENT_URL, "http://localhost:3000", "http://127.0.0.1:3000"];
-app.use(
-  cors({
-    origin: (origin, cb) =>
-      !origin || allowed.includes(origin) ? cb(null, true) : cb(new Error("CORS blocked")),
-    methods: ["GET", "POST", "PUT", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"]
-  })
-);
+const allowed = [CLIENT_URL, "http://localhost:3000"];
+app.use(cors({
+  origin: (origin, cb) =>
+    !origin || allowed.includes(origin) ? cb(null, true) : cb(new Error("CORS blocked")),
+  methods: ["GET", "POST", "PUT", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"]
+}));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// ✅ Public static
 app.use(express.static(path.join(__dirname, "public")));
-app.options("/*", cors());  // ✅ FIX wildcard
+
+// ✅ Preflight ถูกต้อง
+app.options("*", cors());
 
 /* =============================
    DB CONNECT
@@ -67,7 +69,7 @@ mongoose.connect(MONGO_URI)
   });
 
 /* =============================
-   USER MODEL
+   USER
 ============================= */
 const userSchema = new mongoose.Schema({
   username: String,
@@ -107,7 +109,6 @@ async function sendResetEmail(email, token) {
     subject: "🔐 รีเซ็ตรหัสผ่าน",
     htmlContent: `
       <h2>กู้คืนรหัสผ่าน</h2>
-      <p>คลิกเพื่อเปลี่ยนรหัสผ่านใหม่</p>
       <a href="${resetUrl}" style="background:#ff8a25;padding:10px 14px;border-radius:8px;color:white;text-decoration:none;display:inline-block;">
         รีเซ็ตรหัสผ่าน
       </a>
@@ -123,7 +124,6 @@ async function sendResetEmail(email, token) {
 
   const out = await r.json().catch(() => ({}));
   if (!r.ok) console.error("Brevo send error:", out);
-  return out;
 }
 
 /* =============================
@@ -152,7 +152,7 @@ app.post("/api/auth/register", async (req, res) => {
     console.error("REGISTER error:", e.message);
     res.json({ status: "error", message: "สมัครไม่สำเร็จ" });
   }
-})
+});
 
 app.post("/api/auth/login", async (req, res) => {
   try {
@@ -172,8 +172,7 @@ app.post("/api/auth/login", async (req, res) => {
         profileImg: u.profileImg,
       },
     });
-  } catch (e) {
-    console.error("LOGIN error:", e.message);
+  } catch {
     res.json({ status: "error", message: "ล็อกอินล้มเหลว" });
   }
 });
@@ -182,14 +181,12 @@ app.post("/api/auth/forgot", async (req, res) => {
   try {
     const { email = "" } = req.body || {};
     const u = await User.findOne({ email });
-    if (!u) return res.json({ status: "success" });
-
-    const token = jwt.sign({ uid: u._id }, RESET_PASSWORD_SECRET, { expiresIn: "30m" });
-    await sendResetEmail(email, token);
-
+    if (u) {
+      const token = jwt.sign({ uid: u._id }, RESET_PASSWORD_SECRET, { expiresIn: "30m" });
+      await sendResetEmail(email, token);
+    }
     res.json({ status: "success" });
-  } catch (e) {
-    console.error("FORGOT error:", e.message);
+  } catch {
     res.json({ status: "error", message: "ส่งอีเมลไม่สำเร็จ" });
   }
 });
@@ -198,7 +195,6 @@ app.post("/api/auth/reset", async (req, res) => {
   try {
     const { token = "", password = "" } = req.body || {};
     const { uid } = jwt.verify(token, RESET_PASSWORD_SECRET);
-
     await User.findByIdAndUpdate(uid, { password: await bcrypt.hash(password, 10) });
     res.json({ status: "success" });
   } catch {
@@ -209,26 +205,21 @@ app.post("/api/auth/reset", async (req, res) => {
 app.get("/api/auth/profile", authRequired, async (req, res) => {
   const u = await User.findById(req.uid).lean();
   if (!u) return res.status(401).json({ status: "unauthorized" });
-
-  res.json({
-    status: "success",
-    user: {
-      id: u._id,
-      username: u.username,
-      email: u.email,
-      profileImg: u.profileImg,
-    }
-  });
+  res.json({ status: "success", user: u });
 });
 
-/* ✅ FIX ALL: SPA Static Route (Express 5 Compatible) */
+/* =============================
+   SPA STATIC ROUTE ✅
+============================= */
 app.get(/.*/, (req, res, next) => {
   if (req.path.startsWith("/api")) return next();
   res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
 /* =============================
-   START
+   START ✅
 ============================= */
 const port = process.env.PORT || 10000;
-app.listen(port, () => console.log(`🚀 Server Online on Port ${port}`));
+app.listen(port, () =>
+  console.log(`🚀 Server Online → PORT ${port}`)
+);

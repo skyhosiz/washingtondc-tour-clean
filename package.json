@@ -4,6 +4,9 @@
   "description": "Washington DC Travel Auth + MongoDB + Brevo Email + Cloudinary Profile Upload",
   "main": "server.js",
   "type": "commonjs",
+  "engines": {
+    "node": "22.x"
+  },
   "scripts": {
     "start": "node server.js"
   },
