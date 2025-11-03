@@ -1,231 +1,290 @@
 <!DOCTYPE html>
 <html lang="th">
-  <head>
-    <!-- 📊 Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-VGBZS316J9"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag("js", new Date());
-      gtag("config", "G-VGBZS316J9");
-    </script>
+<head>
+  <!-- Analytics (เหมือนเดิม) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-VGBZS316J9"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}
+  gtag("js",new Date()); gtag("config","G-VGBZS316J9");</script>
 
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Explore Washington D.C.</title>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Explore Washington D.C. — Virtual Tour</title>
 
-    <!-- 🔒 Auth + Nav -->
-    <script src="js/auth.js"></script>
-    <script src="js/nav.js" defer></script>
+  <!-- ระบบเดิม -->
+  <script src="js/auth.js"></script>
+  <script src="js/nav.js" defer></script>
 
-    <!-- 🖋 Font -->
-    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600;800&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600;800&display=swap" rel="stylesheet"/>
 
-    <style>
-      *{margin:0;padding:0;box-sizing:border-box;}
-      body{
-        font-family:'Kanit',sans-serif;
-        background:#0d0b22;
-        color:#fff;
-        overflow-x:hidden;
-      }
+  <style>
+    :root{
+      --bg:#0d0b22;--card:#15132b;--glow1:#7b2cffbb;--gold1:#fff3c5;--gold2:#ffd36b;--gold3:#ff9f43;
+      --text:#ffffff;--muted:#cfcfe6;--border:rgba(255,220,150,.08);
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    html,body{background:var(--bg);color:var(--text);font-family:"Kanit",sans-serif;scroll-behavior:smooth;overflow-x:hidden}
+    @media (prefers-reduced-motion:reduce){html,body{scroll-behavior:auto}}
 
-      /* ✨ Background Glow */
-      .bg-core{
-        position:fixed;inset:-40%;
-        background:radial-gradient(circle at 50% 35%,#7b2cffbb,transparent 60%),
-                   conic-gradient(from 0turn,#ffc98222 0 25%,transparent 25% 50%,#ffc98222 50% 75%,transparent 75% 100%);
-        filter:blur(80px) saturate(120%);
-        animation:spin 40s linear infinite;
-        opacity:.35;
-        pointer-events:none;
-      }
-      @keyframes spin{to{transform:rotate(360deg);}}
+    /* Soft animated background */
+    .bg-core{position:fixed;inset:-40%;pointer-events:none;opacity:.32;filter:blur(95px) saturate(120%);
+      background:radial-gradient(circle at 50% 35%,var(--glow1),transparent 60%),
+                 conic-gradient(from 0turn,#ffc98222 0 25%,transparent 25% 50%,#ffc98222 50% 75%,transparent 75% 100%);
+      animation:spin 55s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
 
-      /* 🏛️ Title */
-      h1{
-        text-align:center;
-        padding-top:100px;
-        font-size:58px;
-        font-weight:800;
-        letter-spacing:1px;
-        background:linear-gradient(90deg,#fff3c5 0%,#ffd36b 45%,#ff9f43 100%);
-        -webkit-background-clip:text;
-        -webkit-text-fill-color:transparent;
-        background-clip:text;
-        color:transparent;
-        text-shadow:0 0 25px rgba(255,200,100,0.25);
-      }
+    /* Header */
+    header{position:relative;text-align:center;padding:90px 16px 22px}
+    header h1{font-size:56px;font-weight:800;letter-spacing:.5px;
+      background:linear-gradient(90deg,var(--gold1) 0%,var(--gold2) 45%,var(--gold3) 100%);
+      -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+    header p{max-width:880px;margin:14px auto 20px;color:var(--muted);opacity:.9}
 
-      .intro{
-        text-align:center;
-        opacity:.9;
-        font-size:18px;
-        margin:15px auto 60px;
-        width:min(800px,90%);
-        line-height:1.6;
-      }
+    /* Controls (Auto tour + Dots) */
+    .controls{display:flex;gap:16px;justify-content:center;align-items:center;margin:10px 0 40px}
+    .toggle{display:flex;align-items:center;gap:10px;background:var(--card);border:1px solid var(--border);
+      padding:10px 14px;border-radius:12px;box-shadow:0 0 16px rgba(0,0,0,.35)}
+    .toggle input{appearance:none;width:42px;height:24px;background:#444;border-radius:12px;position:relative;outline:none;cursor:pointer}
+    .toggle input:after{content:"";position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:#fff;transition:.22s}
+    .toggle input:checked{background:#5cc08f}
+    .toggle input:checked:after{left:21px}
+    .dots{display:flex;gap:8px;align-items:center}
+    .dot{width:10px;height:10px;border-radius:50%;background:#5f5b86;border:1px solid #7e78ae;transition:.25s}
+    .dot.active{transform:scale(1.28);background:#ffd68a;border-color:#fff;box-shadow:0 0 10px rgba(255,214,138,.6)}
 
-      /* 🌆 Explore Grid */
-      .explore-grid{
-        display:grid;
-        grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
-        gap:35px;
-        width:min(1200px,90%);
-        margin:0 auto 100px;
-      }
+    /* Section slide full-bleed */
+    section.section{position:relative;min-height:100vh;display:grid;place-items:center;isolation:isolate}
+    .media{position:absolute;inset:0;z-index:-2;overflow:hidden}
+    .media img{width:100%;height:100%;object-fit:cover;filter:brightness(.52);transform:scale(1.08);
+      transition:transform 2s ease,filter 1.2s ease}
+    .overlay{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(13,11,34,.25) 0,rgba(13,11,34,.55) 55%,rgba(13,11,34,.85) 100%);
+      z-index:-1}
 
-      .place-card{
-        position:relative;
-        overflow:hidden;
-        border-radius:18px;
-        background:#15132b;
-        border:1px solid rgba(255,220,150,0.08);
-        box-shadow:0 0 20px rgba(0,0,0,.5);
-        transform:translateY(30px);
-        opacity:0;
-        transition:transform .7s ease,opacity .7s ease;
-      }
-      .place-card.visible{transform:translateY(0);opacity:1;}
+    .content{max-width:980px;margin:0 18px;background:rgba(21,19,43,.55);border:1px solid var(--border);
+      backdrop-filter:blur(6px);padding:26px 22px;border-radius:18px;box-shadow:0 6px 26px rgba(0,0,0,.45);
+      opacity:0;transform:translateY(44px);transition:opacity 1.1s ease,transform 1.1s ease}
+    .section.visible .media img{transform:scale(1);filter:brightness(.88)}
+    .section.visible .content{opacity:1;transform:translateY(0)}
 
-      .place-card img{
-        width:100%;height:230px;
-        object-fit:cover;
-        border-bottom:2px solid rgba(255,255,255,0.1);
-        transition:transform .4s ease,filter .4s ease;
-      }
-      .place-card:hover img{
-        transform:scale(1.08);
-        filter:brightness(1.12);
-      }
+    .title{font-size:40px;font-weight:800;margin:6px 10px 10px;
+      background:linear-gradient(90deg,#ffeab0 0%,#ffd87b 40%,#ff9f43 100%);
+      -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;text-align:center}
+    .fact{display:flex;gap:18px;align-items:flex-start;margin:12px 10px;color:#eae7ff;line-height:1.75}
+    .bullet{min-width:8px;height:8px;margin-top:10px;border-radius:50%;background:#ffd68a;box-shadow:0 0 10px rgba(255,214,138,.65)}
+    .hint{color:#bfbbe2;opacity:.9;font-size:14px;margin:8px 10px 2px}
 
-      .place-info{
-        padding:18px 22px 26px;
-        text-align:center;
-      }
-      .place-title{
-        font-size:22px;
-        font-weight:700;
-        background:linear-gradient(90deg,#ffeab0 0%,#ffd87b 40%,#ff9f43 100%);
-        -webkit-background-clip:text;
-        -webkit-text-fill-color:transparent;
-        background-clip:text;
-        color:transparent;
-        margin-bottom:10px;
-      }
-      .place-desc{
-        font-size:15px;
-        opacity:.85;
-        line-height:1.6;
-      }
+    footer{padding:42px 0 34px;text-align:center;color:#c9c9da;font-size:13px;border-top:1px solid rgba(255,255,255,.06)}
+    @media (max-width:768px){header h1{font-size:42px}.title{font-size:30px}.fact{font-size:15px}}
+  </style>
+</head>
+<body>
+  <div class="bg-core"></div>
 
-      .btn-view{
-        display:inline-block;
-        margin-top:14px;
-        padding:10px 20px;
-        border-radius:10px;
-        background:#ffb84a;
-        color:#111;
-        font-weight:600;
-        text-decoration:none;
-        transition:.25s;
-      }
-      .btn-view:hover{
-        background:#ffd68a;
-        transform:scale(1.08);
-      }
-
-      footer{
-        text-align:center;
-        padding:40px 0 30px;
-        font-size:14px;
-        opacity:.8;
-        color:#ccc;
-      }
-
-      @media(max-width:600px){
-        h1{font-size:44px;}
-      }
-    </style>
-  </head>
-
-  <body>
-    <div class="bg-core"></div>
-
+  <header>
     <h1>EXPLORE WASHINGTON D.C.</h1>
-    <div class="intro">
-      สำรวจจุดหมายปลายทางที่โดดเด่นของเมืองวอชิงตัน ดี.ซี. —  
-      จากอนุสรณ์สถานทางประวัติศาสตร์จนถึงอาหารท้องถิ่นและศิลปะร่วมสมัย
+    <p>
+      ทัวร์เสมือนจริงแบบ “เลื่อนแล้วรู้” — ภาพเต็มจอ ข้อความสั้นแต่ลึก เปิดเผยดีเทลที่คนทั่วไปไม่ค่อยรู้
+      เลื่อนทีละสไลด์เหมือนพรีเซนต์งานมืออาชีพ
+    </p>
+    <div class="controls" aria-label="page controls">
+      <label class="toggle"><input id="autoTour" type="checkbox" aria-label="Auto tour"/>
+        <span>Auto-tour (เลื่อนอัตโนมัติ)</span></label>
+      <div class="dots" id="dots" aria-hidden="true"></div>
     </div>
+  </header>
 
-    <div class="explore-grid">
-      <div class="place-card">
-        <img src="pic/landmark.png" alt="Lincoln Memorial">
-        <div class="place-info">
-          <div class="place-title">Lincoln Memorial</div>
-          <div class="place-desc">อนุสรณ์แห่งเสรีภาพและความเท่าเทียม จุดหมายสำคัญของทุกคนที่มาเยือน</div>
-          <a href="lincoln.html" class="btn-view">ดูเพิ่มเติม</a>
-        </div>
-      </div>
-
-      <div class="place-card">
-        <img src="pic/museum.png" alt="Smithsonian Museum">
-        <div class="place-info">
-          <div class="place-title">Smithsonian Museum</div>
-          <div class="place-desc">พิพิธภัณฑ์ระดับโลก ที่เก็บประวัติศาสตร์ของมนุษยชาติไว้อย่างครบถ้วน</div>
-          <a href="smithsonian.html" class="btn-view">ดูเพิ่มเติม</a>
-        </div>
-      </div>
-
-      <div class="place-card">
-        <img src="pic/capital.png" alt="U.S. Capitol">
-        <div class="place-info">
-          <div class="place-title">U.S. Capitol</div>
-          <div class="place-desc">สัญลักษณ์แห่งประชาธิปไตย ศูนย์กลางการบริหารประเทศของสหรัฐอเมริกา</div>
-          <a href="capital.html" class="btn-view">ดูเพิ่มเติม</a>
-        </div>
-      </div>
-
-      <div class="place-card">
-        <img src="pic/CrabCakeBurger.png" alt="Local Food">
-        <div class="place-info">
-          <div class="place-title">Local Food</div>
-          <div class="place-desc">อาหารพื้นเมืองรสเข้มจากวอชิงตัน ดี.ซี. ที่คุณต้องลองด้วยตัวเอง</div>
-          <a href="food.html" class="btn-view">ดูเพิ่มเติม</a>
-        </div>
-      </div>
-
-      <div class="place-card">
-        <img src="pic/chinatown.png" alt="Chinatown D.C.">
-        <div class="place-info">
-          <div class="place-title">Chinatown</div>
-          <div class="place-desc">ย่านวัฒนธรรมจีนที่คึกคัก เต็มไปด้วยร้านอาหารและสีสันไม่เหมือนใคร</div>
-          <a href="chinatown.html" class="btn-view">ดูเพิ่มเติม</a>
-        </div>
-      </div>
-
-      <div class="place-card">
-        <img src="pic/festival.png" alt="Festivals & Events">
-        <div class="place-info">
-          <div class="place-title">Festivals & Events</div>
-          <div class="place-desc">สัมผัสชีวิตของคนเมือง ผ่านเทศกาลและกิจกรรมที่ไม่หยุดตลอดทั้งปี</div>
-          <a href="festival.html" class="btn-view">ดูเพิ่มเติม</a>
-        </div>
-      </div>
+  <!-- ============= 1. LINCOLN ============= -->
+  <section class="section" data-name="Lincoln">
+    <div class="media">
+      <picture>
+        <source srcset="pic/explore/exploreWEBP/lincoln.webp" type="image/webp"/>
+        <img src="pic/explore/lincoln.jpg" alt="Lincoln Memorial" loading="lazy"/>
+      </picture>
     </div>
+    <div class="overlay"></div>
 
-    <footer>
-      © 2025 Washington D.C. Tourism Project — Explore Page | Developed by FlukeTON
-    </footer>
+    <article class="content">
+      <h2 class="title">Lincoln Memorial</h2>
+      <p class="hint">สถาปัตยกรรมกรีกคลาสสิก / สร้างเสร็จปี 1922</p>
+      <div class="fact"><span class="bullet"></span>
+        <p><b>เบาะแสซ่อนในตัวอักษร:</b> คำกล่าวสุนทรพจน์ “Gettysburg Address” และ “Second Inaugural”
+          ถูกจารไว้ที่ผนังด้านใน—วางตำแหน่งให้ตรงกับสายตาผู้เยี่ยมชมเมื่อยืนตรงกลางโถง เพื่อให้ “อ่านพร้อมรู้สึก”</p>
+      </div>
+      <div class="fact"><span class="bullet"></span>
+        <p><b>เก้าอี้ลินคอล์นไม่ได้นิ่งเฉย:</b> ท่าประทับนั่งหินอ่อนสูง ~6 ม.
+          ตั้งใจให้มือขวาเกร็งเล็กน้อย มือซ้ายผ่อน—สื่อ “ความเด็ดขาด + ความเมตตา” ของผู้นำที่ยกเลิกทาส</p>
+      </div>
+      <div class="fact"><span class="bullet"></span>
+        <p><b>เวทีเปลี่ยนโลก:</b> ปี 1963 มาร์ติน ลูเธอร์ คิง จูเนียร์ กล่าว <i>I Have a Dream</i> ที่ขั้นบันไดหน้ากรีฑาสถานนี้
+          จุดติดขบวนสิทธิพลเมืองสหรัฐฯ อย่างเป็นรูปธรรม</p>
+      </div>
+    </article>
+  </section>
 
-    <script>
-      const cards=document.querySelectorAll(".place-card");
-      const obs=new IntersectionObserver(entries=>{
-        entries.forEach(e=>{
-          if(e.isIntersecting)e.target.classList.add("visible");
-        });
-      },{threshold:.2});
-      cards.forEach(c=>obs.observe(c));
-    </script>
-  </body>
+  <!-- ============= 2. SMITHSONIAN ============= -->
+  <section class="section" data-name="Smithsonian">
+    <div class="media">
+      <picture>
+        <source srcset="pic/explore/exploreWEBP/smithsonian.webp" type="image/webp"/>
+        <img src="pic/explore/smithsonian.jpg" alt="Smithsonian Institution" loading="lazy"/>
+      </picture>
+    </div>
+    <div class="overlay"></div>
+
+    <article class="content">
+      <h2 class="title">Smithsonian Institution</h2>
+      <p class="hint">ก่อตั้งปี 1846 จากพินัยกรรม “เพื่อขยายองค์ความรู้ของมนุษยชาติ”</p>
+      <div class="fact"><span class="bullet"></span>
+        <p><b>ฟรีเพราะปรัชญา:</b> 19 พิพิธภัณฑ์ + สวนสัตว์ + ศูนย์วิจัย เข้าชมฟรีเกือบทั้งหมด—
+          แนวคิดคือ “ความรู้เป็นทรัพย์สินสาธารณะ” ไม่ใช่ของชนชั้นใด</p>
+      </div>
+      <div class="fact"><span class="bullet"></span>
+        <p><b>ขนาดคลังชาติ:</b> เก็บวัตถุเกิน <b>155 ล้านชิ้น</b> ตั้งแต่โมเดลยานอพอลโล–ซากไดโนเสาร์
+          ไปจนถึงเอกสารต้นฉบับด้านสิทธิมนุษยชน</p>
+      </div>
+      <div class="fact"><span class="bullet"></span>
+        <p><b>เบื้องหลังวิทยาศาสตร์ที่เห็น:</b> งานส่วนใหญ่เกิด “หลังฉาก”—
+          ห้องเก็บตัวอย่างและห้องแล็บขนาดยักษ์ที่ประชาชนไม่เห็น คือต้นทางบทความวิจัยระดับโลก</p>
+      </div>
+    </article>
+  </section>
+
+  <!-- ============= 3. CAPITOL ============= -->
+  <section class="section" data-name="Capitol">
+    <div class="media">
+      <picture>
+        <source srcset="pic/explore/exploreWEBP/capitol.webp" type="image/webp"/>
+        <img src="pic/explore/capitol.jpg" alt="U.S. Capitol" loading="lazy"/>
+      </picture>
+    </div>
+    <div class="overlay"></div>
+
+    <article class="content">
+      <h2 class="title">U.S. Capitol</h2>
+      <p class="hint">โดมสูง ~88 ม. / ภายในคือ Rotunda อันโด่งดัง</p>
+      <div class="fact"><span class="bullet"></span>
+        <p><b>ภาพบนเพดานไม่ได้แค่สวย:</b> “Apotheosis of Washington” วาดให้เห็นจอร์จ วอชิงตันในฐานะผู้พิทักษ์เสรีภาพ
+          รายล้อมด้วยเทพสัญลักษณ์—คือภาษาทัศน์ที่ประกาศอุดมการณ์ของรัฐชาติ</p>
+      </div>
+      <div class="fact"><span class="bullet"></span>
+        <p><b>เสียงที่ดังขึ้นจากพื้น:</b> Rotunda ออกแบบให้ <i>เสียงสะท้อน</i> ชัด
+          เพื่อให้คำอภิปรายของสมาชิกรัฐสภาถูกได้ยินชัดในพื้นที่วงกลม—การเมืองจึงถูก “ได้ยินจริง”</p>
+      </div>
+      <div class="fact"><span class="bullet"></span>
+        <p><b>เส้นแกนเมือง:</b> ลากเส้นตรงจาก Capitol ผ่าน National Mall ไปถึง Lincoln Memorial—
+          คือ “เส้นประวัติศาสตร์” ที่เชื่อมอำนาจนิติบัญญัติกับอุดมการณ์เสรีภาพ</p>
+      </div>
+    </article>
+  </section>
+
+  <!-- ============= 4. HALF-SMOKE ============= -->
+  <section class="section" data-name="Half-Smoke">
+    <div class="media">
+      <picture>
+        <source srcset="pic/explore/exploreWEBP/halfsmoke.webp" type="image/webp"/>
+        <img src="pic/explore/halfsmoke.jpg" alt="Half-Smoke" loading="lazy"/>
+      </picture>
+    </div>
+    <div class="overlay"></div>
+
+    <article class="content">
+      <h2 class="title">Local Taste: Half-Smoke</h2>
+      <p class="hint">สูตรคลาสสิกแห่ง “Ben’s Chili Bowl” ตั้งแต่ปี 1958</p>
+      <div class="fact"><span class="bullet"></span>
+        <p><b>ทำไมเรียก Half-Smoke:</b> ไส้กรอกผสมเนื้อวัว–หมู “บดหยาบครึ่งหนึ่ง”
+          แล้วรมควัน—ให้รสเผ็ดพริกไทยกับกลิ่นควันชัดกว่าฮอตด็อกทั่วไป</p>
+      </div>
+      <div class="fact"><span class="bullet"></span>
+        <p><b>อาหารที่เล่าเรื่องเมือง:</b> จากนักดนตรีแจ๊สถึงประธานาธิบดี—ลูกค้าหลากชนชั้นใช้ร้านเดียวกัน
+          คือพื้นที่ที่รสชาติทำให้ “คนต่างกันนั่งโต๊ะเดียวกัน”</p>
+      </div>
+    </article>
+  </section>
+
+  <!-- ============= 5. CHINATOWN ============= -->
+  <section class="section" data-name="Chinatown">
+    <div class="media">
+      <picture>
+        <source srcset="pic/explore/exploreWEBP/chinatown.webp" type="image/webp"/>
+        <img src="pic/explore/chinatown.jpg" alt="Chinatown D.C." loading="lazy"/>
+      </picture>
+    </div>
+    <div class="overlay"></div>
+
+    <article class="content">
+      <h2 class="title">Chinatown D.C.</h2>
+      <p class="hint">Friendship Archway (1986) กระเบื้องทองคำ ~7,000 ชิ้น</p>
+      <div class="fact"><span class="bullet"></span>
+        <p><b>ซุ้มไม่ได้แค่ประดับเมือง:</b> คือสัญลักษณ์การฟื้นย่านหลังความเปลี่ยนแปลงเชิงเมือง
+          บทเรียนเรื่อง “อัตลักษณ์ต้องอยู่รอดคู่กับการพัฒนา”</p>
+      </div>
+      <div class="fact"><span class="bullet"></span>
+        <p><b>พิกัดรสชาติ:</b> กลางวันเป็นศูนย์กลางข้าวเที่ยงของคนทำงาน กลางคืนคือเขตแสงสี–โรงละคร–ร้านกินดึก
+          ถ่ายรูป long-exposure จะเห็นเส้นแสงรถตัดกับลวดลายจีน—เป็นภาพเล่าเรื่องที่ดีมาก</p>
+      </div>
+    </article>
+  </section>
+
+  <!-- ============= 6. FESTIVALS ============= -->
+  <section class="section" data-name="Festivals">
+    <div class="media">
+      <picture>
+        <source srcset="pic/explore/exploreWEBP/festivals.webp" type="image/webp"/>
+        <img src="pic/explore/festivals.jpg" alt="Festivals & Events" loading="lazy"/>
+      </picture>
+    </div>
+    <div class="overlay"></div>
+
+    <article class="content">
+      <h2 class="title">Festivals & Events</h2>
+      <p class="hint">National Cherry Blossom Festival — ของขวัญซากุระจากญี่ปุ่นปี 1912</p>
+      <div class="fact"><span class="bullet"></span>
+        <p><b>เทศกาลที่เป็นนโยบาย:</b> ซากุระคือ “soft-power” ทางการทูต
+          ทำให้คนเข้ามาใช้พื้นที่สาธารณะร่วมกัน—เศรษฐกิจท้องถิ่นจึงหมุนด้วยกิจกรรมศิลปะ วัฒนธรรม และการเดิน</p>
+      </div>
+      <div class="fact"><span class="bullet"></span>
+        <p><b>จังหวะเมือง:</b> ปฏิทินงาน (ไฟ, หนัง, ดนตรี, มาราธอน) ถูกวางให้กระจายตลอดปี
+          รักษาความมีชีวิตของเมือง—ดีทั้งธุรกิจเล็กและความปลอดภัยยามค่ำ</p>
+      </div>
+    </article>
+  </section>
+
+  <footer>© 2025 Washington D.C. Tourism Project — Explore (Virtual Tour) | Developed by FlukeTON</footer>
+
+  <script>
+    // Build dots
+    const sections=[...document.querySelectorAll(".section")];
+    const dotsWrap=document.getElementById("dots");
+    sections.forEach((_,i)=>{const d=document.createElement("div");d.className="dot";d.dataset.i=i;d.onclick=()=>sections[i].scrollIntoView({behavior:"smooth"});dotsWrap.appendChild(d)});
+    const dots=[...document.querySelectorAll(".dot")];
+
+    // Reveal + dot sync
+    const io=new IntersectionObserver(es=>{
+      es.forEach(e=>{
+        if(e.isIntersecting){
+          e.target.classList.add("visible");
+          const idx=sections.indexOf(e.target);
+          dots.forEach((d,i)=>d.classList.toggle("active",i===idx));
+        }
+      });
+    },{threshold:.45});
+    sections.forEach(s=>io.observe(s));
+
+    // Auto tour (safe, หยุดทันทีเมื่อผู้ใช้สกรอลเอง/คลิก)
+    const auto=document.getElementById("autoTour");
+    let timer=null, lastUserAction=Date.now();
+    const next=()=>{const y=window.scrollY+1; // force calc
+      const idx=sections.findIndex(s=>s.getBoundingClientRect().top>=-1 && s.getBoundingClientRect().top<window.innerHeight*0.6);
+      const to=sections[Math.min((idx===-1?0:idx)+1,sections.length-1)];
+      if(to) to.scrollIntoView({behavior:"smooth"});
+      else {window.scrollTo({top:0,behavior:"smooth"});}
+    };
+    const start=()=>{stop(); timer=setInterval(()=>{ if(Date.now()-lastUserAction>1200) next(); },6000);}
+    const stop =()=>{ if(timer){clearInterval(timer);timer=null} }
+    auto.addEventListener("change",()=>auto.checked?start():stop());
+    ["wheel","touchstart","keydown","mousedown"].forEach(ev=>window.addEventListener(ev,()=>{lastUserAction=Date.now(); if(auto.checked) start();},{passive:true}));
+
+    // Reduce motion users: disable animations & auto
+    if(window.matchMedia("(prefers-reduced-motion: reduce)").matches){document.querySelectorAll(".media img,.content").forEach(el=>el.style.transition="none");auto.checked=false;auto.disabled=true;dotsWrap.style.display="none";}
+  </script>
+</body>
 </html>
