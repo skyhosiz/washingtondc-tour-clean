@@ -50,7 +50,6 @@
         padding: 100px 24px 40px;
       }
 
-      /* 🌆 Modern gradient title */
       .page-title {
         position: relative;
         font-size: 40px;
@@ -196,9 +195,9 @@
               let detailUrl = "#";
 
               try {
-                // 🔗 ดึงข้อมูลภาพจาก Smithsonian API จริง
+                // ✅ ใช้ Proxy ผ่าน backend แทน Smithsonian ตรง ๆ (แก้ CORS)
                 const recordRes = await fetch(
-                  `https://edan.si.edu/openaccess/api/v1.0/content/${item.id}`
+                  `${API_BASE}/api/proxy-smithsonian/${item.id}`
                 );
                 const recordData = await recordRes.json();
 
@@ -214,9 +213,10 @@
                     "pic/default.png";
                 }
 
+                // 🔗 ลิงก์ไป Smithsonian ของจริง
                 detailUrl = `https://collections.si.edu/search/detail/${item.id}`;
               } catch (e) {
-                console.warn("⚠️ Smithsonian fetch failed:", e);
+                console.warn("⚠️ Smithsonian proxy fetch failed:", e);
               }
 
               const card = document.createElement("div");
