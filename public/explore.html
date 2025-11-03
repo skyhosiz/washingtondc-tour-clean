@@ -194,34 +194,18 @@
               const museum =
                 item.content?.unitCode || "Smithsonian Institution";
 
-              // 🧠 ดึงภาพจาก descriptiveNonRepeating
-              let imageUrl =
-                item.content?.descriptiveNonRepeating?.online_media?.media?.[0]
-                  ?.thumbnail ||
-                item.content?.descriptiveNonRepeating?.online_media?.media?.[0]
-                  ?.resources?.[0]?.url ||
-                item.content?.descriptiveNonRepeating?.online_media?.media?.[0]
-                  ?.content ||
-                item.image_url ||
-                null;
+              // 🧠 ใช้ Smithsonian IDS เป็นแหล่งภาพหลัก
+              const recordId = item.url?.split(":")[1];
+              let imageUrl = recordId
+                ? `https://ids.si.edu/ids/deliveryService?id=${recordId}`
+                : "pic/default.png";
 
-              // 🪄 ถ้ายังไม่มี thumbnail → ดึงจาก recordId Smithsonian
-              if (!imageUrl && item.url?.startsWith("edanmdm:")) {
-                const recordId = item.url.split(":")[1];
-                imageUrl = `https://ids.si.edu/ids/deliveryService?id=${recordId}`;
-              }
-
-              // ✅ ถ้าไม่มีอีก ให้ fallback
+              // ✅ fallback ถ้าภาพโหลดไม่ได้
               if (!imageUrl) imageUrl = "pic/default.png";
 
-              // ✅ ถ้า URL ไม่เต็ม เติมโดเมน
-              if (imageUrl && !imageUrl.startsWith("http")) {
-                imageUrl = `${API_BASE}/${imageUrl}`;
-              }
-
-              // 🌐 URL Smithsonian (ดูเพิ่มเติม)
-              const detailUrl = item.url?.startsWith("edanmdm:")
-                ? `https://collections.si.edu/search/detail/${item.url.split(":")[1]}`
+              // 🌐 Smithsonian ลิงก์ดูเพิ่มเติม
+              const detailUrl = recordId
+                ? `https://collections.si.edu/search/results.htm?q=${recordId}`
                 : "#";
 
               const card = document.createElement("div");
@@ -233,7 +217,7 @@
                      onerror="this.onerror=null;this.src='pic/default.png';"
                      class="loading">
                 <div class="card-content">
-                  <h3>${title}</h3>
+                  <h3 title="${item.title}">${title}</h3>
                   <p>${museum}</p>
                   <a href="${detailUrl}" target="_blank">🔗 ดูเพิ่มเติม</a>
                 </div>
