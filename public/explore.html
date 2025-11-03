@@ -5,13 +5,13 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Explore Washington D.C. — Virtual Tour</title>
 
-  <!-- 🔹 Font & Analytics -->
+  <!-- Font & Analytics -->
   <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600;800&display=swap" rel="stylesheet"/>
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-VGBZS316J9"></script>
   <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}
   gtag('js',new Date());gtag('config','G-VGBZS316J9');</script>
 
-  <!-- 🔹 Preload Key Images -->
+  <!-- Preload Key Images -->
   <link rel="preload" as="image" href="pic/explore/lincoln.jpg">
   <link rel="preload" as="image" href="pic/explore/smithsonian.jpg">
   <link rel="preload" as="image" href="pic/explore/capitol.jpg">
@@ -29,12 +29,24 @@
     ::selection{background:#ffd36b44;}
     @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 
-    /* ✨ Background Glow */
+    /* Background Glow */
     .bg-core{position:fixed;inset:-40%;z-index:-3;
       background:radial-gradient(circle at 50% 35%,#7b2cffbb,transparent 60%),
                  conic-gradient(from 0turn,#ffc98222 0 25%,transparent 25% 50%,#ffc98222 50% 75%,transparent 75% 100%);
       filter:blur(80px) saturate(130%);opacity:.35;animation:spin 55s linear infinite;pointer-events:none}
     @keyframes spin{to{transform:rotate(360deg)}}
+
+    /* Top Navigation Bar */
+    nav.topbar{
+      position:fixed;top:0;left:0;right:0;height:56px;
+      background:rgba(0,0,0,.85);backdrop-filter:blur(8px);
+      display:flex;align-items:center;justify-content:space-between;
+      padding:0 20px;z-index:999;border-bottom:1px solid rgba(255,255,255,.1);
+    }
+    nav .logo{font-weight:800;font-size:20px;color:var(--gold3)}
+    nav .menu a{color:#fff;text-decoration:none;margin:0 14px;font-weight:600;opacity:.9;transition:.3s}
+    nav .menu a:hover,nav .menu a.active{color:var(--gold2);opacity:1;}
+    .spacer{height:56px}
 
     /* Header */
     header{text-align:center;padding:80px 16px 25px}
@@ -43,7 +55,7 @@
       -webkit-background-clip:text;-webkit-text-fill-color:transparent}
     header p{max-width:880px;margin:14px auto;color:var(--muted);opacity:.9;font-size:18px}
 
-    /* Section core */
+    /* Section */
     section.section{position:relative;min-height:100vh;display:grid;place-items:center;isolation:isolate;transition:opacity 1.2s ease}
     .media{position:absolute;inset:0;z-index:-2;overflow:hidden;will-change:transform,filter}
     .media img{width:100%;height:100%;object-fit:cover;filter:brightness(.55);transform:translateY(-5%) scale(1.1);
@@ -77,7 +89,18 @@
   </style>
 </head>
 <body>
+  <nav class="topbar">
+    <div class="logo">D.C. TOUR</div>
+    <div class="menu">
+      <a href="index.html">HOME</a>
+      <a href="explore.html" class="active">EXPLORE</a>
+      <a href="profile.html">PROFILE</a>
+    </div>
+  </nav>
+  <div class="spacer"></div>
+
   <div class="bg-core"></div>
+
   <header>
     <h1>Explore Washington D.C.</h1>
     <p>สำรวจมหานครแห่งอำนาจและอุดมการณ์ของโลก ผ่านมุมมองทางสถาปัตยกรรม ประวัติศาสตร์ และวัฒนธรรมที่ลึกซึ้ง</p>
@@ -85,7 +108,7 @@
 
   <div class="dots" id="dots"></div>
 
-  <!-- ✅ Lincoln -->
+  <!-- ✅ ทั้ง 6 Section ของคุณเหมือนเดิม -->
   <section class="section" data-name="Lincoln">
     <div class="media"><picture><source srcset="pic/explore/exploreWEBP/lincoln6.webp" type="image/webp"><img src="pic/explore/lincoln.jpg" alt="Lincoln Memorial" loading="lazy"></picture></div>
     <div class="overlay"></div>
@@ -98,7 +121,6 @@
     </div>
   </section>
 
-  <!-- ✅ Smithsonian -->
   <section class="section" data-name="Smithsonian">
     <div class="media"><picture><source srcset="pic/explore/exploreWEBP/smithsonian.webp" type="image/webp"><img src="pic/explore/smithsonian.jpg" alt="Smithsonian" loading="lazy"></picture></div>
     <div class="overlay"></div>
@@ -111,9 +133,8 @@
     </div>
   </section>
 
-  <!-- ✅ Capitol -->
   <section class="section" data-name="Capitol">
-    <div class="media"><picture><source srcset="pic/explore/exploreWEBP/capitol.webp" type="image/webp"></picture></div>
+    <div class="media"><picture><img src="pic/explore/capitol3.jpg" alt="Capitol" loading="lazy"></picture></div>
     <div class="overlay"></div>
     <div class="content">
       <h2 class="title">U.S. Capitol</h2>
@@ -124,7 +145,6 @@
     </div>
   </section>
 
-  <!-- ✅ Half-Smoke -->
   <section class="section" data-name="Half-Smoke">
     <div class="media"><picture><source srcset="pic/explore/exploreWEBP/halfsmoke.webp" type="image/webp"><img src="pic/explore/interior-of-ben-s-chili-bowl-jpeg.jpg" alt="Half-Smoke" loading="lazy"></picture></div>
     <div class="overlay"></div>
@@ -136,7 +156,6 @@
     </div>
   </section>
 
-  <!-- ✅ Chinatown -->
   <section class="section" data-name="Chinatown">
     <div class="media"><picture><source srcset="pic/explore/exploreWEBP/chinatown.webp" type="image/webp"><img src="pic/explore/chinatown5.jpg" alt="Chinatown" loading="lazy"></picture></div>
     <div class="overlay"></div>
@@ -148,9 +167,8 @@
     </div>
   </section>
 
-  <!-- ✅ Festivals -->
   <section class="section" data-name="Festivals">
-    <div class="media"><picture><img src="pic/explore/festivals2.jpg" alt="Festivals & Events" loading="lazy"></picture></div>
+    <div class="media"><picture><img src="pic/explore/Cherry-Monument.png" alt="Festivals & Events" loading="lazy"></picture></div>
     <div class="overlay"></div>
     <div class="content">
       <h2 class="title">Festivals & Events</h2>
@@ -164,19 +182,38 @@
   <footer>© 2025 Washington D.C. Virtual Tour | Developed by FlukeTON</footer>
 
   <script>
+  document.addEventListener("DOMContentLoaded",()=>{
     const sections=[...document.querySelectorAll('.section')];
     const dotsWrap=document.getElementById('dots');
-    sections.forEach((_,i)=>{const d=document.createElement('div');d.className='dot';d.onclick=()=>sections[i].scrollIntoView({behavior:'smooth'});dotsWrap.appendChild(d)});
+    sections.forEach((_,i)=>{
+      const d=document.createElement('div');
+      d.className='dot';
+      d.onclick=()=>sections[i].scrollIntoView({behavior:'smooth'});
+      dotsWrap.appendChild(d);
+    });
     const dots=[...document.querySelectorAll('.dot')];
-    const io=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');const i=sections.indexOf(e.target);dots.forEach((d,idx)=>d.classList.toggle('active',idx===i));}});},{threshold:.4});
+    const io=new IntersectionObserver(es=>{
+      es.forEach(e=>{
+        if(e.isIntersecting){
+          e.target.classList.add('visible');
+          const i=sections.indexOf(e.target);
+          dots.forEach((d,idx)=>d.classList.toggle('active',idx===i));
+        }
+      });
+    },{threshold:.4});
     sections.forEach(s=>io.observe(s));
 
-    // 🚀 Parallax + fade via requestAnimationFrame
-    let scrollY=0;
-    const smooth=()=>{sections.forEach(s=>{const img=s.querySelector('.media img');if(!img)return;
-      const depth=.25,rect=s.getBoundingClientRect(),offset=rect.top*depth;
-      img.style.transform=`translateY(${offset}px) scale(1.1)`;});requestAnimationFrame(smooth);}
+    const smooth=()=>{
+      sections.forEach(s=>{
+        const img=s.querySelector('.media img');
+        if(!img) return;
+        const depth=.25,rect=s.getBoundingClientRect(),offset=rect.top*depth;
+        img.style.transform=`translateY(${offset}px) scale(1.1)`;
+      });
+      requestAnimationFrame(smooth);
+    };
     requestAnimationFrame(smooth);
+  });
   </script>
 </body>
 </html>
