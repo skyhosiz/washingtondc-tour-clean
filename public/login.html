@@ -48,7 +48,7 @@
 
         background: url("pic/dc_sunset.png") center/cover no-repeat;
 
-        min-height: 100svh;
+        min-height: 100svh; /* (แก้จาก 100vh) */
 
         display: flex;
 
@@ -97,6 +97,12 @@
         font-weight: 800;
 
         background: linear-gradient(90deg, #ffd089, #ff8a25);
+
+        /* --- 1. เอากลับมา (แม้จะเหลือง) --- */
+
+        -webkit-background-clip: text;
+
+        background-clip: text;
 
         color: transparent;
       }
@@ -203,6 +209,14 @@
           : "https://washingtondc-tour-clean.onrender.com";
 
       async function login() {
+        // --- 2. ย้าย getElementById มาไว้ "ข้างใน" ---
+
+        const emailEl = document.getElementById("email");
+
+        const passwordEl = document.getElementById("password");
+
+        // ------------------------------------------
+
         const email = emailEl.value.trim();
 
         const password = passwordEl.value.trim();
@@ -221,7 +235,7 @@
           const data = await res.json();
 
           if (data.status === "success") {
-            saveAuth(data);
+            saveAuth(data); // (เรียกใช้ 'saveAuth' จาก js/auth.js)
 
             gtag("event", "login", { method: "Email" });
 
@@ -234,9 +248,7 @@
         }
       }
 
-      const emailEl = document.getElementById("email");
-
-      const passwordEl = document.getElementById("password");
+      // (ลบ const emailEl และ passwordEl จากตรงนี้)
 
       document.getElementById("loginForm").addEventListener("keypress", (e) => {
         if (e.key === "Enter") login();
