@@ -12,10 +12,11 @@ const jwt = require("jsonwebtoken");
 const fetch = require("node-fetch");
 const cloudinary = require("cloudinary").v2;
 const { CloudinaryStorage } = require("multer-storage-cloudinary");
+
 const app = express();
 
 /* =============================
-   ENV CHECK & VARIABLES
+   ✅ ENV CHECK & VARIABLES
 ============================= */
 [
   "JWT_SECRET",
@@ -49,7 +50,7 @@ const {
 } = process.env;
 
 /* =============================
-   CLOUDINARY & MULTER SETUP
+   ☁️ CLOUDINARY & MULTER SETUP
 ============================= */
 
 cloudinary.config({
@@ -64,14 +65,15 @@ const storage = new CloudinaryStorage({
   params: {
     folder: "dc-profiles",
     allowed_formats: ["jpg", "png", "jpeg"],
-    public_id: (req, file) => (req.uid ? `${req.uid}_${Date.now()}` : `anon_${Date.now()}`),
+    public_id: (req, file) =>
+      req.uid ? `${req.uid}_${Date.now()}` : `anon_${Date.now()}`,
   },
 });
 
 const upload = multer({ storage });
 
 /* =============================
-   DB CONNECT & USER SCHEMA
+   🧠 DB CONNECT & USER SCHEMA
 ============================= */
 
 mongoose
@@ -93,7 +95,7 @@ const User = mongoose.model(
 );
 
 /* =============================
-   HELPERS & MIDDLEWARE
+   🔐 HELPERS & MIDDLEWARE
 ============================= */
 
 const signToken = (uid) => jwt.sign({ uid }, JWT_SECRET, { expiresIn: "7d" });
@@ -112,7 +114,7 @@ function authRequired(req, res, next) {
 }
 
 /* =============================
-   MIDDLEWARE (CORS + STATIC)
+   ⚙️ MIDDLEWARE (CORS + STATIC)
 ============================= */
 
 app.disable("x-powered-by");
@@ -134,7 +136,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "public")));
 
 /* =============================
-   AUTH ROUTES
+   👤 AUTH ROUTES
 ============================= */
 
 app.post("/api/auth/register", async (req, res) => {
@@ -179,7 +181,7 @@ app.post("/api/auth/login", async (req, res) => {
 });
 
 /* =============================
-   EXPLORE ROUTE (Smithsonian Search)
+   🏛️ EXPLORE ROUTE (Smithsonian Search)
 ============================= */
 
 app.get("/api/explore", authRequired, async (req, res) => {
@@ -196,34 +198,49 @@ app.get("/api/explore", authRequired, async (req, res) => {
 });
 
 /* =============================
-   ✅ NEW: PROXY Smithsonian (Fix CORS)
+   🚀 PROXY Smithsonian (Fix CORS + Safe ID)
 ============================= */
 
 app.get("/api/proxy-smithsonian/:id", async (req, res) => {
   try {
     const { id } = req.params;
-    const url = `https://edan.si.edu/openaccess/api/v1.0/content/${id}`;
+    const safeId = encodeURIComponent(id); // ✅ ป้องกันตัวอักษรพิเศษใน id
+    const url = `https://edan.si.edu/openaccess/api/v1.0/content/${safeId}`;
+
+    console.log("🛰 Smithsonian Proxy Request:", url);
+
     const response = await fetch(url);
-    if (!response.ok) throw new Error(`Smithsonian fetch failed ${response.status}`);
+    if (!response.ok)
+      throw new Error(`Smithsonian fetch failed: ${response.status}`);
+
     const data = await response.json();
 
-    // ✅ ป้องกัน CORS Error
+    // ✅ ป้องกัน CORS Block
     res.setHeader("Access-Control-Allow-Origin", "*");
+    res.setHeader("Access-Control-Allow-Methods", "GET");
+    res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+
     res.json(data);
   } catch (err) {
     console.error("Proxy Smithsonian Error:", err.message);
-    res.status(500).json({ error: "Failed to fetch Smithsonian data" });
+    res
+      .status(500)
+      .json({ error: "Failed to fetch Smithsonian data", detail: err.message });
   }
 });
 
 /* =============================
-   SPA STATIC ROUTE & START
+   🌐 SPA STATIC ROUTE
 ============================= */
 
 app.get(/.*/, (req, res, next) => {
   if (req.path.startsWith("/api")) return next();
   res.sendFile(path.join(__dirname, "public", "index.html"));
 });
+
+/* =============================
+   🟢 START SERVER
+============================= */
 
 const port = process.env.PORT || 10000;
 app.listen(port, () => console.log(`🚀 Server Online → PORT ${port}`));
