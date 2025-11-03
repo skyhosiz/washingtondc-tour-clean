@@ -194,20 +194,23 @@
               const museum =
                 item.content?.unitCode || "Smithsonian Institution";
 
-              // 🧠 ใช้ Smithsonian IDS เป็นแหล่งภาพหลัก
+              // 🧠 ใช้ Smithsonian IDS สำหรับภาพ
               const recordId = item.url?.split(":")[1];
               let imageUrl = recordId
                 ? `https://ids.si.edu/ids/deliveryService?id=${recordId}`
                 : "pic/default.png";
 
-              // ✅ fallback ถ้าภาพโหลดไม่ได้
+              // ✅ fallback หากไม่มีภาพ
               if (!imageUrl) imageUrl = "pic/default.png";
 
-              // 🌐 Smithsonian ลิงก์ดูเพิ่มเติม
-              const detailUrl = recordId
-                ? `https://collections.si.edu/search/results.htm?q=${recordId}`
+              // 🌐 Smithsonian ลิงก์ดูเพิ่มเติม (เปิดได้ทุก record)
+              const detailUrl = item.url
+                ? `https://collections.si.edu/search/results.htm?q=${encodeURIComponent(
+                    item.url
+                  )}`
                 : "#";
 
+              // 🧩 สร้างการ์ด
               const card = document.createElement("div");
               card.className = "explore-card";
 
@@ -219,7 +222,7 @@
                 <div class="card-content">
                   <h3 title="${item.title}">${title}</h3>
                   <p>${museum}</p>
-                  <a href="${detailUrl}" target="_blank">🔗 ดูเพิ่มเติม</a>
+                  <a href="${detailUrl}" target="_blank" rel="noopener noreferrer">🔗 ดูเพิ่มเติม</a>
                 </div>
               `;
 
