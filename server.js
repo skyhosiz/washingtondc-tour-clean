@@ -20,7 +20,7 @@ const app = express();
   "CLIENT_URL",
   "BREVO_API_KEY",
   "SENDER_EMAIL",
-].forEach((v) => {
+].forEach(v => {
   if (!process.env[v]) {
     console.error(`🚨 Missing ENV: ${v}`);
     process.exit(1);
@@ -47,22 +47,21 @@ app.use(
     origin: (origin, cb) =>
       !origin || allowed.includes(origin) ? cb(null, true) : cb(new Error("CORS blocked")),
     methods: ["GET", "POST", "PUT", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"],
+    allowedHeaders: ["Content-Type", "Authorization"]
   })
 );
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "public")));
-app.options("*", cors());
+app.options("/*", cors());  // ✅ FIX wildcard
 
 /* =============================
    DB CONNECT
 ============================= */
-mongoose
-  .connect(MONGO_URI)
+mongoose.connect(MONGO_URI)
   .then(() => console.log("✅ MongoDB Connected"))
-  .catch((err) => {
+  .catch(err => {
     console.error("❌ MongoDB Error:", err.message);
     process.exit(1);
   });
@@ -81,7 +80,8 @@ const User = mongoose.model("User", userSchema);
 /* =============================
    HELPERS
 ============================= */
-const signToken = (uid) => jwt.sign({ uid }, JWT_SECRET, { expiresIn: "7d" });
+const signToken = (uid) =>
+  jwt.sign({ uid }, JWT_SECRET, { expiresIn: "7d" });
 
 function authRequired(req, res, next) {
   try {
@@ -115,14 +115,14 @@ async function sendResetEmail(email, token) {
     `,
   };
 
-  const res = await fetch("https://api.brevo.com/v3/smtp/email", {
+  const r = await fetch("https://api.brevo.com/v3/smtp/email", {
     method: "POST",
     headers: { "Content-Type": "application/json", "api-key": BREVO_API_KEY },
     body: JSON.stringify(payload),
   });
 
-  const out = await res.json().catch(() => ({}));
-  if (!res.ok) console.error("Brevo send error:", out);
+  const out = await r.json().catch(() => ({}));
+  if (!r.ok) console.error("Brevo send error:", out);
   return out;
 }
 
@@ -132,7 +132,8 @@ async function sendResetEmail(email, token) {
 app.post("/api/auth/register", async (req, res) => {
   try {
     const { username = "", email = "", password = "" } = req.body || {};
-    if (!email || !password) return res.json({ status: "error", message: "ข้อมูลไม่ครบ!" });
+    if (!email || !password)
+      return res.json({ status: "error", message: "ข้อมูลไม่ครบ!" });
 
     if (await User.findOne({ email }))
       return res.json({ status: "error", message: "อีเมลนี้ถูกใช้แล้ว!" });
@@ -147,10 +148,11 @@ app.post("/api/auth/register", async (req, res) => {
   } catch (e) {
     if (e.code === 11000)
       return res.json({ status: "error", message: "อีเมลนี้ถูกใช้แล้ว!" });
+
     console.error("REGISTER error:", e.message);
     res.json({ status: "error", message: "สมัครไม่สำเร็จ" });
   }
-});
+})
 
 app.post("/api/auth/login", async (req, res) => {
   try {
@@ -196,8 +198,8 @@ app.post("/api/auth/reset", async (req, res) => {
   try {
     const { token = "", password = "" } = req.body || {};
     const { uid } = jwt.verify(token, RESET_PASSWORD_SECRET);
-    const hashed = await bcrypt.hash(password, 10);
-    await User.findByIdAndUpdate(uid, { password: hashed });
+
+    await User.findByIdAndUpdate(uid, { password: await bcrypt.hash(password, 10) });
     res.json({ status: "success" });
   } catch {
     res.json({ status: "error", message: "ลิงก์หมดอายุ/ไม่ถูกต้อง" });
@@ -210,12 +212,18 @@ app.get("/api/auth/profile", authRequired, async (req, res) => {
 
   res.json({
     status: "success",
-    user: { id: u._id, username: u.username, email: u.email, profileImg: u.profileImg },
+    user: {
+      id: u._id,
+      username: u.username,
+      email: u.email,
+      profileImg: u.profileImg,
+    }
   });
 });
 
-/* ✅ FIX: Catch-All Static Route (Express 5 Compatible) */
-app.get("*", (req, res) => {
+/* ✅ FIX ALL: SPA Static Route (Express 5 Compatible) */
+app.get(/.*/, (req, res, next) => {
+  if (req.path.startsWith("/api")) return next();
   res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
