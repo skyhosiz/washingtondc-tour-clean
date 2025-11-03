@@ -1,15 +1,11 @@
 <!DOCTYPE html>
-
 <html lang="th">
   <head>
     <meta charset="UTF-8" />
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
     <title>Explore D.C. | Washington D.C.</title>
 
     <script src="js/auth.js"></script>
-
     <script src="js/nav.js" defer></script>
 
     <link
@@ -24,13 +20,10 @@
 
     <script>
       window.dataLayer = window.dataLayer || [];
-
       function gtag() {
         dataLayer.push(arguments);
       }
-
       gtag("js", new Date());
-
       gtag("config", "G-VGBZS316J9");
     </script>
 
@@ -43,60 +36,45 @@
 
       body {
         font-family: "Kanit", sans-serif;
-
         background: radial-gradient(circle, #1c1a33, #0b0814);
-
         color: white;
         min-height: 100vh;
       }
 
       .container {
         max-width: 1200px;
-
         margin: auto;
-
         padding: 100px 24px 40px;
       }
 
       .page-title {
         font-size: 36px;
-
         background: linear-gradient(90deg, #ffd089, #ff8a25);
-
         color: transparent;
-
         margin-bottom: 24px;
-
         border-bottom: 2px solid rgba(255, 150, 60, 0.45);
-
         padding-bottom: 10px;
+        -webkit-background-clip: text;
+        background-clip: text;
       }
 
       #loadingState {
         font-size: 20px;
-
         text-align: center;
-
         margin-top: 40px;
       }
 
       #exploreGrid {
         display: grid;
-
         grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-
         gap: 24px;
       }
 
       .explore-card {
         background: rgba(255, 255, 255, 0.08);
-
         border-radius: 16px;
-
         box-shadow: 0 0 15px rgba(255, 150, 60, 0.3);
-
         overflow: hidden;
-
         transition: transform 0.25s;
       }
 
@@ -106,11 +84,8 @@
 
       .explore-card img {
         width: 100%;
-
         height: 220px;
-
         object-fit: cover;
-
         border-bottom: 2px solid #ff952e;
       }
 
@@ -120,21 +95,15 @@
 
       .explore-card h3 {
         font-size: 20px;
-
         margin-bottom: 8px;
-
         overflow: hidden;
-
         text-overflow: ellipsis;
-
         white-space: nowrap;
       }
 
       .explore-card p {
         font-size: 16px;
-
         color: #ccc;
-
         font-weight: 300;
       }
     </style>
@@ -143,9 +112,7 @@
   <body>
     <div class="container">
       <h1 class="page-title">Explore D.C. Attractions</h1>
-
       <div id="exploreGrid"></div>
-
       <p id="loadingState">Loading data...</p>
     </div>
 
@@ -161,9 +128,7 @@
 
       async function loadExploreData() {
         const token = localStorage.getItem("token");
-
         const grid = document.getElementById("exploreGrid");
-
         const loading = document.getElementById("loadingState");
 
         try {
@@ -172,52 +137,48 @@
           });
 
           const data = await res.json();
+          console.log("✅ API Data:", data);
 
           if (data.status === "success" && data.data.rows.length > 0) {
             loading.style.display = "none";
 
             data.data.rows.forEach((item) => {
               const title = item.title || "Untitled Artwork";
+              const museum =
+                item.content?.unitCode || "Smithsonian Institution";
 
-              const museum = item.content.unitCode || "Smithsonian Institution";
+              // 🔍 ดึง URL ของภาพจากหลายโครงสร้างที่อาจเป็นไปได้
+              let imageUrl =
+                item.content?.online_media?.media?.[0]?.thumbnail ||
+                item.content?.online_media?.media?.[0]?.resources?.[0]?.url ||
+                item.content?.online_media?.resources?.[0]?.content ||
+                item.content?.descriptiveNonstandardDate?.online_media
+                  ?.resources?.[0]?.thumbnail?.url ||
+                item.image_url ||
+                "pic/default.png";
 
-              let imageUrl = "pic/default.png";
-
-              if (
-                item.content.descriptiveNonstandardDate?.online_media?.resources
-                  ?.thumbnail?.url
-              ) {
-                imageUrl =
-                  item.content.descriptiveNonstandardDate.online_media.resources
-                    .thumbnail.url;
+              // ✅ ตรวจสอบว่าถ้าไม่ใช่ URL เต็ม ให้เติมโดเมน
+              if (imageUrl && !imageUrl.startsWith("http")) {
+                imageUrl = `${API_BASE}/${imageUrl}`;
               }
 
               const card = document.createElement("div");
-
               card.className = "explore-card";
 
               card.innerHTML = `
-
-          <img src="${imageUrl}" alt="${title}">
-
-          <div class="card-content">
-
-            <h3>${title}</h3>
-
-            <p>${museum}</p>
-
-          </div>
-
-        `;
-
+                <img src="${imageUrl}" alt="${title}" onerror="this.onerror=null;this.src='pic/default.png';">
+                <div class="card-content">
+                  <h3>${title}</h3>
+                  <p>${museum}</p>
+                </div>
+              `;
               grid.appendChild(card);
             });
           } else {
             loading.textContent = "No data found or error.";
           }
         } catch (err) {
-          console.error("Fetch Error:", err);
-
+          console.error("❌ Fetch Error:", err);
           loading.textContent = "⚠ Failed to load resources.";
         }
       }
