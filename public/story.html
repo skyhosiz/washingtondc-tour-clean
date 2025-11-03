@@ -1,494 +1,162 @@
 <!DOCTYPE html>
 <html lang="th">
-  <head>
-    <!-- 📊 Google Analytics -->
-    <script
-      async
-      src="https://www.googletagmanager.com/gtag/js?id=G-VGBZS316J9"
-    ></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag() {
-        dataLayer.push(arguments);
-      }
-      gtag("js", new Date());
-      gtag("config", "G-VGBZS316J9");
-    </script>
+<head>
+  <!-- 📊 Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-VGBZS316J9"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag("js", new Date());
+    gtag("config", "G-VGBZS316J9");
+  </script>
 
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>History & Story | Washington D.C.</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>History & Story | Washington D.C.</title>
 
-    <!-- 🔒 Auth / Nav -->
-    <script src="js/auth.js"></script>
-    <script src="js/nav.js" defer></script>
+  <!-- 🔒 Auth / Nav -->
+  <script src="js/auth.js"></script>
+  <script src="js/nav.js" defer></script>
 
-    <!-- 🖋 Font -->
-    <link
-      href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600;800&display=swap"
-      rel="stylesheet"
-    />
+  <!-- 🖋 Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600;800&display=swap" rel="stylesheet" />
 
-    <style>
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-      }
-      body {
-        font-family: "Kanit", sans-serif;
-        background: #0b031a;
-        color: #fff;
-        overflow-x: hidden;
-        padding-bottom: 50px;
-      }
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;}
+    body{font-family:"Kanit",sans-serif;background:#0b031a;color:#fff;overflow-x:hidden;padding-bottom:60px;}
+    h1{text-align:center;font-size:62px;padding-top:100px;margin:20px 0 10px;
+      background:linear-gradient(90deg,#ffd28a,#ff8e28);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+    h1::after{content:"";width:260px;height:4px;margin:15px auto;display:block;
+      background:linear-gradient(90deg,#ffbf66,#ffe9b2,#ffbf66);border-radius:2px;}
 
-      /* 🌌 Background Lines */
-      .circuit-bg,
-      .circuit-lines {
-        position: fixed;
-        inset: 0;
-        pointer-events: none;
-        z-index: -20;
-      }
-      .circuit-bg {
-        background: repeating-linear-gradient(
-            90deg,
-            rgba(100, 0, 180, 0.15) 0 2px,
-            transparent 2px 120px
-          ),
-          repeating-linear-gradient(
-            0deg,
-            rgba(100, 0, 180, 0.15) 0 2px,
-            transparent 2px 120px
-          );
-        filter: blur(0.6px);
-      }
-      .circuit-lines::before,
-      .circuit-lines::after {
-        content: "";
-        position: absolute;
-        width: 160%;
-        height: 160%;
-        top: -30%;
-        left: -30%;
-        background: linear-gradient(
-          110deg,
-          rgba(0, 255, 255, 0.5),
-          rgba(140, 0, 255, 0.45) 50%,
-          rgba(0, 255, 255, 0.45)
-        );
-        background-size: 600% 600%;
-        opacity: 0.12;
-        mix-blend-mode: screen;
-        animation: flow 14s linear infinite;
-      }
-      .circuit-lines::after {
-        animation-duration: 20s;
-      }
-      @keyframes flow {
-        0% {
-          background-position: 0% 50%;
-        }
-        50% {
-          background-position: 100% 50%;
-        }
-        100% {
-          background-position: 0% 50%;
-        }
-      }
+    /* 🌌 Animated Background */
+    .circuit-bg,.circuit-lines{position:fixed;inset:0;pointer-events:none;z-index:-20;}
+    .circuit-bg{background:repeating-linear-gradient(90deg,rgba(100,0,180,.15)0 2px,transparent 2px 120px),
+                         repeating-linear-gradient(0deg,rgba(100,0,180,.15)0 2px,transparent 2px 120px);filter:blur(.6px);}
+    .circuit-lines::before,.circuit-lines::after{content:"";position:absolute;width:160%;height:160%;top:-30%;left:-30%;
+      background:linear-gradient(110deg,rgba(0,255,255,.5),rgba(140,0,255,.45)50%,rgba(0,255,255,.45));
+      background-size:600% 600%;opacity:.12;mix-blend-mode:screen;animation:flow 14s linear infinite;}
+    .circuit-lines::after{animation-duration:20s;}
+    @keyframes flow{0%{background-position:0% 50%;}50%{background-position:100% 50%;}100%{background-position:0% 50%;}}
 
-      /* 🏛 Header Title */
-      h1 {
-        text-align: center;
-        font-size: 62px;
-        padding-top: 100px;
-        margin: 20px 0 10px;
-        background: linear-gradient(90deg, #ffd28a, #ff8e28);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-        color: transparent;
-        /* fallback for browsers not supporting gradient text */
-        background-color: #ffb84d;
-      }
-      h1::after {
-        content: "";
-        width: 260px;
-        height: 4px;
-        margin: 15px auto;
-        display: block;
-        background: linear-gradient(90deg, #ffbf66, #ffe9b2, #ffbf66);
-        border-radius: 2px;
-      }
+    /* 📘 Section Styling */
+    .section{width:90%;background:linear-gradient(145deg,#1b1333,#2a1b55);border-radius:22px;margin:45px auto;padding:25px;
+      display:flex;align-items:center;gap:25px;box-shadow:0 0 20px rgba(255,150,60,.1);
+      opacity:0;transform:translateY(40px) scale(.95);transition:opacity .8s,transform .8s;cursor:pointer;}
+    .section.visible{opacity:1;transform:translateY(0) scale(1);}
+    .section:hover{transform:translateY(-8px) scale(1.02);box-shadow:0 0 40px rgba(175,125,255,.38);}
+    .section img{width:45%;height:300px;border-radius:18px;object-fit:cover;transition:transform .6s,filter .4s;}
+    .section:hover img{transform:scale(1.06);filter:brightness(1.1);}
+    .title{font-size:36px;margin-bottom:10px;background:linear-gradient(90deg,#ffe1a7,#ff7f14);
+      -webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+    .desc{font-size:18px;opacity:.92;line-height:1.55;}
+    @media(max-width:820px){.section{flex-direction:column;}.section img{width:100%;height:240px;}h1{font-size:48px;}}
 
-      /* 📘 Section Styling */
-      .section {
-        width: 90%;
-        background: linear-gradient(145deg, #1b1333, #2a1b55);
-        border-radius: 22px;
-        margin: 45px auto;
-        padding: 25px;
-        display: flex;
-        align-items: center;
-        gap: 25px;
-        box-shadow: 0 0 20px rgba(255, 150, 60, 0.1);
-        opacity: 0;
-        transform: translateY(40px) scale(0.95);
-        transition: opacity 0.8s ease, transform 0.8s ease;
-      }
-      .section.visible {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-      }
-      .section:hover {
-        transform: translateY(-8px) scale(1.02);
-        box-shadow: 0 0 40px rgba(175, 125, 255, 0.38);
-      }
+    /* 🏛 Popup */
+    .popup{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;
+      background:rgba(10,0,25,.75);backdrop-filter:blur(8px);opacity:0;visibility:hidden;
+      transition:opacity .5s,visibility .5s;z-index:1000;}
+    .popup.show{opacity:1;visibility:visible;}
+    .popup-content{background:linear-gradient(165deg,#1a1032,#261c4d);border-radius:18px;
+      box-shadow:0 0 30px rgba(255,150,60,.25);padding:20px 28px;width:min(90%,850px);
+      max-height:85vh;overflow:hidden;transform:translateY(40px);transition:transform .45s;position:relative;}
+    .popup.show .popup-content{transform:translateY(0);}
+    .popup .close{position:absolute;top:15px;right:20px;font-size:28px;color:#ffd58b;cursor:pointer;
+      transition:transform .25s,color .3s;}
+    .popup .close:hover{transform:scale(1.2);color:#fff7d8;}
+    .popup-inner{display:flex;flex-direction:column;align-items:center;gap:18px;max-height:75vh;overflow-y:auto;}
+    .popup-inner::-webkit-scrollbar{width:6px;}
+    .popup-inner::-webkit-scrollbar-thumb{background:linear-gradient(#ffb84a,#ff8a2c);border-radius:3px;}
+    .popup-inner img{width:100%;border-radius:12px;box-shadow:0 0 10px rgba(255,180,90,.3);}
+    .popup-textbox{text-align:left;color:#eaeaea;}
+    .popup-textbox h2{background:linear-gradient(90deg,#ffd78b,#ff8b2c);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:10px;}
+    .popup-textbox p{font-size:17px;line-height:1.7;margin-bottom:10px;}
+  </style>
+</head>
 
-      .section img {
-        width: 45%;
-        height: 300px;
-        border-radius: 18px;
-        object-fit: cover;
-        transition: transform 0.6s ease, filter 0.4s ease;
-      }
-      .section.visible img {
-        transform: scale(1.02);
-      }
-      .section:hover img {
-        transform: scale(1.06);
-        filter: brightness(1.1);
-      }
+<body>
+  <div class="circuit-bg"></div>
+  <div class="circuit-lines"></div>
+  <h1>History & Story</h1>
 
-      .title {
-        font-size: 38px;
-        margin-bottom: 10px;
-        background: linear-gradient(90deg, #ffe1a7, #ff7f14);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-        color: transparent;
-        /* fallback plain gold color */
-        background-color: #ffcc70;
-      }
-      .desc {
-        font-size: 18px;
-        opacity: 0.92;
-        line-height: 1.55;
-      }
+  <!-- 🕰️ Sections -->
+  <div class="section"><img src="pic/His/HIS.png"><div><div class="title">Birth of Washington D.C.</div><p class="desc">เมืองหลวงที่ถูกออกแบบเพื่อประชาธิปไตยตั้งแต่ปี 1790</p></div></div>
+  <div class="section"><img src="pic/His/map.png"><div><div class="title">The Original District Map</div><p class="desc">แผนผังกริดแห่งเสรีภาพที่เชื่อมอำนาจกับประชาชน</p></div></div>
+  <div class="section"><img src="pic/His/DSWERT.png"><div><div class="title">Historic Public Buildings</div><p class="desc">รากฐานของรัฐบาลที่เติบโตสู่มหานครศูนย์กลางโลก</p></div></div>
+  <div class="section"><img src="pic/His/DDD.png"><div><div class="title">I Have A Dream — 1963</div><p class="desc">มาร์ติน ลูเธอร์ คิง จุดไฟแห่งความเท่าเทียมที่นี่</p></div></div>
+  <div class="section"><img src="pic/His/DWSD.png"><div><div class="title">Washington Monument</div><p class="desc">อนุสรณ์แห่งผู้นำคนแรกของอเมริกา</p></div></div>
+  <div class="section"><img src="pic/His/HYT.png"><div><div class="title">The Monument Through Time</div><p class="desc">หอแห่งศรัทธาที่เปลี่ยนตามกาลเวลา</p></div></div>
+  <div class="section"><img src="pic/His/musem.png"><div><div class="title">Lincoln Memorial</div><p class="desc">สถานที่แห่งคำมั่นต่อเสรีภาพและความเท่าเทียม</p></div></div>
+  <div class="section"><img src="pic/His/FPSD.png"><div><div class="title">The White House</div><p class="desc">ศูนย์กลางอำนาจบริหารของประเทศ</p></div></div>
+  <div class="section"><img src="pic/His/fwa.png"><div><div class="title">U.S. Capitol</div><p class="desc">แหล่งถกเถียงทางความคิดเพื่ออนาคตของประเทศ</p></div></div>
+  <div class="section"><img src="pic/His/PNG.png"><div><div class="title">Capitol Night View</div><p class="desc">สภาแห่งแสงไฟและความหวังยามค่ำคืน</p></div></div>
+  <div class="section"><img src="pic/His/WC.png"><div><div class="title">Pentagon</div><p class="desc">หัวใจแห่งการป้องกันประเทศที่ทั่วโลกจับตา</p></div></div>
+  <div class="section"><img src="pic/His/DDDDDD.png"><div><div class="title">Defense Intelligence</div><p class="desc">ศูนย์บัญชาการลับสุดยอดด้านข่าวกรอง</p></div></div>
+  <div class="section"><img src="pic/His/smithsonian-museum-natural-history.png"><div><div class="title">Smithsonian Museum</div><p class="desc">คลังความรู้ยิ่งใหญ่ที่สุดของมนุษยชาติ</p></div></div>
+  <div class="section"><img src="pic/His/PEP.png"><div><div class="title">Modern DC Streets</div><p class="desc">ชีวิตร่วมสมัยที่สานต่อจากอดีตอันเข้มแข็ง</p></div></div>
+  <div class="section"><img src="pic/His/TOTAL.png"><div><div class="title">Street Art Voices</div><p class="desc">ศิลปะบนกำแพงคือเสียงของประชาชน</p></div></div>
+  <div class="section"><img src="pic/His/pughf.png"><div><div class="title">D.C. Sunset</div><p class="desc">ภาพสุดท้ายของวันแห่งเสรีภาพที่งดงาม</p></div></div>
 
-      /* 📱 Responsive */
-      @media (max-width: 820px) {
-        .section {
-          flex-direction: column;
-        }
-        .section img {
-          width: 100%;
-          height: 240px;
-        }
-        h1 {
-          font-size: 48px;
-        }
-      }
-    </style>
-  </head>
-
-  <body>
-    <!-- ✨ Animated Background -->
-    <div class="circuit-bg"></div>
-    <div class="circuit-lines"></div>
-
-    <h1>History & Story</h1>
-
-    <!-- 🕰️ Historical Sections -->
-    <div class="section">
-      <img src="pic/His/HIS.png" alt="Birth of Washington D.C." />
-      <div>
-        <div class="title">Birth of Washington D.C.</div>
-        <p class="desc">
-          เมืองหลวงที่ถูกออกแบบอย่างตั้งใจให้เป็นสัญลักษณ์แห่งประชาธิปไตย
-          ตั้งแต่ปี 1790
-        </p>
+  <!-- 📖 Popup -->
+  <div id="popup" class="popup">
+    <div class="popup-content">
+      <span class="close">&times;</span>
+      <div class="popup-inner">
+        <img id="popup-img" alt="">
+        <div class="popup-textbox">
+          <h2 id="popup-title"></h2>
+          <div id="popup-text"></div>
+        </div>
       </div>
     </div>
+  </div>
 
-    <div class="section">
-      <img src="pic/His/map.png" alt="The Original District Map" />
-      <div>
-        <div class="title">The Original District Map</div>
-        <p class="desc">
-          แผนผังกริดเชื่อมโยงศูนย์กลางอำนาจและสิทธิของประชาชนอย่างเท่าเทียม
-        </p>
-      </div>
-    </div>
+  <script>
+    // 👁 Section Reveal
+    const observer=new IntersectionObserver(entries=>{
+      entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add("visible");});
+    },{threshold:.15});
+    document.querySelectorAll(".section").forEach(sec=>observer.observe(sec));
 
-    <div class="section">
-      <img src="pic/His/DSWERT.png" alt="Historic Public Buildings" />
-      <div>
-        <div class="title">Historic Public Buildings</div>
-        <p class="desc">
-          โครงสร้างรัฐยุคแรก เริ่มต้นฐานรากสู่มหานครศูนย์กลางโลก
-        </p>
-      </div>
-    </div>
+    // 🧠 Popup Data (ครบทุกหัวข้อ)
+    const deepInfo={
+      "Birth of Washington D.C.":{img:"pic/His/HIS.png",text:`<p>ก่อตั้งปี 1790 โดย George Washington เพื่อสร้างเมืองหลวงกลางที่เป็นกลางไม่ขึ้นกับรัฐใด</p>`},
+      "The Original District Map":{img:"pic/His/map.png",text:`<p>ผังเมืองปี 1791 โดย Pierre L’Enfant แสดงการวางกริดถนนสื่อถึงความเท่าเทียมของอำนาจ</p>`},
+      "Historic Public Buildings":{img:"pic/His/DSWERT.png",text:`<p>อาคารรัฐยุคแรก เช่น Treasury และ Capitol คือรากฐานของรัฐบาลอเมริกันยุคใหม่</p>`},
+      "I Have A Dream — 1963":{img:"pic/His/DDD.png",text:`<p>มาร์ติน ลูเธอร์ คิง จูเนียร์ กล่าวสุนทรพจน์ประวัติศาสตร์เรียกร้องสิทธิมนุษยชนที่ Lincoln Memorial</p>`},
+      "Washington Monument":{img:"pic/His/DWSD.png",text:`<p>สร้างเพื่อรำลึกถึง George Washington หอสูง 169 เมตร ใช้เวลาก่อสร้างกว่า 30 ปี</p>`},
+      "The Monument Through Time":{img:"pic/His/HYT.png",text:`<p>หอคอยแห่งศรัทธาที่เปลี่ยนไปทุกฤดูกาลแต่ยังคงยืนหยัดงดงามเสมอ</p>`},
+      "Lincoln Memorial":{img:"pic/His/musem.png",text:`<p>สัญลักษณ์แห่งความเสมอภาคและคำมั่นของ Abraham Lincoln ต่อเสรีภาพของมนุษย์</p>`},
+      "The White House":{img:"pic/His/FPSD.png",text:`<p>ทำเนียบขาวสร้างปี 1792 โดย James Hoban เคยถูกเผาในสงครามปี 1812 ก่อนฟื้นฟูใหม่</p>`},
+      "U.S. Capitol":{img:"pic/His/fwa.png",text:`<p>ศูนย์กลางของสภาคองเกรส จุดเริ่มต้นของการตัดสินใจระดับประเทศ</p>`},
+      "Capitol Night View":{img:"pic/His/PNG.png",text:`<p>ภาพกลางคืนของอาคารรัฐสภา สื่อถึงแสงแห่งความหวังที่ไม่ดับลง</p>`},
+      "Pentagon":{img:"pic/His/WC.png",text:`<p>สำนักงานใหญ่กระทรวงกลาโหม ออกแบบให้สื่อถึงความแข็งแกร่งทางยุทธศาสตร์</p>`},
+      "Defense Intelligence":{img:"pic/His/DDDDDD.png",text:`<p>หน่วยข่าวกรองทางทหารของประเทศ ทำหน้าที่วิเคราะห์ข้อมูลสำคัญระดับโลก</p>`},
+      "Smithsonian Museum":{img:"pic/His/smithsonian-museum-natural-history.png",text:`<p>พิพิธภัณฑ์กว่า 19 แห่งในเครือ เก็บองค์ความรู้ของมนุษยชาติไว้กว่า 155 ล้านชิ้น</p>`},
+      "Modern DC Streets":{img:"pic/His/PEP.png",text:`<p>สะท้อนวัฒนธรรมสมัยใหม่ที่หลอมรวมอดีตและปัจจุบันของวอชิงตัน ดี.ซี.</p>`},
+      "Street Art Voices":{img:"pic/His/TOTAL.png",text:`<p>ศิลปะข้างถนนกลายเป็นเครื่องมือสื่อสารความคิดและการเมืองของประชาชน</p>`},
+      "D.C. Sunset":{img:"pic/His/pughf.png",text:`<p>ภาพพระอาทิตย์ตกเหนือเมืองหลวงที่เตือนให้ระลึกถึงเสรีภาพและความงามของประชาธิปไตย</p>`}
+    };
 
-    <div class="section">
-      <img src="pic/His/DDD.png" alt="I Have A Dream — 1963" />
-      <div>
-        <div class="title">I Have A Dream — 1963</div>
-        <p class="desc">
-          มาร์ติน ลูเธอร์ คิง จูเนียร์ จุดไฟเพื่อความเท่าเทียมแก่คนทั้งโลกที่นี่
-        </p>
-      </div>
-    </div>
+    // 🎬 Popup Logic
+    const popup=document.getElementById("popup"),
+          popupImg=document.getElementById("popup-img"),
+          popupTitle=document.getElementById("popup-title"),
+          popupText=document.getElementById("popup-text"),
+          closeBtn=document.querySelector(".popup .close");
 
-    <div class="section">
-      <img src="pic/His/DWSD.png" alt="Washington Monument" />
-      <div>
-        <div class="title">Washington Monument</div>
-        <p class="desc">
-          โอบกอดอดีตของ George Washington ด้วยหินสูงกว่า 169 เมตร
-        </p>
-      </div>
-    </div>
-
-    <div class="section">
-      <img src="pic/His/HYT.png" alt="The Monument Through Time" />
-      <div>
-        <div class="title">The Monument Through Time</div>
-        <p class="desc">
-          วิวแห่งพลังศรัทธา ที่เปลี่ยนไปทุกฤดูกาล แต่สง่างามเสมอ
-        </p>
-      </div>
-    </div>
-
-    <div class="section">
-      <img src="pic/His/musem.png" alt="Lincoln Memorial" />
-      <div>
-        <div class="title">Lincoln Memorial</div>
-        <p class="desc">
-          สถานที่ประกาศความเสมอภาคของมนุษย์ สะท้อนเสียงแห่งประชาชน
-        </p>
-      </div>
-    </div>
-
-    <div class="section">
-      <img src="pic/His/FPSD.png" alt="The White House" />
-      <div>
-        <div class="title">The White House</div>
-        <p class="desc">สัญลักษณ์ของอำนาจบริหาร ที่ขับเคลื่อนโลกทุกลมหายใจ</p>
-      </div>
-    </div>
-
-    <div class="section">
-      <img src="pic/His/fwa.png" alt="U.S. Capitol" />
-      <div>
-        <div class="title">U.S. Capitol</div>
-        <p class="desc">แหล่งปะทะของความคิด เพื่อสร้างอนาคตประเทศ</p>
-      </div>
-    </div>
-
-    <div class="section">
-      <img src="pic/His/PNG.png" alt="Capitol Night View" />
-      <div>
-        <div class="title">Capitol Night View</div>
-        <p class="desc">สภาไม่ได้ทำงานแค่กลางวัน … ความหวังเดินหน้าตลอดคืน</p>
-      </div>
-    </div>
-
-    <div class="section">
-      <img src="pic/His/WC.png" alt="Pentagon" />
-      <div>
-        <div class="title">Pentagon</div>
-        <p class="desc">กำแพงป้องกันประเทศที่ทั้งโลกจับตามอง</p>
-      </div>
-    </div>
-
-    <div class="section">
-      <img src="pic/His/DDDDDD.png" alt="Defense Intelligence" />
-      <div>
-        <div class="title">Defense Intelligence</div>
-        <p class="desc">ฐานบัญชาการลับ ๆ ที่เรารู้แค่ว่า “สำคัญมาก”</p>
-      </div>
-    </div>
-
-    <div class="section">
-      <img
-        src="pic/His/smithsonian-museum-natural-history.png"
-        alt="Smithsonian Museum"
-      />
-      <div>
-        <div class="title">Smithsonian Museum</div>
-        <p class="desc">
-          พิพิธภัณฑ์ที่ใหญ่สุดแห่งหนึ่งของมนุษยชาติ เก็บเรื่องราวจากดาวโลกไว้ครบ
-        </p>
-      </div>
-    </div>
-
-    <div class="section">
-      <img src="pic/His/PEP.png" alt="Modern DC Streets" />
-      <div>
-        <div class="title">Modern DC Streets</div>
-        <p class="desc">
-          อดีตที่เข้มแข็งผลักดันสู่ปัจจุบันที่เต็มไปด้วยชีวิตและวัฒนธรรม
-        </p>
-      </div>
-    </div>
-
-    <div class="section">
-      <img src="pic/His/TOTAL.png" alt="Street Art Voices" />
-      <div>
-        <div class="title">Street Art Voices</div>
-        <p class="desc">ศิลปะบนกำแพงคือกล้องขยายเสียงของประชาชน</p>
-      </div>
-    </div>
-
-    <div class="section">
-      <img src="pic/His/pughf.png" alt="D.C. Sunset" />
-      <div>
-        <div class="title">D.C. Sunset</div>
-        <p class="desc">
-          จบวันด้วยภาพที่เตือนว่า เสรีภาพต้องสวยงามและเข้มแข็งที่สุด
-        </p>
-      </div>
-    </div>
-
-    <!-- 🎥 Section Reveal -->
-    <script>
-      const observer = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((e) => {
-            if (e.isIntersecting) e.target.classList.add("visible");
-          });
-        },
-        { threshold: 0.15 }
-      );
-      document
-        .querySelectorAll(".section")
-        .forEach((sec) => observer.observe(sec));
-    </script>
-
-    <!-- 📖 Knowledge Popup -->
-    <div id="popup" class="popup">
-      <div class="popup-content">
-        <span class="close">&times;</span>
-        <h2 id="popup-title"></h2>
-        <p id="popup-text"></p>
-      </div>
-    </div>
-
-    <script>
-      /* ===========================
-     🧠 Deep Knowledge Popup
-  =========================== */
-      const deepInfo = {
-        "Birth of Washington D.C.":
-          "ในปี 1790 ประธานาธิบดี George Washington เลือกพื้นที่ระหว่างรัฐ Maryland และ Virginia เพื่อสร้างเมืองหลวงใหม่ ... เมืองนี้ถูกออกแบบโดยสถาปนิกชาวฝรั่งเศส Pierre Charles L’Enfant ผู้วางผังเมืองแบบกริด และเน้นแกนเชื่อมโยงสัญลักษณ์ประชาธิปไตย",
-        "The Original District Map":
-          "แผนผังเมืองต้นแบบของ L’Enfant แบ่งเส้นทางถนนออกจากศูนย์กลางอำนาจอย่าง Capitol และ The White House โดยใช้แนวคิด 'มองเห็นได้ทั่วถึง' เพื่อแสดงถึงความโปร่งใสของอำนาจรัฐ",
-        "Historic Public Buildings":
-          "สถาปัตยกรรมยุคแรกของรัฐบาลกลาง เช่น Treasury, Navy Yard และ Old Post Office ล้วนสร้างด้วยหินอ่อน เพื่อสื่อถึงความมั่นคงของประชาธิปไตยอเมริกัน",
-        "I Have A Dream — 1963":
-          "คำปราศรัยของ Martin Luther King Jr. ที่ Lincoln Memorial คือหนึ่งในเหตุการณ์สำคัญที่สุดของขบวนการสิทธิมนุษยชนโลก จุดประกายให้กฎหมายสิทธิเสรีภาพในสหรัฐฯ เปลี่ยนไปตลอดกาล",
-        "Washington Monument":
-          "เสาหินสูง 169 เมตรที่ใช้เวลาสร้างกว่า 36 ปี เป็นสัญลักษณ์แห่งเกียรติยศของ George Washington และชัยชนะของแนวคิดเสรีภาพเหนือกาลเวลา",
-        "Smithsonian Museum":
-          "เครือพิพิธภัณฑ์กว่า 19 แห่ง เก็บสมบัติของโลกมากกว่า 150 ล้านชิ้น — ถือเป็น 'คลังข้อมูลของมนุษยชาติ' ที่เปิดให้เข้าชมฟรี",
-        Pentagon:
-          "อาคารห้าหลี่ยมแห่งนี้ไม่ใช่แค่สำนักงานใหญ่กลาโหม แต่ยังเป็นระบบประสานงานความมั่นคงที่ใหญ่ที่สุดในโลก มีพื้นที่มากกว่า 600,000 ตร.ม.",
-        "U.S. Capitol":
-          "ศูนย์กลางนิติบัญญัติที่เชื่อมแนวตรงถึง Lincoln Memorial — เป็นแกนพลังของแนวคิด ‘Power by the People’ ที่สะท้อนผ่านการวางผังเมืองทั้งเมือง",
-        "The White House":
-          "สร้างขึ้นในปี 1792 โดย James Hoban ใช้สถาปัตยกรรมแบบนีโอคลาสสิก เพื่อสื่อถึงอุดมการณ์ที่รัฐบาลต้องโปร่งใสและเข้าถึงได้",
-        "Street Art Voices":
-          "ศิลปะข้างถนนใน D.C. เป็นเครื่องมือทางสังคมที่ศิลปินใช้แสดงความคิดเห็นทางการเมือง และเรียกร้องความเท่าเทียม",
-        "D.C. Sunset":
-          "ภาพยามเย็นของเมืองหลวงสะท้อนความหมายลึกซึ้งของคำว่า ‘เสรีภาพ’ ที่สวยงามแต่ต้องต่อสู้เพื่อรักษาไว้เสมอ",
-      };
-
-      const popup = document.getElementById("popup");
-      const popupTitle = document.getElementById("popup-title");
-      const popupText = document.getElementById("popup-text");
-      const closeBtn = document.querySelector(".popup .close");
-
-      document.querySelectorAll(".section").forEach((sec) => {
-        sec.addEventListener("click", () => {
-          const title = sec.querySelector(".title").textContent.trim();
-          popupTitle.textContent = title;
-          popupText.textContent =
-            deepInfo[title] || "ยังไม่มีข้อมูลเพิ่มเติมในส่วนนี้";
-          popup.classList.add("show");
-          gtag("event", "open_popup", {
-            event_category: "Knowledge",
-            event_label: title,
-          });
-        });
+    document.querySelectorAll(".section").forEach(sec=>{
+      sec.addEventListener("click",()=>{
+        const title=sec.querySelector(".title").textContent.trim();
+        const info=deepInfo[title]||{img:"pic/His/default.png",text:"<p>ยังไม่มีข้อมูลเพิ่มเติม</p>"};
+        popupImg.src=info.img;popupTitle.textContent=title;popupText.innerHTML=info.text;
+        popup.classList.add("show");
+        gtag("event","open_popup",{event_category:"Knowledge",event_label:title});
       });
+    });
 
-      closeBtn.addEventListener("click", () => popup.classList.remove("show"));
-      popup.addEventListener("click", (e) => {
-        if (e.target === popup) popup.classList.remove("show");
-      });
-    </script>
-
-    <style>
-      /* 💬 Popup Style */
-      .popup {
-        position: fixed;
-        inset: 0;
-        background: rgba(10, 0, 25, 0.8);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        backdrop-filter: blur(6px);
-        opacity: 0;
-        visibility: hidden;
-        transition: opacity 0.4s ease, visibility 0.4s ease;
-        z-index: 999;
-      }
-      .popup.show {
-        opacity: 1;
-        visibility: visible;
-      }
-
-      .popup-content {
-        background: linear-gradient(160deg, #1d1438, #291e52);
-        border-radius: 18px;
-        max-width: 650px;
-        padding: 30px 40px;
-        box-shadow: 0 0 25px rgba(255, 150, 60, 0.25);
-        color: #fff;
-        transform: scale(0.9);
-        transition: transform 0.35s ease;
-      }
-      .popup.show .popup-content {
-        transform: scale(1);
-      }
-      .popup-content h2 {
-        background: linear-gradient(90deg, #ffd68a, #ff8e2a);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        margin-bottom: 10px;
-      }
-      .popup-content p {
-        font-size: 17px;
-        line-height: 1.7;
-        color: #ddd;
-      }
-      .popup .close {
-        position: absolute;
-        top: 20px;
-        right: 30px;
-        font-size: 28px;
-        color: #ffb86b;
-        cursor: pointer;
-        transition: transform 0.25s ease;
-      }
-      .popup .close:hover {
-        transform: scale(1.2);
-        color: #fff5d2;
-      }
-    </style>
-  </body>
+    closeBtn.addEventListener("click",()=>popup.classList.remove("show"));
+    popup.addEventListener("click",e=>{if(e.target===popup)popup.classList.remove("show");});
+  </script>
+</body>
 </html>
