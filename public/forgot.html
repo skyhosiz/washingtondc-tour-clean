@@ -1,235 +1,271 @@
 <!DOCTYPE html>
 
 <html lang="th">
-  <head>
-    <script
-      async
-      src="https://www.googletagmanager.com/gtag/js?id=G-VGBZS316J9"
-    ></script>
 
-    <script>
-      window.dataLayer = window.dataLayer || [];
+<head>
 
-      function gtag() {
-        dataLayer.push(arguments);
-      }
 
-      gtag("js", new Date());
 
-      gtag("config", "G-VGBZS316J9");
-    </script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-VGBZS316J9"></script>
 
-    <script src="js/auth.js"></script>
+<script>
 
-    <script src="js/nav.js" defer></script>
+  window.dataLayer = window.dataLayer || [];
 
-    <meta charset="UTF-8" />
+  function gtag(){dataLayer.push(arguments);}
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  gtag('js', new Date());
 
-    <title>Forgot Password | Washington D.C.</title>
+  gtag('config', 'G-VGBZS316J9');
 
-    <link
-      href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600;800&display=swap"
-      rel="stylesheet"
-    />
+</script>
 
-    <style>
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-      }
 
-      body {
-        font-family: "Kanit", sans-serif;
 
-        height: 100svh;
+<script src="js/auth.js"></script>
 
-        display: flex;
-        justify-content: center;
-        align-items: center;
+<script src="js/nav.js" defer></script> 
 
-        overflow: hidden;
-        position: relative;
-      }
 
-      .bg {
-        position: fixed;
-        inset: 0;
 
-        background: url("pic/dc_sunset.png") center/cover no-repeat;
+<meta charset="UTF-8">
 
-        z-index: -2;
-      }
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-      .overlay {
-        position: fixed;
-        inset: 0;
+<title>Forgot Password | Washington D.C.</title>
 
-        background: rgba(0, 0, 0, 0.35);
+<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600;800&display=swap" rel="stylesheet">
 
-        backdrop-filter: blur(2px);
 
-        z-index: -1;
-      }
 
-      .box {
-        width: 410px;
-        background: rgba(10, 0, 25, 0.85);
+<style>
 
-        padding: 36px;
-        border-radius: 24px;
-        text-align: center;
-        color: white;
+*{margin:0;padding:0;box-sizing:border-box;}
 
-        box-shadow: 0 0 40px rgba(255, 140, 30, 0.35);
-      }
+body{
 
-      h2 {
-        font-size: 30px;
-        margin-bottom: 16px;
-        font-weight: 800;
+    font-family:'Kanit',sans-serif;
 
-        background: linear-gradient(90deg, #ffd089, #ff8a25);
+    height:100svh; 
 
-        color: transparent;
+    display:flex; justify-content:center; align-items:center;
 
-        text-shadow: 0 0 10px rgba(255, 140, 50, 0.4);
-      }
+    overflow:hidden; position:relative;
 
-      input {
-        width: 100%;
-        padding: 12px;
-        margin: 10px 0;
+}
 
-        border-radius: 10px;
-        border: none;
-        font-size: 17px;
-        color: #222;
-      }
+.bg{
 
-      button {
-        width: 100%;
-        padding: 12px;
+    position:fixed; inset:0;
 
-        background: linear-gradient(90deg, #ffe29c, #ff8522);
+    background:url("pic/dc_sunset.png") center/cover no-repeat;
 
-        border: none;
-        border-radius: 12px;
-        font-size: 18px;
-        font-weight: bold;
+    z-index:-2;
 
-        cursor: pointer;
-        margin-top: 10px;
-        color: #222;
-        transition: 0.25s;
-      }
+}
 
-      button:hover {
-        transform: scale(1.05);
-        box-shadow: 0 0 18px rgba(255, 160, 50, 0.65);
-      }
+.overlay{
 
-      a {
-        display: inline-block;
-        margin-top: 14px;
-        font-size: 15px;
-        color: #ffd28a;
-        text-decoration: none;
-      }
+    position:fixed; inset:0;
 
-      .small {
-        font-size: 13px;
-        opacity: 0.9;
-        margin-top: 8px;
-      }
-    </style>
-  </head>
+    background:rgba(0,0,0,0.35);
 
-  <body>
-    <div class="bg"></div>
+    backdrop-filter:blur(2px);
 
-    <div class="overlay"></div>
+    z-index:-1;
 
-    <div class="box">
-      <h2>กู้คืนรหัสผ่าน</h2>
+}
 
-      <input
-        type="email"
-        id="email"
-        placeholder="อีเมลที่ลงทะเบียนไว้"
-        autocomplete="email"
-      />
+.box{
 
-      <button id="sendBtn" onclick="sendReset()">ส่งลิงก์รีเซ็ต</button>
+    width:410px; background:rgba(10,0,25,0.85);
 
-      <div class="small">เราจะส่งลิงก์รีเซ็ต (หมดอายุภายใน 30 นาที)</div>
+    padding:36px; border-radius:24px; text-align:center; color:white;
 
-      <a href="login.html">กลับไป Login</a>
-    </div>
+    box-shadow:0 0 40px rgba(255,140,30,.35);
 
-    <script>
-      localStorage.removeItem("token");
+}
 
-      localStorage.removeItem("user");
+h2{
 
-      const API_BASE =
-        location.hostname === "localhost"
-          ? "http://localhost:3000"
-          : "https://washingtondc-tour-clean.onrender.com";
+    font-size:30px; margin-bottom:16px; font-weight:800;
 
-      function isEmail(s) {
-        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s);
-      }
+    background:linear-gradient(90deg,#ffd089,#ff8a25);
 
-      async function sendReset() {
-        const email = document.getElementById("email").value.trim();
+    /* --- 1. เอากลับมา (จำเป็น!) --- */
 
-        const btn = document.getElementById("sendBtn");
+    -webkit-background-clip:text; 
 
-        if (!email) return alert("⚠️ กรุณากรอกอีเมล");
+    background-clip:text;
 
-        if (!isEmail(email)) return alert("⚠️ รูปแบบอีเมลไม่ถูกต้อง");
+    color:transparent;
 
-        btn.disabled = true;
+    text-shadow:0 0 10px rgba(255,140,50,0.4);
 
-        const oldText = btn.textContent;
+}
 
-        btn.innerHTML = `<span class="loader"></span> กำลังส่ง...`;
+input{
 
-        try {
-          const res = await fetch(`${API_BASE}/api/auth/forgot`, {
+    width:100%; padding:12px; margin:10px 0;
+
+    border-radius:10px; border:none; font-size:17px; color:#222;
+
+}
+
+button{
+
+    width:100%; padding:12px;
+
+    background:linear-gradient(90deg,#ffe29c,#ff8522);
+
+    border:none; border-radius:12px; font-size:18px; font-weight:bold;
+
+    cursor:pointer; margin-top:10px; color:#222; transition:.25s;
+
+}
+
+button:hover{ transform:scale(1.05); box-shadow:0 0 18px rgba(255,160,50,0.65); }
+
+a{ display:inline-block; margin-top:14px; font-size:15px; color:#ffd28a; text-decoration:none; }
+
+.small { font-size:13px; opacity:.9; margin-top:8px; }
+
+</style>
+
+</head>
+
+<body>
+
+
+
+<div class="bg"></div>
+
+<div class="overlay"></div>
+
+
+
+<div class="box">
+
+    <h2>กู้คืนรหัสผ่าน</h2>
+
+    <input type="email" id="email" placeholder="อีเมลที่ลงทะเบียนไว้" autocomplete="email" />
+
+    <button id="sendBtn" onclick="sendReset()">ส่งลิงก์รีเซ็ต</button>
+
+    <div class="small">เราจะส่งลิงก์รีเซ็ต (หมดอายุภายใน 30 นาที)</div>
+
+    <a href="login.html">กลับไป Login</a>
+
+</div>
+
+
+
+<script>
+
+localStorage.removeItem("token");
+
+localStorage.removeItem("user");
+
+
+
+const API_BASE =
+
+    location.hostname === "localhost"
+
+        ? "http://localhost:3000"
+
+        : "https://washingtondc-tour-clean.onrender.com";
+
+
+
+function isEmail(s){
+
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s);
+
+}
+
+
+
+async function sendReset(){
+
+    const email = document.getElementById("email").value.trim();
+
+    const btn = document.getElementById("sendBtn");
+
+
+
+    if(!email) return alert("⚠️ กรุณากรอกอีเมล");
+
+    if(!isEmail(email)) return alert("⚠️ รูปแบบอีเมลไม่ถูกต้อง");
+
+
+
+    btn.disabled = true;
+
+    const oldText = btn.textContent;
+
+    btn.innerHTML = "กำลังส่ง..."; // (แก้จาก loader)
+
+
+
+    try {
+
+        const res = await fetch(`${API_BASE}/api/auth/forgot`, {
+
             method: "POST",
 
             headers: { "Content-Type": "application/json" },
 
-            body: JSON.stringify({ email }),
-          });
+            body: JSON.stringify({ email })
 
-          const data = await res.json().catch(() => null);
+        });
 
-          if (data?.status === "success") {
-            gtag("event", "forgot_password", { event_category: "User" });
+
+
+        const data = await res.json().catch(()=>null);
+
+
+
+        if(data?.status === "success"){
+
+            gtag('event', 'forgot_password', { 'event_category': 'User' });
 
             alert("✅ ส่งอีเมลรีเซ็ตรหัสผ่านแล้ว! กรุณาตรวจสอบกล่องจดหมาย ✉️");
 
-            setTimeout(() => (location.href = "login.html"), 1200);
+            setTimeout(() => location.href="login.html", 1200);
 
-            return;
-          }
+            // (ลบ return; ออกจากตรงนี้)
+
+        } else {
 
           alert(data?.message || "❌ ไม่สามารถส่งอีเมลได้ ลองใหม่อีกครั้ง");
-        } catch (err) {
-          console.error(err);
 
-          alert("🚨 ระบบมีปัญหา กรุณาลองใหม่อีกครั้ง");
-        } finally {
-          btn.disabled = false;
-
-          btn.textContent = oldText;
         }
-      }
-    </script>
-  </body>
+
+
+
+    } catch(err){
+
+        console.error(err);
+
+        alert("🚨 ระบบมีปัญหา กรุณาลองใหม่อีกครั้ง");
+
+    } finally {
+
+      // --- 2. โค้ดนี้จะได้รันเสมอ ---
+
+        btn.disabled = false;
+
+        btn.textContent = oldText;
+
+    }
+
+}
+
+</script>
+
+
+
+</body>
+
 </html>

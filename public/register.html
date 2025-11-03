@@ -86,6 +86,12 @@
 
         background: linear-gradient(90deg, #ffd089, #ff8a25);
 
+        /* --- 1. เอากลับมา (จำเป็น!) --- */
+
+        -webkit-background-clip: text;
+
+        background-clip: text;
+
         color: transparent;
       }
 
@@ -153,7 +159,7 @@
 
       <input type="password" id="password" placeholder="รหัสผ่าน" />
 
-      <button onclick="register()">สมัครสมาชิก</button>
+      <button id="regBtn" onclick="register()">สมัครสมาชิก</button>
 
       <div class="login-box">
         มีบัญชีแล้ว? <a href="login.html">เข้าสู่ระบบ</a>
@@ -167,6 +173,8 @@
           : "https://washingtondc-tour-clean.onrender.com";
 
       async function register() {
+        const btn = document.getElementById("regBtn");
+
         const username = document.getElementById("username").value.trim();
 
         const email = document.getElementById("email").value.trim();
@@ -180,6 +188,12 @@
 
         if (!emailPattern.test(email))
           return alert("📧 กรุณากรอกอีเมลให้ถูกต้อง");
+
+        btn.disabled = true;
+
+        const oldText = btn.textContent;
+
+        btn.textContent = "กำลังสมัคร...";
 
         try {
           const res = await fetch(`${API_BASE}/api/auth/register`, {
@@ -199,14 +213,20 @@
 
             setTimeout(() => (location.href = "login.html"), 500);
 
-            return;
+            // (ลบ return; ออกจากตรงนี้)
+          } else {
+            alert(data?.message || "❌ สมัครไม่สำเร็จ!");
           }
-
-          alert(data?.message || "❌ สมัครไม่สำเร็จ!");
         } catch (err) {
           console.error("Register Error:", err);
 
           alert("🚨 เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง");
+        } finally {
+          // (โค้ดนี้จะได้รันเสมอ)
+
+          btn.disabled = false;
+
+          btn.textContent = oldText;
         }
       }
     </script>
