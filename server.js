@@ -198,13 +198,17 @@ app.get("/api/explore", authRequired, async (req, res) => {
 });
 
 /* =============================
-   🚀 PROXY Smithsonian (Fix CORS + Safe ID)
+   ✅ PROXY Smithsonian (Fixed ID Prefix + Safe CORS)
 ============================= */
 
 app.get("/api/proxy-smithsonian/:id", async (req, res) => {
   try {
     const { id } = req.params;
-    const safeId = encodeURIComponent(id); // ✅ ป้องกันตัวอักษรพิเศษใน id
+
+    // ✅ Smithsonian ต้องการ prefix "edanmdm:" นำหน้า id
+    const fullId = id.startsWith("edanmdm:") ? id : `edanmdm:${id}`;
+    const safeId = encodeURIComponent(fullId);
+
     const url = `https://edan.si.edu/openaccess/api/v1.0/content/${safeId}`;
 
     console.log("🛰 Smithsonian Proxy Request:", url);
@@ -223,9 +227,10 @@ app.get("/api/proxy-smithsonian/:id", async (req, res) => {
     res.json(data);
   } catch (err) {
     console.error("Proxy Smithsonian Error:", err.message);
-    res
-      .status(500)
-      .json({ error: "Failed to fetch Smithsonian data", detail: err.message });
+    res.status(500).json({
+      error: "Failed to fetch Smithsonian data",
+      detail: err.message,
+    });
   }
 });
 
