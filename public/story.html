@@ -1,421 +1,239 @@
 <!DOCTYPE html>
-
 <html lang="th">
   <head>
-    <script
-      async
-      src="https://www.googletagmanager.com/gtag/js?id=G-VGBZS316J9"
-    ></script>
-
+    <!-- 📊 Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-VGBZS316J9"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
-
-      function gtag() {
-        dataLayer.push(arguments);
-      }
-
+      function gtag() { dataLayer.push(arguments); }
       gtag("js", new Date());
-
       gtag("config", "G-VGBZS316J9");
     </script>
 
     <meta charset="UTF-8" />
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
     <title>History & Story | Washington D.C.</title>
 
+    <!-- 🔒 Auth / Nav -->
     <script src="js/auth.js"></script>
-
     <script src="js/nav.js" defer></script>
 
-    <link
-      href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600;800&display=swap"
-      rel="stylesheet"
-    />
+    <!-- 🖋 Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600;800&display=swap" rel="stylesheet" />
 
     <style>
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-      }
-
+      * {margin:0; padding:0; box-sizing:border-box;}
       body {
-        font-family: "Kanit", sans-serif;
-
-        background: #0b031a;
-
-        color: white;
-
-        overflow-x: hidden;
-
-        padding-bottom: 50px;
+        font-family:'Kanit',sans-serif;
+        background:#0b031a;
+        color:#fff;
+        overflow-x:hidden;
+        padding-bottom:50px;
       }
 
-      .circuit-bg,
-      .circuit-lines {
-        position: fixed;
-        inset: 0;
-        pointer-events: none;
-        z-index: -20;
+      /* 🌌 Background Lines */
+      .circuit-bg, .circuit-lines {
+        position:fixed; inset:0; pointer-events:none; z-index:-20;
       }
-
       .circuit-bg {
-        background: repeating-linear-gradient(
-            90deg,
-            rgba(100, 0, 180, 0.15) 0px,
-            rgba(100, 0, 180, 0.15) 2px,
-            transparent 2px,
-            transparent 120px
-          ),
-          repeating-linear-gradient(
-            0deg,
-            rgba(100, 0, 180, 0.15) 0px,
-            rgba(100, 0, 180, 0.15) 2px,
-            transparent 2px,
-            transparent 120px
-          );
-
-        filter: blur(0.6px);
+        background:
+          repeating-linear-gradient(90deg,rgba(100,0,180,.15) 0 2px,transparent 2px 120px),
+          repeating-linear-gradient(0deg,rgba(100,0,180,.15) 0 2px,transparent 2px 120px);
+        filter:blur(.6px);
       }
-
-      .circuit-lines::before,
-      .circuit-lines::after {
-        content: "";
-        position: absolute;
-        width: 160%;
-        height: 160%;
-        top: -30%;
-        left: -30%;
-
-        background-image: linear-gradient(
-          110deg,
-          rgba(0, 255, 255, 0.5),
-          rgba(140, 0, 255, 0.45) 50%,
-          rgba(0, 255, 255, 0.45)
-        );
-
-        background-size: 600% 600%;
-        opacity: 0.12;
-        mix-blend-mode: screen;
-
-        animation: flow 12s linear infinite;
+      .circuit-lines::before, .circuit-lines::after {
+        content:""; position:absolute; width:160%; height:160%; top:-30%; left:-30%;
+        background:linear-gradient(110deg,rgba(0,255,255,.5),rgba(140,0,255,.45) 50%,rgba(0,255,255,.45));
+        background-size:600% 600%;
+        opacity:.12; mix-blend-mode:screen;
+        animation:flow 14s linear infinite;
       }
-
-      .circuit-lines::after {
-        animation-duration: 17s;
-      }
-
+      .circuit-lines::after {animation-duration:20s;}
       @keyframes flow {
-        0% {
-          background-position: 0% 50%;
-        }
-
-        50% {
-          background-position: 100% 50%;
-        }
-
-        100% {
-          background-position: 0% 50%;
-        }
+        0% {background-position:0% 50%;}
+        50% {background-position:100% 50%;}
+        100% {background-position:0% 50%;}
       }
 
+      /* 🏛 Header Title */
       h1 {
-        text-align: center;
-
-        font-size: 62px;
-
-        padding-top: 100px;
-
-        margin: 20px 0 10px;
-
-        background: linear-gradient(90deg, #ffd28a, #ff8e28);
-
-        color: transparent;
+        text-align:center;
+        font-size:62px;
+        padding-top:100px;
+        margin:20px 0 10px;
+        background:linear-gradient(90deg,#ffd28a,#ff8e28);
+        -webkit-background-clip:text;
+        -webkit-text-fill-color:transparent;
+        background-clip:text;
+        color:transparent;
+        /* fallback for browsers not supporting gradient text */
+        background-color:#ffb84d;
       }
-
       h1::after {
-        content: "";
-
-        width: 260px;
-        height: 4px;
-
-        margin: 15px auto;
-
-        display: block;
-
-        background: linear-gradient(90deg, #ffbf66, #ffe9b2, #ffbf66);
-
-        border-radius: 2px;
+        content:"";
+        width:260px; height:4px;
+        margin:15px auto;
+        display:block;
+        background:linear-gradient(90deg,#ffbf66,#ffe9b2,#ffbf66);
+        border-radius:2px;
       }
 
+      /* 📘 Section Styling */
       .section {
-        width: 90%;
-
-        background: linear-gradient(145deg, #1b1333, #2a1b55);
-
-        border-radius: 22px;
-
-        margin: 45px auto;
-
-        padding: 25px;
-
-        display: flex;
-
-        align-items: center;
-
-        gap: 25px;
-
-        box-shadow: 0 0 20px rgba(255, 150, 60, 0.1);
-
-        position: relative;
-
-        opacity: 0;
-
-        transform: translateY(40px) scale(0.95);
-
-        transition: opacity 0.8s ease, transform 0.8s ease;
+        width:90%;
+        background:linear-gradient(145deg,#1b1333,#2a1b55);
+        border-radius:22px;
+        margin:45px auto;
+        padding:25px;
+        display:flex;
+        align-items:center;
+        gap:25px;
+        box-shadow:0 0 20px rgba(255,150,60,.1);
+        opacity:0;
+        transform:translateY(40px) scale(.95);
+        transition:opacity .8s ease, transform .8s ease;
       }
-
       .section.visible {
-        opacity: 1;
-
-        transform: translateY(0) scale(1);
+        opacity:1;
+        transform:translateY(0) scale(1);
+      }
+      .section:hover {
+        transform:translateY(-8px) scale(1.02);
+        box-shadow:0 0 40px rgba(175,125,255,.38);
       }
 
       .section img {
-        width: 45%;
-
-        height: 300px;
-
-        border-radius: 18px;
-
-        object-fit: cover;
-
-        transition: transform 0.9s ease, filter 0.45s ease;
+        width:45%;
+        height:300px;
+        border-radius:18px;
+        object-fit:cover;
+        transition:transform .6s ease, filter .4s ease;
       }
-
-      .section.visible img {
-        transform: scale(1.015);
-      }
-
-      .section:hover img {
-        transform: scale(1.07);
-
-        filter: brightness(1.12);
-      }
-
-      .section:hover {
-        transform: translateY(-8px) scale(1.02);
-
-        box-shadow: 0 0 40px rgba(175, 125, 255, 0.38);
-      }
+      .section.visible img {transform:scale(1.02);}
+      .section:hover img {transform:scale(1.06); filter:brightness(1.1);}
 
       .title {
-        font-size: 39px;
-
-        background: linear-gradient(90deg, #ffe1a7, #ff7f14);
-
-        color: transparent;
-
-        margin-bottom: 12px;
+        font-size:38px;
+        margin-bottom:10px;
+        background:linear-gradient(90deg,#ffe1a7,#ff7f14);
+        -webkit-background-clip:text;
+        -webkit-text-fill-color:transparent;
+        background-clip:text;
+        color:transparent;
+        /* fallback plain gold color */
+        background-color:#ffcc70;
       }
-
       .desc {
-        font-size: 18px;
-        opacity: 0.92;
-        line-height: 1.5;
+        font-size:18px;
+        opacity:.92;
+        line-height:1.55;
       }
 
-      @media (max-width: 820px) {
-        .section {
-          flex-direction: column;
-        }
-
-        .section img {
-          width: 100%;
-          height: 240px;
-        }
-
-        h1 {
-          font-size: 48px;
-        }
+      /* 📱 Responsive */
+      @media(max-width:820px){
+        .section{flex-direction:column;}
+        .section img{width:100%; height:240px;}
+        h1{font-size:48px;}
       }
     </style>
   </head>
 
   <body>
+    <!-- ✨ Animated Background -->
     <div class="circuit-bg"></div>
-
     <div class="circuit-lines"></div>
 
     <h1>History & Story</h1>
 
-    <div class="section">
-      <img src="pic/His/HIS.png" />
-      <div>
-        <div class="title">Birth of Washington D.C.</div>
-        <p class="desc">
-          เมืองหลวงที่ถูกออกแบบอย่างตั้งใจให้เป็นสัญลักษณ์แห่งประชาธิปไตย
-          ตั้งแต่ปี 1790
-        </p>
-      </div>
-    </div>
+    <!-- 🕰️ Historical Sections -->
+    <div class="section"><img src="pic/His/HIS.png" alt="Birth of Washington D.C.">
+      <div><div class="title">Birth of Washington D.C.</div>
+        <p class="desc">เมืองหลวงที่ถูกออกแบบอย่างตั้งใจให้เป็นสัญลักษณ์แห่งประชาธิปไตย ตั้งแต่ปี 1790</p>
+      </div></div>
 
-    <div class="section">
-      <img src="pic/His/map.png" />
-      <div>
-        <div class="title">The Original District Map</div>
-        <p class="desc">
-          แผนผังกริดเชื่อมโยงศูนย์กลางอำนาจและสิทธิของประชาชนอย่างเท่าเทียม
-        </p>
-      </div>
-    </div>
+    <div class="section"><img src="pic/His/map.png" alt="The Original District Map">
+      <div><div class="title">The Original District Map</div>
+        <p class="desc">แผนผังกริดเชื่อมโยงศูนย์กลางอำนาจและสิทธิของประชาชนอย่างเท่าเทียม</p>
+      </div></div>
 
-    <div class="section">
-      <img src="pic/His/DSWERT.png" />
-      <div>
-        <div class="title">Historic Public Buildings</div>
-        <p class="desc">
-          โครงสร้างรัฐยุคแรก เริ่มต้นฐานรากสู่มหานครศูนย์กลางโลก
-        </p>
-      </div>
-    </div>
+    <div class="section"><img src="pic/His/DSWERT.png" alt="Historic Public Buildings">
+      <div><div class="title">Historic Public Buildings</div>
+        <p class="desc">โครงสร้างรัฐยุคแรก เริ่มต้นฐานรากสู่มหานครศูนย์กลางโลก</p>
+      </div></div>
 
-    <div class="section">
-      <img src="pic/His/DDD.png" />
-      <div>
-        <div class="title">I Have A Dream — 1963</div>
-        <p class="desc">
-          มาร์ติน ลูเธอร์ คิง จูเนียร์ จุดไฟเพื่อความเท่าเทียมแก่คนทั้งโลกที่นี่
-        </p>
-      </div>
-    </div>
+    <div class="section"><img src="pic/His/DDD.png" alt="I Have A Dream — 1963">
+      <div><div class="title">I Have A Dream — 1963</div>
+        <p class="desc">มาร์ติน ลูเธอร์ คิง จูเนียร์ จุดไฟเพื่อความเท่าเทียมแก่คนทั้งโลกที่นี่</p>
+      </div></div>
 
-    <div class="section">
-      <img src="pic/His/DWSD.png" />
-      <div>
-        <div class="title">Washington Monument</div>
-        <p class="desc">
-          โอบกอดอดีตของ George Washington ด้วยหินสูงกว่า 169 เมตร
-        </p>
-      </div>
-    </div>
+    <div class="section"><img src="pic/His/DWSD.png" alt="Washington Monument">
+      <div><div class="title">Washington Monument</div>
+        <p class="desc">โอบกอดอดีตของ George Washington ด้วยหินสูงกว่า 169 เมตร</p>
+      </div></div>
 
-    <div class="section">
-      <img src="pic/His/HYT.png" />
-      <div>
-        <div class="title">The Monument Through Time</div>
-        <p class="desc">
-          วิวแห่งพลังศรัทธา ที่เปลี่ยนไปทุกฤดูกาล แต่สง่างามเสมอ
-        </p>
-      </div>
-    </div>
+    <div class="section"><img src="pic/His/HYT.png" alt="The Monument Through Time">
+      <div><div class="title">The Monument Through Time</div>
+        <p class="desc">วิวแห่งพลังศรัทธา ที่เปลี่ยนไปทุกฤดูกาล แต่สง่างามเสมอ</p>
+      </div></div>
 
-    <div class="section">
-      <img src="pic/His/musem.png" />
-      <div>
-        <div class="title">Lincoln Memorial</div>
-        <p class="desc">
-          สถานที่ประกาศความเสมอภาคของมนุษย์ สะท้อนเสียงแห่งประชาชน
-        </p>
-      </div>
-    </div>
+    <div class="section"><img src="pic/His/musem.png" alt="Lincoln Memorial">
+      <div><div class="title">Lincoln Memorial</div>
+        <p class="desc">สถานที่ประกาศความเสมอภาคของมนุษย์ สะท้อนเสียงแห่งประชาชน</p>
+      </div></div>
 
-    <div class="section">
-      <img src="pic/His/FPSD.png" />
-      <div>
-        <div class="title">The White House</div>
+    <div class="section"><img src="pic/His/FPSD.png" alt="The White House">
+      <div><div class="title">The White House</div>
         <p class="desc">สัญลักษณ์ของอำนาจบริหาร ที่ขับเคลื่อนโลกทุกลมหายใจ</p>
-      </div>
-    </div>
+      </div></div>
 
-    <div class="section">
-      <img src="pic/His/fwa.png" />
-      <div>
-        <div class="title">U.S. Capitol</div>
+    <div class="section"><img src="pic/His/fwa.png" alt="U.S. Capitol">
+      <div><div class="title">U.S. Capitol</div>
         <p class="desc">แหล่งปะทะของความคิด เพื่อสร้างอนาคตประเทศ</p>
-      </div>
-    </div>
+      </div></div>
 
-    <div class="section">
-      <img src="pic/His/PNG.png" />
-      <div>
-        <div class="title">Capitol Night View</div>
+    <div class="section"><img src="pic/His/PNG.png" alt="Capitol Night View">
+      <div><div class="title">Capitol Night View</div>
         <p class="desc">สภาไม่ได้ทำงานแค่กลางวัน … ความหวังเดินหน้าตลอดคืน</p>
-      </div>
-    </div>
+      </div></div>
 
-    <div class="section">
-      <img src="pic/His/WC.png" />
-      <div>
-        <div class="title">Pentagon</div>
+    <div class="section"><img src="pic/His/WC.png" alt="Pentagon">
+      <div><div class="title">Pentagon</div>
         <p class="desc">กำแพงป้องกันประเทศที่ทั้งโลกจับตามอง</p>
-      </div>
-    </div>
+      </div></div>
 
-    <div class="section">
-      <img src="pic/His/DDDDDD.png" />
-      <div>
-        <div class="title">Defense Intelligence</div>
+    <div class="section"><img src="pic/His/DDDDDD.png" alt="Defense Intelligence">
+      <div><div class="title">Defense Intelligence</div>
         <p class="desc">ฐานบัญชาการลับ ๆ ที่เรารู้แค่ว่า “สำคัญมาก”</p>
-      </div>
-    </div>
+      </div></div>
 
-    <div class="section">
-      <img src="pic/His/smithsonian-museum-natural-history.png" />
-      <div>
-        <div class="title">Smithsonian Museum</div>
-        <p class="desc">
-          พิพิธภัณฑ์ที่ใหญ่สุดแห่งหนึ่งของมนุษยชาติ เก็บเรื่องราวจากดาวโลกไว้ครบ
-        </p>
-      </div>
-    </div>
+    <div class="section"><img src="pic/His/smithsonian-museum-natural-history.png" alt="Smithsonian Museum">
+      <div><div class="title">Smithsonian Museum</div>
+        <p class="desc">พิพิธภัณฑ์ที่ใหญ่สุดแห่งหนึ่งของมนุษยชาติ เก็บเรื่องราวจากดาวโลกไว้ครบ</p>
+      </div></div>
 
-    <div class="section">
-      <img src="pic/His/PEP.png" />
-      <div>
-        <div class="title">Modern DC Streets</div>
-        <p class="desc">
-          อดีตที่เข้มแข็งผลักดันสู่ปัจจุบันที่เต็มไปด้วยชีวิตและวัฒนธรรม
-        </p>
-      </div>
-    </div>
+    <div class="section"><img src="pic/His/PEP.png" alt="Modern DC Streets">
+      <div><div class="title">Modern DC Streets</div>
+        <p class="desc">อดีตที่เข้มแข็งผลักดันสู่ปัจจุบันที่เต็มไปด้วยชีวิตและวัฒนธรรม</p>
+      </div></div>
 
-    <div class="section">
-      <img src="pic/His/TOTAL.png" />
-      <div>
-        <div class="title">Street Art Voices</div>
+    <div class="section"><img src="pic/His/TOTAL.png" alt="Street Art Voices">
+      <div><div class="title">Street Art Voices</div>
         <p class="desc">ศิลปะบนกำแพงคือกล้องขยายเสียงของประชาชน</p>
-      </div>
-    </div>
+      </div></div>
 
-    <div class="section">
-      <img src="pic/His/pughf.png" />
-      <div>
-        <div class="title">D.C. Sunset</div>
-        <p class="desc">
-          จบวันด้วยภาพที่เตือนว่า เสรีภาพต้องสวยงามและเข้มแข็งที่สุด
-        </p>
-      </div>
-    </div>
+    <div class="section"><img src="pic/His/pughf.png" alt="D.C. Sunset">
+      <div><div class="title">D.C. Sunset</div>
+        <p class="desc">จบวันด้วยภาพที่เตือนว่า เสรีภาพต้องสวยงามและเข้มแข็งที่สุด</p>
+      </div></div>
 
+    <!-- 🎥 Section Reveal -->
     <script>
-      const sections = document.querySelectorAll(".section");
-
-      const observer = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((e) => {
-            if (e.isIntersecting) {
-              e.target.classList.add("visible");
-            }
-          });
-        },
-        { threshold: 0.15 }
-      );
-
-      sections.forEach((s) => observer.observe(s));
+      const observer = new IntersectionObserver(entries=>{
+        entries.forEach(e=>{
+          if(e.isIntersecting) e.target.classList.add("visible");
+        });
+      },{threshold:.15});
+      document.querySelectorAll(".section").forEach(sec=>observer.observe(sec));
     </script>
   </body>
 </html>

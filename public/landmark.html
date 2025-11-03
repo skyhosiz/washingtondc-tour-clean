@@ -1,267 +1,112 @@
 <!DOCTYPE html>
-
 <html lang="th">
-
 <head>
-
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-VGBZS316J9"></script>
-
-<script>
-
-  window.dataLayer = window.dataLayer || [];
-
-  function gtag(){dataLayer.push(arguments);}
-
-  gtag('js', new Date());
-
-  gtag('config', 'G-VGBZS316J9');
-
-</script>
-
-<meta charset="UTF-8">
-
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Lincoln Memorial | Washington D.C.</title>
-
-
-
-<script src="js/auth.js"></script>
-
-<script src="js/nav.js" defer></script>
-
-<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600;800&display=swap" rel="stylesheet"/>
-
-
-
-<style>
-
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Kanit',sans-serif;}
-
-body{
-
-  background:#000;
-
-  color:white;
-
-  overflow-x:hidden;
-
-}
-
-.hero{
-
-  height:100vh;
-
-  background:url("pic/landmark.png") center/cover no-repeat;
-
-  display:flex;
-
-  justify-content:center;
-
-  align-items:center;
-
-  position:relative;
-
-  text-align:center;
-
-}
-
-.hero::before{
-
-  content:"";
-
-  position:absolute; inset:0;
-
-  background:rgba(0,0,0,.45);
-
-  backdrop-filter:blur(2px);
-
-}
-
-.hero-content{
-
-  position:relative;
-
-  max-width:850px;
-
-  padding:0 20px;
-
-  animation:fade .9s ease-in-out;
-
-}
-
-@keyframes fade{
-
-  from{opacity:0;transform:scale(1.05);}
-
-  to{opacity:1;transform:scale(1);}
-
-}
-
-h1{
-
-  font-size:70px; font-weight:800;
-
-  background:linear-gradient(90deg,#ffe7b3,#ffae52);
-
-
-  color:transparent; 
-
-}
-
-h2{
-
-  opacity:.92;
-
-  font-size:25px;
-
-  margin-top:12px;
-
-}
-
-.text{
-
-  margin-top:15px;
-
-  padding:0 20px;
-
-  opacity:.92;
-
-  line-height:1.75;
-
-  font-size:18px;
-
-}
-
-
-
-.btnBox{
-
-  margin-top:30px;
-
-  display:flex;
-
-  justify-content:center;
-
-  gap:22px;
-
-}
-
-.btnInfo{
-
-  padding:14px 32px;
-
-  border:none;
-
-  cursor:pointer;
-
-  border-radius:14px;
-
-  font-size:17px;
-
-  font-weight:700;
-
-  box-shadow:0 4px 18px rgba(0,0,0,.35);
-
-  transition:.25s;
-
-}
-
-
-
-.btn-back{
-
-  background:#ffb84a;color:#000;
-
-}
-
-.btn-back:hover{
-
-  background:#ffd78c;
-
-  transform:translateY(-3px) scale(1.05);
-
-}
-
-
-
-.btn-web{
-
-  background:#e35a5a;color:#fff;
-
-}
-
-.btn-web:hover{
-
-  background:#ff8585; 
-
-  transform:translateY(-3px) scale(1.05);
-
-}
-
-
-
-footer{
-
-  text-align:center;
-
-  padding:35px 0;
-
-  opacity:.85;
-
-  font-size:14px;
-
-  letter-spacing:.3px;
-
-}
-
-</style>
-
+  <!-- 🧭 Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-VGBZS316J9"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-VGBZS316J9');
+  </script>
+
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lincoln Memorial | Washington D.C.</title>
+
+  <script src="js/auth.js"></script>
+  <script src="js/nav.js" defer></script>
+  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600;800&display=swap" rel="stylesheet" />
+
+  <style>
+    * {margin:0; padding:0; box-sizing:border-box; font-family:'Kanit',sans-serif;}
+    body {background:#000; color:#fff; overflow-x:hidden;}
+
+    .hero {
+      height:100vh;
+      background:url("pic/landmark.png") center/cover no-repeat;
+      display:flex; justify-content:center; align-items:center;
+      position:relative; text-align:center;
+    }
+
+    .hero::before {
+      content:"";
+      position:absolute; inset:0;
+      background:rgba(0,0,0,0.45);
+      backdrop-filter:blur(2px);
+    }
+
+    .hero-content {
+      position:relative;
+      max-width:850px;
+      padding:0 20px;
+      animation:fade 0.9s ease-in-out;
+    }
+
+    @keyframes fade {
+      from {opacity:0; transform:scale(1.05);}
+      to {opacity:1; transform:scale(1);}
+    }
+
+    h1 {
+      font-size:70px; font-weight:800;
+      background:linear-gradient(90deg,#ffe7b3,#ffae52);
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+      background-clip:text;
+      color:transparent;
+    }
+
+    h2 {opacity:.92; font-size:25px; margin-top:12px;}
+
+    .text {
+      margin-top:15px; padding:0 20px;
+      opacity:.92; line-height:1.75; font-size:18px;
+    }
+
+    .btnBox {
+      margin-top:30px; display:flex;
+      justify-content:center; gap:22px;
+    }
+
+    .btnInfo {
+      padding:14px 32px; border:none; cursor:pointer;
+      border-radius:14px; font-size:17px; font-weight:700;
+      box-shadow:0 4px 18px rgba(0,0,0,0.35);
+      transition:.25s;
+    }
+
+    .btn-back {background:#ffb84a; color:#000;}
+    .btn-back:hover {background:#ffd78c; transform:translateY(-3px) scale(1.05);}
+    .btn-web {background:#e35a5a; color:#fff;}
+    .btn-web:hover {background:#ff8585; transform:translateY(-3px) scale(1.05);}
+
+    footer {
+      text-align:center; padding:35px 0;
+      opacity:.85; font-size:14px; letter-spacing:.3px;
+    }
+  </style>
 </head>
 
 <body>
-
-
-<section class="hero">
-
-  <div class="hero-content">
-
-    <h1>Lincoln Memorial</h1>
-
-    <h2>The Heart of American History</h2>
-
-
-
-    <p class="text">
-
-      อนุสรณ์สถานลินคอล์น ถูกสร้างขึ้นเพื่อเป็นเกียรติแก่ประธานาธิบดี
-
-      อับราฮัม ลินคอล์น เป็นหนึ่งในแลนด์มาร์คสำคัญที่นักท่องเที่ยวทั่วโลกมาเยือน
-
-      และเป็นสัญลักษณ์แห่งเสรีภาพและความเสมอภาคของประเทศสหรัฐอเมริกา
-
-    </p>
-
-
-
-    <div class="btnBox">
-
-      <button class="btnInfo btn-back" onclick="location.href='index.html'">← Back to Home</button>
-
-      <button class="btnInfo btn-web" onclick="window.open('https://www.nps.gov/linc/index.htm','_blank')">🔎 Official Website</button>
-
+  <section class="hero">
+    <div class="hero-content">
+      <h1>Lincoln Memorial</h1>
+      <h2>The Heart of American History</h2>
+      <p class="text">
+        อนุสรณ์สถานลินคอล์น ถูกสร้างขึ้นเพื่อเป็นเกียรติแก่ประธานาธิบดี
+        อับราฮัม ลินคอล์น เป็นหนึ่งในแลนด์มาร์คสำคัญที่นักท่องเที่ยวทั่วโลกมาเยือน
+        และเป็นสัญลักษณ์แห่งเสรีภาพและความเสมอภาคของประเทศสหรัฐอเมริกา
+      </p>
+      <div class="btnBox">
+        <button class="btnInfo btn-back" onclick="location.href='index.html'">← Back to Home</button>
+        <button class="btnInfo btn-web" onclick="window.open('https://www.nps.gov/linc/index.htm','_blank')">🔎 Official Website</button>
+      </div>
     </div>
+  </section>
 
-</section>
-
-
-
-<footer>
-
-© 2025 Washington D.C. Tourism Project — Lincoln Memorial | Developed by FlukeTON
-
-</footer>
-
+  <footer>
+    © 2025 Washington D.C. Tourism Project — Lincoln Memorial | Developed by FlukeTON
+  </footer>
 </body>
-
 </html>

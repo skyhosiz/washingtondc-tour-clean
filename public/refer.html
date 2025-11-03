@@ -1,264 +1,170 @@
 <!DOCTYPE html>
-
 <html lang="th">
   <head>
-    <script
-      async
-      src="https://www.googletagmanager.com/gtag/js?id=G-VGBZS316J9"
-    ></script>
-
+    <!-- 📊 Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-VGBZS316J9"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
-
-      function gtag() {
-        dataLayer.push(arguments);
-      }
-
+      function gtag(){dataLayer.push(arguments);}
       gtag("js", new Date());
-
       gtag("config", "G-VGBZS316J9");
     </script>
 
     <meta charset="UTF-8" />
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
     <title>References — Washington D.C. Tourism</title>
 
+    <!-- 🔒 Auth + Nav -->
     <script src="js/auth.js"></script>
-
     <script src="js/nav.js" defer></script>
 
-    <link
-      href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600;700&display=swap"
-      rel="stylesheet"
-    />
+    <!-- 🖋 Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600;700&display=swap" rel="stylesheet"/>
 
     <style>
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
+      *{margin:0;padding:0;box-sizing:border-box;}
+      body{
+        font-family:"Kanit",sans-serif;
+        background:#0d0b22;
+        color:#fff;
+        overflow-x:hidden;
       }
 
-      body {
-        font-family: "Kanit", sans-serif;
+      /* 🌌 Animated Soft Background */
+      .bg-core{
+        position:fixed;inset:-40%;
+        background:radial-gradient(circle at 50% 35%,#6c10ffbb,transparent 60%),
+                   conic-gradient(from 0turn,#ffc98222 0 25%,transparent 25% 50%,#ffc98222 50% 75%,transparent 75% 100%);
+        filter:blur(70px) saturate(130%);
+        animation:spin 36s linear infinite;
+        opacity:.38;pointer-events:none;
+      }
+      @keyframes spin{to{transform:rotate(360deg);}}
 
-        background: #0d0b22;
-
-        color: #fff;
-
-        overflow-x: hidden;
+      /* 🏛️ Page Title */
+      h1{
+        text-align:center;
+        padding-top:100px;
+        margin-top:20px;
+        font-size:52px;
+        font-weight:700;
+        background:linear-gradient(90deg,#fff3c5 0%,#ffd36b 45%,#ff9f43 100%);
+        -webkit-background-clip:text;
+        -webkit-text-fill-color:transparent;
+        background-clip:text;
+        color:transparent;
+        text-shadow:0 0 25px rgba(255,200,100,0.25);
       }
 
-      .bg-core {
-        position: fixed;
-        inset: -40%;
-
-        background: radial-gradient(
-            circle at 50% 35%,
-            #6c10ffbb,
-            transparent 60%
-          ),
-          conic-gradient(
-            from 0turn,
-            #ffc98222 0 25%,
-            transparent 25% 50%,
-            #ffc98222 50% 75%,
-            transparent 75% 100%
-          );
-
-        filter: blur(70px) saturate(130%);
-
-        animation: spin 36s linear infinite;
-
-        opacity: 0.38;
-        pointer-events: none;
+      /* 📚 Grid Layout */
+      .ref-grid{
+        width:min(1100px,90%);
+        margin:50px auto 100px;
+        display:grid;
+        gap:35px;
+        grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
       }
 
-      @keyframes spin {
-        to {
-          transform: rotate(360deg);
-        }
+      /* 🪶 Card Styling */
+      .ref-card{
+        padding:22px 20px;
+        border-radius:18px;
+        background:rgba(255,255,255,0.05);
+        border:1px solid rgba(255,208,137,0.1);
+        backdrop-filter:blur(6px);
+        box-shadow:0 0 15px rgba(0,0,0,0.55);
+        text-align:center;
+        opacity:0;
+        transform:translateY(25px) scale(0.97);
+        transition:opacity .5s ease,transform .5s ease,border .3s ease;
+      }
+      .ref-card.visible{opacity:1;transform:translateY(0) scale(1);}
+      .ref-card:hover{
+        transform:translateY(-8px) scale(1.03);
+        border-color:rgba(255,208,137,0.4);
+        box-shadow:0 0 35px rgba(255,185,90,0.55);
       }
 
-      h1 {
-        text-align: center;
-
-        padding-top: 100px;
-
-        margin-top: 20px;
-
-        font-size: 52px;
-        font-weight: 700;
-
-        background: linear-gradient(90deg, #ffe1a7, #ff7f14);
-
-        color: transparent;
+      /* 🏷️ Title */
+      .ref-title{
+        font-size:21px;
+        font-weight:600;
+        margin-bottom:8px;
+        background:linear-gradient(90deg,#ffeab0 0%,#ffd87b 40%,#ff9f43 100%);
+        -webkit-background-clip:text;
+        -webkit-text-fill-color:transparent;
+        background-clip:text;
+        color:transparent;
       }
 
-      .ref-grid {
-        width: min(1100px, 90%);
+      /* 🔗 URL */
+      .ref-url{
+        font-size:14px;
+        color:#9dd4ff;
+        text-decoration:none;
+        word-break:break-all;
+        transition:.2s;
+      }
+      .ref-url:hover{color:#d9eeff;text-shadow:0 0 6px #5db9ff;}
 
-        margin: 50px auto 100px;
-
-        display: grid;
-
-        gap: 35px;
-
-        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      /* 🪩 Footer */
+      .credit{
+        text-align:center;
+        font-size:14px;
+        margin-bottom:70px;
+        opacity:.85;
+        color:#ccc;
       }
 
-      .ref-card {
-        padding: 22px 20px;
-
-        border-radius: 18px;
-
-        background: rgba(255, 255, 255, 0.05);
-
-        border: 1px solid rgba(255, 208, 137, 0.08);
-
-        backdrop-filter: blur(6px);
-
-        box-shadow: 0 0 12px rgba(0, 0, 0, 0.6);
-
-        text-align: center;
-
-        position: relative;
-
-        opacity: 0;
-
-        transform: translateY(25px) scale(0.97);
-
-        transition: 0.4s ease;
-      }
-
-      .ref-card.visible {
-        opacity: 1;
-
-        transform: translateY(0) scale(1);
-      }
-
-      .ref-card:hover {
-        transform: translateY(-10px) scale(1.05);
-
-        border-color: rgba(255, 208, 137, 0.3);
-
-        box-shadow: 0 0 35px rgba(255, 180, 100, 0.55);
-      }
-
-      .ref-title {
-        font-size: 21px;
-        font-weight: 600;
-
-        background: linear-gradient(90deg, #ffd8a8, #ff8b1e);
-
-        color: transparent;
-
-        margin-bottom: 6px;
-      }
-
-      .ref-url {
-        font-size: 14px;
-
-        color: #92c8ff;
-
-        text-decoration: none;
-
-        word-break: break-all;
-
-        transition: 0.2s;
-      }
-
-      .ref-url:hover {
-        color: #d2e6ff;
-
-        text-shadow: 0 0 6px #5db9ff;
-      }
-
-      .credit {
-        text-align: center;
-
-        font-size: 14px;
-
-        margin-bottom: 70px;
-
-        opacity: 0.85;
+      @media(max-width:600px){
+        h1{font-size:42px;padding-top:80px;}
       }
     </style>
   </head>
 
   <body>
     <div class="bg-core"></div>
-
     <h1>REFERENCE SOURCES</h1>
 
     <div class="ref-grid">
       <div class="ref-card">
         <div class="ref-title">Smithsonian</div>
-
-        <a class="ref-url" href="https://www.si.edu" target="_blank"
-          >https://www.si.edu</a
-        >
+        <a class="ref-url" href="https://www.si.edu" target="_blank">https://www.si.edu</a>
       </div>
 
       <div class="ref-card">
         <div class="ref-title">Lincoln Memorial</div>
-
-        <a
-          class="ref-url"
-          href="https://www.nps.gov/linc/index.htm"
-          target="_blank"
-        >
-          https://www.nps.gov/linc/index.htm
-        </a>
+        <a class="ref-url" href="https://www.nps.gov/linc/index.htm" target="_blank">https://www.nps.gov/linc/index.htm</a>
       </div>
 
       <div class="ref-card">
         <div class="ref-title">Washington DC Official Tourism</div>
-
-        <a class="ref-url" href="https://washington.org" target="_blank"
-          >https://washington.org</a
-        >
+        <a class="ref-url" href="https://washington.org" target="_blank">https://washington.org</a>
       </div>
 
       <div class="ref-card">
         <div class="ref-title">Hotels & Stays</div>
-
-        <a class="ref-url" href="https://www.booking.com" target="_blank"
-          >https://www.booking.com</a
-        >
+        <a class="ref-url" href="https://www.booking.com" target="_blank">https://www.booking.com</a>
       </div>
 
       <div class="ref-card">
         <div class="ref-title">US Capitol</div>
-
-        <a class="ref-url" href="https://www.aoc.gov" target="_blank"
-          >https://www.aoc.gov</a
-        >
+        <a class="ref-url" href="https://www.aoc.gov" target="_blank">https://www.aoc.gov</a>
       </div>
     </div>
 
     <div class="credit">
-      © 2025 Washington D.C. Tourism Project — References | Developed by
-      FlukeTON
+      © 2025 Washington D.C. Tourism Project — References | Developed by FlukeTON
     </div>
 
     <script>
-      const cards = document.querySelectorAll(".ref-card");
-
-      const obs = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((e) => {
-            if (e.isIntersecting) {
-              e.target.classList.add("visible");
-            }
-          });
-        },
-        { threshold: 0.25 }
-      );
-
-      cards.forEach((c) => obs.observe(c));
+      const cards=document.querySelectorAll(".ref-card");
+      const obs=new IntersectionObserver(entries=>{
+        entries.forEach(e=>{
+          if(e.isIntersecting)e.target.classList.add("visible");
+        });
+      },{threshold:.25});
+      cards.forEach(c=>obs.observe(c));
     </script>
   </body>
 </html>
