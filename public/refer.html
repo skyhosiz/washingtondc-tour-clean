@@ -1,214 +1,264 @@
 <!DOCTYPE html>
+
 <html lang="th">
-<head>
+  <head>
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-VGBZS316J9"
+    ></script>
 
-<!-- ✅ Google Analytics: WashingtonDC-Tour -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-VGBZS316J9"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-VGBZS316J9');
-</script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
 
+      function gtag() {
+        dataLayer.push(arguments);
+      }
 
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>References — Washington D.C. Tourism</title>
+      gtag("js", new Date());
 
-<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600;700&display=swap" rel="stylesheet"/>
+      gtag("config", "G-VGBZS316J9");
+    </script>
 
-<style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{
-  font-family:'Kanit',sans-serif;
-  background:#0d0b22;
-  color:#fff;
-  overflow-x:hidden;
-}
+    <meta charset="UTF-8" />
 
-/* ✅ Navbar Standard */
-.navbar{
-  position:fixed;
-  top:0; left:0;
-  width:100%;
-  height:65px;
-  padding:14px 24px;
-  background:rgba(0,0,0,0.78);
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  z-index:2000;
-  backdrop-filter:blur(8px);
-}
-.nav-left{display:flex;align-items:center;gap:14px;}
-.brand{
-  background:linear-gradient(90deg,#ffd089,#ff8a25);
-  -webkit-background-clip:text;color:transparent;
-  font-size:20px;font-weight:700;
-}
-.btn--ghost{
-  padding:8px 14px;
-  border-radius:8px;
-  border:1px solid rgba(255,210,137,.25);
-  background:rgba(255,208,137,.12);
-  color:#ffd089;
-  cursor:pointer;
-  transition:.2s;
-}
-.btn--ghost:hover{
-  background:rgba(255,208,137,.3);
-  transform:translateY(-2px);
-}
-.nav-right{display:flex;align-items:center;gap:12px;}
-.logout-btn{
-  background:#ff7a45;border:none;
-  padding:8px 14px;border-radius:8px;
-  cursor:pointer;
-}
-.logout-btn:hover{filter:brightness(1.15);}
-.pushdown{height:80px;}
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-/* BG */
-.bg-core{
-  position:fixed;inset:-40%;
-  background:
-    radial-gradient(circle at 50% 35%, #6c10ffbb, transparent 60%),
-    conic-gradient(from 0turn,#ffc98222 0 25%, transparent 25% 50%, #ffc98222 50% 75%, transparent 75% 100%);
-  filter:blur(70px) saturate(130%);
-  animation:spin 36s linear infinite;
-  opacity:.38;pointer-events:none;
-}
-@keyframes spin{to{transform:rotate(360deg)}}
+    <title>References — Washington D.C. Tourism</title>
 
-/* Title */
-h1{
-  text-align:center;margin-top:20px;
-  font-size:52px;font-weight:700;
-  background:linear-gradient(90deg,#ffe1a7,#ff7f14);
-  -webkit-background-clip:text;color:transparent;
-}
+    <script src="js/auth.js"></script>
 
-.ref-grid{
-  width:min(1100px,90%);
-  margin:50px auto 100px;
-  display:grid;
-  gap:35px;
-  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
-}
-.ref-card{
-  padding:22px 20px;
-  border-radius:18px;
-  background:rgba(255,255,255,0.05);
-  border:1px solid rgba(255,208,137,.08);
-  backdrop-filter:blur(6px);
-  box-shadow:0 0 12px rgba(0,0,0,.6);
-  text-align:center;
-  position:relative;
-  opacity:0;
-  transform:translateY(25px) scale(.97);
-  transition:.4s ease;
-}
-.ref-card.visible{
-  opacity:1;
-  transform:translateY(0) scale(1);
-}
-.ref-card:hover{
-  transform:translateY(-10px) scale(1.05);
-  border-color:rgba(255,208,137,.3);
-  box-shadow:0 0 35px rgba(255,180,100,.55);
-}
+    <script src="js/nav.js" defer></script>
 
-/* Text */
-.ref-title{
-  font-size:21px;font-weight:600;
-  background:linear-gradient(90deg,#ffd8a8,#ff8b1e);
-  -webkit-background-clip:text;color:transparent;
-  margin-bottom:6px;
-}
-.ref-url{
-  font-size:14px;
-  color:#92c8ff;
-  text-decoration:none;
-  word-break:break-all;
-  transition:.2s;
-}
-.ref-url:hover{
-  color:#d2e6ff;
-  text-shadow:0 0 6px #5db9ff;
-}
+    <link
+      href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600;700&display=swap"
+      rel="stylesheet"
+    />
 
-.credit{
-  text-align:center;
-  font-size:14px;
-  margin-bottom:70px;
-  opacity:.85;
-}
-</style>
-</head>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
 
-<body>
+      body {
+        font-family: "Kanit", sans-serif;
 
-<div class="navbar">
-  <div class="nav-left">
-    <button class="btn--ghost" onclick="history.back()">← Back</button>
-    <div class="brand">Washington D.C.</div>
-  </div>
-  <div class="nav-right">
-    <span id="nav-username"></span>
-    <button class="logout-btn" onclick="logout()">Logout</button>
-  </div>
-</div>
-<div class="pushdown"></div>
+        background: #0d0b22;
 
-<div class="bg-core"></div>
+        color: #fff;
 
-<h1>REFERENCE SOURCES</h1>
+        overflow-x: hidden;
+      }
 
-<div class="ref-grid">
+      .bg-core {
+        position: fixed;
+        inset: -40%;
 
-  <div class="ref-card">
-    <div class="ref-title">Smithsonian</div>
-    <a class="ref-url" href="https://www.si.edu" target="_blank">https://www.si.edu</a>
-  </div>
+        background: radial-gradient(
+            circle at 50% 35%,
+            #6c10ffbb,
+            transparent 60%
+          ),
+          conic-gradient(
+            from 0turn,
+            #ffc98222 0 25%,
+            transparent 25% 50%,
+            #ffc98222 50% 75%,
+            transparent 75% 100%
+          );
 
-  <div class="ref-card">
-    <div class="ref-title">Lincoln Memorial</div>
-    <a class="ref-url" href="https://www.nps.gov/linc/index.htm" target="_blank">
-      https://www.nps.gov/linc/index.htm
-    </a>
-  </div>
+        filter: blur(70px) saturate(130%);
 
-  <div class="ref-card">
-    <div class="ref-title">Washington DC Official Tourism</div>
-    <a class="ref-url" href="https://washington.org" target="_blank">https://washington.org</a>
-  </div>
+        animation: spin 36s linear infinite;
 
-  <div class="ref-card">
-    <div class="ref-title">Hotels & Stays</div>
-    <a class="ref-url" href="https://www.booking.com" target="_blank">https://www.booking.com</a>
-  </div>
+        opacity: 0.38;
+        pointer-events: none;
+      }
 
-  <div class="ref-card">
-    <div class="ref-title">US Capitol</div>
-    <a class="ref-url" href="https://www.aoc.gov" target="_blank">https://www.aoc.gov</a>
-  </div>
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
 
-</div>
+      h1 {
+        text-align: center;
 
-<div class="credit">© 2025 Washington D.C. Tourism Project — References | Developed by FlukeTON</div>
+        padding-top: 100px;
 
-<script src="js/auth.js"></script>
+        margin-top: 20px;
 
-<script>
-const cards = document.querySelectorAll(".ref-card");
-const obs = new IntersectionObserver(entries=>{
-  entries.forEach(e=>{
-    if(e.isIntersecting){ e.target.classList.add("visible"); }
-  })
-},{threshold:.25});
-cards.forEach(c=>obs.observe(c));
-</script>
+        font-size: 52px;
+        font-weight: 700;
 
-</body>
+        background: linear-gradient(90deg, #ffe1a7, #ff7f14);
+
+        color: transparent;
+      }
+
+      .ref-grid {
+        width: min(1100px, 90%);
+
+        margin: 50px auto 100px;
+
+        display: grid;
+
+        gap: 35px;
+
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      }
+
+      .ref-card {
+        padding: 22px 20px;
+
+        border-radius: 18px;
+
+        background: rgba(255, 255, 255, 0.05);
+
+        border: 1px solid rgba(255, 208, 137, 0.08);
+
+        backdrop-filter: blur(6px);
+
+        box-shadow: 0 0 12px rgba(0, 0, 0, 0.6);
+
+        text-align: center;
+
+        position: relative;
+
+        opacity: 0;
+
+        transform: translateY(25px) scale(0.97);
+
+        transition: 0.4s ease;
+      }
+
+      .ref-card.visible {
+        opacity: 1;
+
+        transform: translateY(0) scale(1);
+      }
+
+      .ref-card:hover {
+        transform: translateY(-10px) scale(1.05);
+
+        border-color: rgba(255, 208, 137, 0.3);
+
+        box-shadow: 0 0 35px rgba(255, 180, 100, 0.55);
+      }
+
+      .ref-title {
+        font-size: 21px;
+        font-weight: 600;
+
+        background: linear-gradient(90deg, #ffd8a8, #ff8b1e);
+
+        color: transparent;
+
+        margin-bottom: 6px;
+      }
+
+      .ref-url {
+        font-size: 14px;
+
+        color: #92c8ff;
+
+        text-decoration: none;
+
+        word-break: break-all;
+
+        transition: 0.2s;
+      }
+
+      .ref-url:hover {
+        color: #d2e6ff;
+
+        text-shadow: 0 0 6px #5db9ff;
+      }
+
+      .credit {
+        text-align: center;
+
+        font-size: 14px;
+
+        margin-bottom: 70px;
+
+        opacity: 0.85;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="bg-core"></div>
+
+    <h1>REFERENCE SOURCES</h1>
+
+    <div class="ref-grid">
+      <div class="ref-card">
+        <div class="ref-title">Smithsonian</div>
+
+        <a class="ref-url" href="https://www.si.edu" target="_blank"
+          >https://www.si.edu</a
+        >
+      </div>
+
+      <div class="ref-card">
+        <div class="ref-title">Lincoln Memorial</div>
+
+        <a
+          class="ref-url"
+          href="https://www.nps.gov/linc/index.htm"
+          target="_blank"
+        >
+          https://www.nps.gov/linc/index.htm
+        </a>
+      </div>
+
+      <div class="ref-card">
+        <div class="ref-title">Washington DC Official Tourism</div>
+
+        <a class="ref-url" href="https://washington.org" target="_blank"
+          >https://washington.org</a
+        >
+      </div>
+
+      <div class="ref-card">
+        <div class="ref-title">Hotels & Stays</div>
+
+        <a class="ref-url" href="https://www.booking.com" target="_blank"
+          >https://www.booking.com</a
+        >
+      </div>
+
+      <div class="ref-card">
+        <div class="ref-title">US Capitol</div>
+
+        <a class="ref-url" href="https://www.aoc.gov" target="_blank"
+          >https://www.aoc.gov</a
+        >
+      </div>
+    </div>
+
+    <div class="credit">
+      © 2025 Washington D.C. Tourism Project — References | Developed by
+      FlukeTON
+    </div>
+
+    <script>
+      const cards = document.querySelectorAll(".ref-card");
+
+      const obs = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((e) => {
+            if (e.isIntersecting) {
+              e.target.classList.add("visible");
+            }
+          });
+        },
+        { threshold: 0.25 }
+      );
+
+      cards.forEach((c) => obs.observe(c));
+    </script>
+  </body>
 </html>

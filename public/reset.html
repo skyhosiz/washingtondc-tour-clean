@@ -1,117 +1,193 @@
 <!DOCTYPE html>
+
 <html lang="th">
-<head>
+  <head>
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-VGBZS316J9"
+    ></script>
 
-<!-- ✅ Google Analytics: WashingtonDC-Tour -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-VGBZS316J9"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-VGBZS316J9');
-</script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
 
+      function gtag() {
+        dataLayer.push(arguments);
+      }
 
-<meta charset="UTF-8">
-<title>Reset Password | Washington D.C.</title>
-<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600;800&display=swap" rel="stylesheet">
+      gtag("js", new Date());
 
-<style>
-*{box-sizing:border-box;margin:0;padding:0;}
-body{
-  font-family:'Kanit',sans-serif;height:100vh;
-  display:flex;justify-content:center;align-items:center;
-  background:url("pic/dc_sunset.png") center/cover no-repeat fixed;
-  color:white;position:relative;
-}
-.overlay{
-  position:absolute;inset:0;background:rgba(0,0,0,.48);backdrop-filter:blur(2px);
-}
-.box{
-  position:relative;z-index:2;width:100%;max-width:420px;
-  padding:36px 32px;text-align:center;border-radius:20px;
-  background:rgba(10,0,25,0.85);
-  box-shadow:0 0 25px rgba(250,150,50,0.42);
-  transform:translateY(-40px);
-}
-h2{
-  margin-bottom:20px;font-size:28px;font-weight:900;
-  background:linear-gradient(90deg,#ffc76b,#ff8a28);
-  -webkit-background-clip:text;color:transparent;
-  text-shadow:0 0 12px rgba(255,150,50,0.45);
-}
-input{
-  width:100%;padding:15px;margin:8px 0;
-  border-radius:12px;border:none;font-size:17px;outline:none;
-}
-button{
-  width:100%;padding:15px;margin-top:12px;font-size:19px;
-  font-weight:bold;border:none;border-radius:12px;
-  background:linear-gradient(90deg,#ffc76b,#ff8a28);
-  color:#222;cursor:pointer;transition:.25s;
-}
-button:hover{transform:scale(1.05);}
-</style>
-</head>
+      gtag("config", "G-VGBZS316J9");
+    </script>
 
-<body>
+    <script src="js/auth.js"></script>
 
-<div class="overlay"></div>
+    <script src="js/nav.js" defer></script>
 
-<div class="box">
-  <h2>ตั้งรหัสผ่านใหม่</h2>
-  <input type="password" id="pass" placeholder="รหัสผ่านใหม่">
-  <input type="password" id="repass" placeholder="ยืนยันรหัสผ่านใหม่">
-  <button onclick="resetPassword()">บันทึกรหัสผ่านใหม่</button>
-</div>
+    <meta charset="UTF-8" />
 
-<script>
-const API_BASE = (location.hostname === "localhost")
-  ? "http://localhost:3000"
-  : "https://washingtondc-tour-clean.onrender.com";
+    <title>Reset Password | Washington D.C.</title>
 
-// ✅ ป้องกันคนที่ login อยู่ไม่ให้เข้าหน้านี้
-if (localStorage.getItem("token")) {
-  location.href = "index.html";
-}
+    <link
+      href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600;800&display=swap"
+      rel="stylesheet"
+    />
 
-// ✅ ฟังก์ชัน Reset Password
-async function resetPassword(){
-  const token = new URLSearchParams(location.search).get("token");
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
 
-  if(!token || token.length < 20){
-    return alert("❌ Token ไม่ถูกต้อง หรือหมดอายุ");
-  }
+      body {
+        font-family: "Kanit", sans-serif;
 
-  const p = pass.value.trim();
-  const rp = repass.value.trim();
+        height: 100svh;
 
-  if(!p || !rp) return alert("⚠️ กรุณากรอกข้อมูลให้ครบ!");
-  if(p.length < 6) return alert("🔐 รหัสผ่านต้องอย่างน้อย 6 ตัว");
-  if(p !== rp) return alert("❌ รหัสผ่านไม่ตรงกัน!");
+        display: flex;
+        justify-content: center;
+        align-items: center;
 
-  try{
-    const res = await fetch(`${API_BASE}/api/auth/reset`, {
-      method:"POST",
-      headers:{ "Content-Type":"application/json" },
-      body:JSON.stringify({ token, password:p })
-    });
+        background: url("pic/dc_sunset.png") center/cover no-repeat fixed;
 
-    const data = await res.json().catch(()=>null);
+        color: white;
+        position: relative;
+      }
 
-    if(data?.status === "success"){
-      alert("✅ รีเซ็ตรหัสผ่านสำเร็จ!");
-      return setTimeout(()=> location.href="login.html", 1000);
-    }
+      .overlay {
+        position: absolute;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.48);
+        backdrop-filter: blur(2px);
+      }
 
-    alert(data?.message || "❌ Token หมดอายุ/ไม่ถูกต้อง");
-  }
-  catch(err){
-    console.error(err);
-    alert("🚨 ระบบมีปัญหา กรุณาลองใหม่อีกครั้ง");
-  }
-}
-</script>
+      .box {
+        position: relative;
+        z-index: 2;
+        width: 100%;
+        max-width: 420px;
 
-</body>
+        padding: 36px 32px;
+        text-align: center;
+        border-radius: 20px;
+
+        background: rgba(10, 0, 25, 0.85);
+
+        box-shadow: 0 0 25px rgba(250, 150, 50, 0.42);
+
+        transform: translateY(-40px);
+      }
+
+      h2 {
+        margin-bottom: 20px;
+        font-size: 28px;
+        font-weight: 900;
+
+        background: linear-gradient(90deg, #ffc76b, #ff8a28);
+
+        color: transparent;
+
+        text-shadow: 0 0 12px rgba(255, 150, 50, 0.45);
+      }
+
+      input {
+        width: 100%;
+        padding: 15px;
+        margin: 8px 0;
+
+        border-radius: 12px;
+        border: none;
+        font-size: 17px;
+        outline: none;
+      }
+
+      button {
+        width: 100%;
+        padding: 15px;
+        margin-top: 12px;
+        font-size: 19px;
+
+        font-weight: bold;
+        border: none;
+        border-radius: 12px;
+
+        background: linear-gradient(90deg, #ffc76b, #ff8a28);
+
+        color: #222;
+        cursor: pointer;
+        transition: 0.25s;
+      }
+
+      button:hover {
+        transform: scale(1.05);
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="overlay"></div>
+
+    <div class="box">
+      <h2>ตั้งรหัสผ่านใหม่</h2>
+
+      <input type="password" id="pass" placeholder="รหัสผ่านใหม่" />
+
+      <input type="password" id="repass" placeholder="ยืนยันรหัสผ่านใหม่" />
+
+      <button onclick="resetPassword()">บันทึกรหัสผ่านใหม่</button>
+    </div>
+
+    <script>
+      const API_BASE =
+        location.hostname === "localhost"
+          ? "http://localhost:3000"
+          : "https://washingtondc-tour-clean.onrender.com";
+
+      async function resetPassword() {
+        const token = new URLSearchParams(location.search).get("token");
+
+        if (!token || token.length < 20) {
+          return alert("❌ Token ไม่ถูกต้อง หรือหมดอายุ");
+        }
+
+        const p = pass.value.trim();
+
+        const rp = repass.value.trim();
+
+        if (!p || !rp) return alert("⚠️ กรุณากรอกข้อมูลให้ครบ!");
+
+        if (p.length < 6) return alert("🔐 รหัสผ่านต้องอย่างน้อย 6 ตัว");
+
+        if (p !== rp) return alert("❌ รหัสผ่านไม่ตรงกัน!");
+
+        try {
+          const res = await fetch(`${API_BASE}/api/auth/reset`, {
+            method: "POST",
+
+            headers: { "Content-Type": "application/json" },
+
+            body: JSON.stringify({ token, password: p }),
+          });
+
+          const data = await res.json().catch(() => null);
+
+          if (data?.status === "success") {
+            gtag("event", "reset_password");
+
+            alert("✅ รีเซ็ตรหัสผ่านสำเร็จ!");
+
+            setTimeout(() => (location.href = "login.html"), 1000);
+
+            return;
+          }
+
+          alert(data?.message || "❌ Token หมดอายุ/ไม่ถูกต้อง");
+        } catch (err) {
+          console.error(err);
+
+          alert("🚨 ระบบมีปัญหา กรุณาลองใหม่อีกครั้ง");
+        }
+      }
+    </script>
+  </body>
 </html>

@@ -1,429 +1,288 @@
 <!DOCTYPE html>
 
 <html lang="th">
+  <head>
+    <meta charset="UTF-8" />
 
-<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-<meta charset="UTF-8">
+    <title>Edit Profile | Washington D.C.</title>
 
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="js/auth.js"></script>
 
-<title>Edit Profile | Washington D.C.</title>
+    <script src="js/nav.js" defer></script>
 
-<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link
+      href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600;700&display=swap"
+      rel="stylesheet"
+    />
 
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
 
+      body {
+        font-family: "Kanit", sans-serif;
 
-<style>
+        background: radial-gradient(circle, #1c1a33, #0b0814);
 
-*{margin:0;padding:0;box-sizing:border-box;}
+        color: white;
+        min-height: 100vh;
+      }
 
-body{
+      .container {
+        max-width: 450px;
+        margin: auto;
 
-  font-family:'Kanit',sans-serif;
+        padding-top: 100px;
 
-  background:radial-gradient(circle,#1c1a33,#0b0814);
+        padding-bottom: 40px;
 
-  color:white; min-height:100vh;
+        text-align: center;
+      }
 
-}
+      .card {
+        background: rgba(255, 255, 255, 0.08);
 
+        padding: 30px;
+        border-radius: 18px;
 
+        box-shadow: 0 0 20px rgba(255, 150, 60, 0.45);
+      }
 
-/* NAVBAR */
+      .profile-img-wrapper {
+        position: relative;
 
-.navbar{
+        width: 120px;
+        height: 120px;
 
-  position:fixed;top:0;left:0;width:100%;height:70px;
+        margin: auto 0 16px;
+        cursor: pointer;
+      }
 
-  background:rgba(0,0,0,.75);
+      .profile-img {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
 
-  display:flex;justify-content:space-between;align-items:center;
+        object-fit: cover;
+        border: 3px solid #ff9a3c;
 
-  padding:14px 24px;z-index:999;backdrop-filter:blur(8px);
+        transition: 0.25s;
+      }
 
-}
+      .profile-img-wrapper:hover .profile-img {
+        transform: scale(1.05);
+        filter: brightness(1.1);
+      }
 
-.brand{
+      .edit-icon {
+        position: absolute;
+        bottom: -5px;
+        right: -5px;
 
-  font-size:22px;font-weight:700;
+        background: #ff952e;
+        color: #000;
+        font-size: 12px;
 
-  background:linear-gradient(90deg,#ffd089,#ff8a25);
+        padding: 6px 12px;
+        border-radius: 10px;
 
-  -webkit-background-clip:text;color:transparent;
+        opacity: 0;
+        pointer-events: none;
+        transition: 0.25s;
+      }
 
-}
+      .profile-img-wrapper:hover .edit-icon {
+        opacity: 1;
+        transform: translateY(-3px);
+      }
 
-.nav-btn{
+      input {
+        width: 100%;
+        padding: 12px;
+        margin: 8px 0;
 
-  background:#ffb55b;
+        border-radius: 10px;
+        border: none;
 
-  padding:8px 14px;border:none;border-radius:8px;
+        font-size: 16px;
+        outline: none;
+      }
 
-  cursor:pointer;font-size:14px;font-weight:600;color:#000;
+      .btn-save {
+        width: 100%;
+        padding: 13px;
+        margin-top: 16px;
 
-  transition:.25s;
+        background: #ff952e;
+        color: #000;
 
-}
+        font-weight: 700;
+        border: none;
+        border-radius: 10px;
 
-.nav-btn:hover{transform:translateY(-1px);filter:brightness(1.12);}
+        font-size: 18px;
+        cursor: pointer;
+        transition: 0.25s;
+      }
 
-.btn-danger{background:#d9534f;color:#fff}
+      .btn-save:hover {
+        transform: translateY(-3px);
+        filter: brightness(1.1);
+      }
 
+      .back-btn {
+        width: 100%;
+        padding: 11px;
+        margin-top: 10px;
 
+        background: #666;
+        color: #fff;
+        border: none;
 
-/* CARD */
+        border-radius: 10px;
+        cursor: pointer;
+        font-weight: 600;
 
-.container{
+        transition: 0.25s;
+      }
 
-  max-width:450px;margin:auto;
+      .back-btn:hover {
+        transform: translateY(-3px);
+        filter: brightness(1.1);
+      }
+    </style>
 
-  padding-top:120px;text-align:center;
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-VGBZS316J9"
+    ></script>
 
-}
+    <script>
+      window.dataLayer = window.dataLayer || [];
 
-.card{
+      function gtag() {
+        dataLayer.push(arguments);
+      }
 
-  background:rgba(255,255,255,0.08);
+      gtag("js", new Date());
 
-  padding:30px;border-radius:18px;
+      gtag("config", "G-VGBZS316J9");
+    </script>
+  </head>
 
-  box-shadow:0 0 20px rgba(255,150,60,0.45);
+  <body>
+    <div class="container">
+      <div class="card">
+        <label for="imgUpload" class="profile-img-wrapper">
+          <img id="profileImg" class="profile-img" src="pic/default.png" />
 
-}
+          <span class="edit-icon">📷 Edit</span>
+        </label>
 
+        <input type="file" id="imgUpload" accept="image/*" hidden />
 
+        <input type="text" id="nameInput" placeholder="Loading..." />
 
-/* PROFILE IMAGE */
+        <button class="btn-save" onclick="saveEdit()">✅ บันทึกข้อมูล</button>
 
-.profile-img-wrapper{
+        <button class="back-btn" onclick="location.href='profile.html'">
+          ← ย้อนกลับ
+        </button>
+      </div>
+    </div>
 
-  position:relative;
+    <script>
+      const API_BASE =
+        location.hostname === "localhost"
+          ? "http://localhost:3000"
+          : "https://washingtondc-tour-clean.onrender.com";
 
-  width:120px;height:120px;
+      document.addEventListener("DOMContentLoaded", () => {
+        showCachedIfAny();
 
-  margin:auto 0 16px;cursor:pointer;
+        loadUser();
+      });
 
-}
+      function showCachedIfAny() {
+        const user = JSON.parse(localStorage.getItem("user") || "null");
 
-.profile-img{
+        if (!user) return;
 
-  width:100%;height:100%;border-radius:50%;
+        profileImg.src = user.profileImg || "pic/default.png";
 
-  object-fit:cover;border:3px solid #ff9a3c;
+        nameInput.placeholder = user.username;
+      }
 
-  transition:.25s;
+      async function loadUser() {
+        try {
+          const r = await fetch(`${API_BASE}/api/auth/profile`, {
+            headers: {
+              Authorization: "Bearer " + localStorage.getItem("token"),
+            },
+          });
 
-}
+          const data = await r.json();
 
-.profile-img-wrapper:hover .profile-img{transform:scale(1.05);filter:brightness(1.1);}
+          if (data.status !== "success") return;
 
-.edit-icon{
+          localStorage.setItem("user", JSON.stringify(data.user));
 
-  position:absolute;bottom:-5px;right:-5px;
+          showCachedIfAny();
+        } catch (err) {
+          console.error(err);
+        }
+      }
 
-  background:#ff952e;color:#000;font-size:12px;
+      imgUpload.addEventListener("change", () => {
+        const file = imgUpload.files[0];
 
-  padding:6px 12px;border-radius:10px;
+        if (file) profileImg.src = URL.createObjectURL(file);
+      });
 
-  opacity:0;pointer-events:none;transition:.25s;
+      async function saveEdit() {
+        const fd = new FormData();
 
-}
+        if (nameInput.value.trim())
+          fd.append("username", nameInput.value.trim());
 
-.profile-img-wrapper:hover .edit-icon{opacity:1;transform:translateY(-3px)}
+        if (imgUpload.files[0]) fd.append("profileImg", imgUpload.files[0]);
 
+        try {
+          const res = await fetch(`${API_BASE}/api/auth/profile`, {
+            method: "PUT",
 
+            headers: {
+              Authorization: "Bearer " + localStorage.getItem("token"),
+            },
 
-/* INPUT */
+            body: fd,
+          });
 
-input{
+          const data = await res.json();
 
-  width:100%;padding:12px;margin:8px 0;
+          if (data.status === "success") {
+            gtag("event", "profile_update", {
+              event_category: "User",
+              event_label: "Profile Saved",
+            });
 
-  border-radius:10px;border:none;
+            localStorage.setItem("user", JSON.stringify(data.user));
 
-  font-size:16px;outline:none;
+            alert("✅ อัปเดตสำเร็จ!");
 
-}
-
-
-
-/* BUTTONS */
-
-.btn-save{
-
-  width:100%; padding:13px; margin-top:16px;
-
-  background:#ff952e;color:#000;
-
-  font-weight:700;border:none;border-radius:10px;
-
-  font-size:18px;cursor:pointer;transition:.25s;
-
-}
-
-.btn-save:hover{transform:translateY(-3px);filter:brightness(1.1)}
-
-
-
-.back-btn{
-
-  width:100%;padding:11px;margin-top:10px;
-
-  background:#666;color:#fff;border:none;
-
-  border-radius:10px;cursor:pointer;font-weight:600;
-
-  transition:.25s;
-
-}
-
-.back-btn:hover{transform:translateY(-3px);filter:brightness(1.1)}
-
-
-
-</style>
-
-
-
-
-
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-VGBZS316J9"></script>
-
-<script>
-
-  window.dataLayer = window.dataLayer || [];
-
-  function gtag(){dataLayer.push(arguments);}
-
-  gtag('js', new Date());
-
-  gtag('config', 'G-VGBZS316J9');
-
-</script>
-
-
-
-</head>
-
-
-
-<body>
-
-
-
-<div class="navbar">
-
-  <div class="brand">Edit Profile</div>
-
-  <div>
-
-    <button class="nav-btn" onclick="location.href='profile.html'">PROFILE</button>
-
-    <button class="nav-btn btn-danger" onclick="logout()">LOGOUT</button>
-
-  </div>
-
-</div>
-
-
-
-<div class="container">
-
-  <div class="card">
-
-
-
-    <label for="imgUpload" class="profile-img-wrapper">
-
-      <img id="profileImg" class="profile-img" src="pic/default.png">
-
-      <span class="edit-icon">📷 Edit</span>
-
-    </label>
-
-    <input type="file" id="imgUpload" accept="image/*" hidden>
-
-
-
-    <input type="text" id="nameInput" placeholder="Loading...">
-
-
-
-    <button class="btn-save" onclick="saveEdit()">✅ บันทึกข้อมูล</button>
-
-    <button class="back-btn" onclick="location.href='profile.html'">← ย้อนกลับ</button>
-
-
-
-  </div>
-
-</div>
-
-
-
-<script>
-
-const API_BASE = location.hostname === "localhost"
-
- ? "http://localhost:3000"
-
- : "https://washingtondc-tour-clean.onrender.com";
-
-
-
-/* ✅ Guard */
-
-document.addEventListener("DOMContentLoaded", () => {
-
-  const token = localStorage.getItem("token");
-
-  if (!token) return location.href = "login.html";
-
-  showCachedIfAny();
-
-  loadUser();
-
-});
-
-
-
-/* ✅ Load cached UI first */
-
-function showCachedIfAny(){
-
-  const user = JSON.parse(localStorage.getItem("user") || "null");
-
-  if (!user) return;
-
-  profileImg.src = user.profileImg || "pic/default.png";
-
-  nameInput.placeholder = user.username;
-
-}
-
-
-
-/* ✅ Load fresh */
-
-async function loadUser(){
-
-  try {
-
-    const r = await fetch(`${API_BASE}/api/auth/profile`, {
-
-      headers:{ Authorization:"Bearer "+localStorage.getItem("token") }
-
-    });
-
-    if(r.status === 401 || r.status === 403){
-
-      return location.href="login.html";
-
-    }
-
-    const data = await r.json();
-
-    if(data.status!=="success") return;
-
-    localStorage.setItem("user", JSON.stringify(data.user));
-
-    showCachedIfAny();
-
-  } catch(err){
-
-    console.error(err);
-
-  }
-
-}
-
-
-
-/* ✅ Preview image */
-
-imgUpload.addEventListener("change", ()=>{
-
-  const file = imgUpload.files[0];
-
-  if(file) profileImg.src = URL.createObjectURL(file);
-
-});
-
-
-
-/* ✅ Save Edit */
-
-async function saveEdit(){
-
-  const fd = new FormData();
-
-  if(nameInput.value.trim()) fd.append("username", nameInput.value.trim());
-
-  if(imgUpload.files[0]) fd.append("profileImg", imgUpload.files[0]);
-
-
-
-  try {
-
-    const res = await fetch(`${API_BASE}/api/auth/profile`, {
-
-      method:"PUT",
-
-      headers:{ Authorization:"Bearer "+localStorage.getItem("token") },
-
-      body:fd
-
-    });
-
-    const data = await res.json();
-
-    if(data.status==="success"){
-
-      // <--- ✅ EVENT TRACKING ADDED! ---
-
-      gtag('event', 'profile_update', { 'event_category': 'User', 'event_label': 'Profile Saved' });
-
-      // ---------------------------------
-
-      localStorage.setItem("user", JSON.stringify(data.user));
-
-      alert("✅ อัปเดตสำเร็จ!");
-
-      location.href="profile.html";
-
-    } else {
-
-      alert("❌ อัปเดตผิดพลาด");
-
-    }
-
-  } catch(err){
-
-    alert("⚠ เกิดข้อผิดพลาด");
-
-  }
-
-}
-
-
-
-/* ✅ Logout */
-
-function logout(){
-
-  localStorage.removeItem("token");
-
-  localStorage.removeItem("user");
-
-  location.href="login.html";
-
-}
-
-</script>
-
-
-
-</body>
-
+            location.href = "profile.html";
+          } else {
+            alert("❌ อัปเดตผิดพลาด");
+          }
+        } catch (err) {
+          alert("⚠ เกิดข้อผิดพลาด");
+        }
+      }
+    </script>
+  </body>
 </html>
