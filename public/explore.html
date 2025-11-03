@@ -5,19 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Explore D.C. | Washington D.C.</title>
 
+    <!-- 🔒 Authentication & Navigation -->
     <script src="js/auth.js"></script>
     <script src="js/nav.js" defer></script>
 
+    <!-- 🖋 Font -->
     <link
       href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600;700&display=swap"
       rel="stylesheet"
     />
 
+    <!-- 📈 Google Analytics -->
     <script
       async
       src="https://www.googletagmanager.com/gtag/js?id=G-VGBZS316J9"
     ></script>
-
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag() {
@@ -27,6 +29,7 @@
       gtag("config", "G-VGBZS316J9");
     </script>
 
+    <!-- 🎨 Styles -->
     <style>
       * {
         margin: 0;
@@ -36,7 +39,7 @@
 
       body {
         font-family: "Kanit", sans-serif;
-        background: radial-gradient(circle, #1c1a33, #0b0814);
+        background: radial-gradient(circle at top, #1c1a33, #0b0814);
         color: white;
         min-height: 100vh;
       }
@@ -47,21 +50,45 @@
         padding: 100px 24px 40px;
       }
 
+      /* 🌆 Modern gradient title */
       .page-title {
-        font-size: 36px;
-        background: linear-gradient(90deg, #ffd089, #ff8a25);
-        color: transparent;
-        margin-bottom: 24px;
-        border-bottom: 2px solid rgba(255, 150, 60, 0.45);
-        padding-bottom: 10px;
+        position: relative;
+        font-size: 40px;
+        font-weight: 700;
+        text-align: center;
+        margin-bottom: 50px;
+        padding: 20px 0;
+        background: linear-gradient(90deg, #ffb84d, #ff7a00);
         -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
         background-clip: text;
+        letter-spacing: 1px;
+        text-shadow: 0 0 20px rgba(255, 136, 0, 0.3);
+      }
+
+      .page-title::before {
+        content: "";
+        position: absolute;
+        left: 10%;
+        right: 10%;
+        top: 50%;
+        transform: translateY(-50%);
+        height: 70px;
+        background: linear-gradient(
+          90deg,
+          rgba(255, 184, 77, 0.15),
+          rgba(255, 122, 0, 0.15)
+        );
+        border-radius: 12px;
+        filter: blur(10px);
+        z-index: -1;
       }
 
       #loadingState {
         font-size: 20px;
         text-align: center;
         margin-top: 40px;
+        color: #ffb84d;
       }
 
       #exploreGrid {
@@ -75,11 +102,12 @@
         border-radius: 16px;
         box-shadow: 0 0 15px rgba(255, 150, 60, 0.3);
         overflow: hidden;
-        transition: transform 0.25s;
+        transition: transform 0.25s, box-shadow 0.25s;
       }
 
       .explore-card:hover {
-        transform: translateY(-5px);
+        transform: translateY(-6px);
+        box-shadow: 0 0 25px rgba(255, 170, 70, 0.45);
       }
 
       .explore-card img {
@@ -87,6 +115,11 @@
         height: 220px;
         object-fit: cover;
         border-bottom: 2px solid #ff952e;
+        transition: opacity 0.3s ease;
+      }
+
+      .explore-card img.loading {
+        opacity: 0.5;
       }
 
       .card-content {
@@ -99,6 +132,7 @@
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
+        color: #fff;
       }
 
       .explore-card p {
@@ -116,6 +150,7 @@
       <p id="loadingState">Loading data...</p>
     </div>
 
+    <!-- 🚀 Script -->
     <script>
       const API_BASE =
         location.hostname === "localhost"
@@ -147,7 +182,7 @@
               const museum =
                 item.content?.unitCode || "Smithsonian Institution";
 
-              // 🔍 ดึง URL ของภาพจากหลายโครงสร้างที่อาจเป็นไปได้
+              // 🧠 ดึง URL ภาพจากหลายแหล่งที่เป็นไปได้
               let imageUrl =
                 item.content?.online_media?.media?.[0]?.thumbnail ||
                 item.content?.online_media?.media?.[0]?.resources?.[0]?.url ||
@@ -157,7 +192,7 @@
                 item.image_url ||
                 "pic/default.png";
 
-              // ✅ ตรวจสอบว่าถ้าไม่ใช่ URL เต็ม ให้เติมโดเมน
+              // ✅ ถ้า URL ไม่เต็ม เติมโดเมนให้ครบ
               if (imageUrl && !imageUrl.startsWith("http")) {
                 imageUrl = `${API_BASE}/${imageUrl}`;
               }
@@ -166,12 +201,16 @@
               card.className = "explore-card";
 
               card.innerHTML = `
-                <img src="${imageUrl}" alt="${title}" onerror="this.onerror=null;this.src='pic/default.png';">
+                <img src="${imageUrl}" alt="${title}"
+                     onload="this.classList.remove('loading')"
+                     onerror="this.onerror=null;this.src='pic/default.png';"
+                     class="loading">
                 <div class="card-content">
                   <h3>${title}</h3>
                   <p>${museum}</p>
                 </div>
               `;
+
               grid.appendChild(card);
             });
           } else {
