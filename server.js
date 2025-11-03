@@ -198,19 +198,19 @@ app.get("/api/explore", authRequired, async (req, res) => {
 });
 
 /* =============================
-   ✅ PROXY Smithsonian (Fixed ID Prefix + Safe CORS)
+   ✅ PROXY Smithsonian (FINAL FIX)
 ============================= */
 
 app.get("/api/proxy-smithsonian/:id", async (req, res) => {
   try {
     const { id } = req.params;
 
-    // ✅ Smithsonian ต้องการ prefix "edanmdm:" นำหน้า id
-    const fullId = id.startsWith("edanmdm:") ? id : `edanmdm:${id}`;
-    const safeId = encodeURIComponent(fullId);
+    // ✅ Smithsonian ใช้ "edanmdm-" ไม่ใช่ "edanmdm:"
+    const normalizedId = id
+      .replace(/^edanmdm:/, "edanmdm-")
+      .replace(/^edanmdm--/, "edanmdm-");
 
-    const url = `https://edan.si.edu/openaccess/api/v1.0/content/${safeId}`;
-
+    const url = `https://edan.si.edu/openaccess/api/v1.0/content/${normalizedId}`;
     console.log("🛰 Smithsonian Proxy Request:", url);
 
     const response = await fetch(url);

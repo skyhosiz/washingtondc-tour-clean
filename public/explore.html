@@ -50,6 +50,7 @@
         padding: 100px 24px 40px;
       }
 
+      /* 🌆 Title */
       .page-title {
         position: relative;
         font-size: 40px;
@@ -60,27 +61,8 @@
         background: linear-gradient(90deg, #ffb84d, #ff7a00);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
-        background-clip: text;
         letter-spacing: 1px;
         text-shadow: 0 0 20px rgba(255, 136, 0, 0.3);
-      }
-
-      .page-title::before {
-        content: "";
-        position: absolute;
-        left: 10%;
-        right: 10%;
-        top: 50%;
-        transform: translateY(-50%);
-        height: 70px;
-        background: linear-gradient(
-          90deg,
-          rgba(255, 184, 77, 0.15),
-          rgba(255, 122, 0, 0.15)
-        );
-        border-radius: 12px;
-        filter: blur(10px);
-        z-index: -1;
       }
 
       #loadingState {
@@ -117,10 +99,6 @@
         transition: opacity 0.3s ease;
       }
 
-      .explore-card img.loading {
-        opacity: 0.5;
-      }
-
       .card-content {
         padding: 20px;
       }
@@ -128,10 +106,10 @@
       .explore-card h3 {
         font-size: 18px;
         margin-bottom: 8px;
+        color: #fff;
+        white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
-        white-space: nowrap;
-        color: #fff;
       }
 
       .explore-card p {
@@ -168,9 +146,7 @@
           ? "http://localhost:3000"
           : "https://washingtondc-tour-clean.onrender.com";
 
-      document.addEventListener("DOMContentLoaded", () => {
-        loadExploreData();
-      });
+      document.addEventListener("DOMContentLoaded", loadExploreData);
 
       async function loadExploreData() {
         const token = localStorage.getItem("token");
@@ -181,7 +157,6 @@
           const res = await fetch(`${API_BASE}/api/explore`, {
             headers: { Authorization: `Bearer ${token}` },
           });
-
           const data = await res.json();
           console.log("✅ Smithsonian API Base Data:", data);
 
@@ -195,7 +170,7 @@
               let detailUrl = "#";
 
               try {
-                // ✅ ใช้ Proxy ผ่าน backend แทน Smithsonian ตรง ๆ (แก้ CORS)
+                // ✅ ดึงข้อมูลจาก backend (proxy Smithsonian)
                 const recordRes = await fetch(
                   `${API_BASE}/api/proxy-smithsonian/${item.id}`
                 );
@@ -213,15 +188,13 @@
                     "pic/default.png";
                 }
 
-                // 🔗 ลิงก์ไป Smithsonian ของจริง
                 detailUrl = `https://collections.si.edu/search/detail/${item.id}`;
               } catch (e) {
-                console.warn("⚠️ Smithsonian proxy fetch failed:", e);
+                console.warn("⚠️ Smithsonian Proxy Error:", e);
               }
 
               const card = document.createElement("div");
               card.className = "explore-card";
-
               card.innerHTML = `
                 <img src="${imageUrl}" alt="${title}"
                      onerror="this.onerror=null;this.src='pic/default.png';"
