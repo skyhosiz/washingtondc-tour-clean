@@ -13,7 +13,7 @@ function logout() {
 
 function getPageName() {
     let name = location.pathname.split("/").pop();
-    if (!name || name === "/") name = "index.html";
+    if (!name || name === "/") name = "intro.html";
     return name.replace(".html", "").toLowerCase();
 }
 
