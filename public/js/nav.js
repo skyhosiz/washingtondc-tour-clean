@@ -1,38 +1,78 @@
-// ✅ nav.js — UNIVERSAL Navigation Bar
+// ✅ ORIGINAL CLEAN NAVBAR (เหมือนรูปที่มึงส่งเป๊ะ)
 
-document.addEventListener("DOMContentLoaded", () => {
-  const nav = document.createElement("nav");
-  nav.className = "nav-bar";
-
-  nav.innerHTML = `
-    <div class="nav-left">
-      <a class="logo" href="index.html">D.C. TOUR</a>
-    </div>
-
-    <div class="nav-mid">
-      <a href="index.html">HOME</a>
-      <a href="food.html">EXPLORE</a>
-      <a href="profile.html">PROFILE</a>
-    </div>
-
-    <div class="nav-right">
-      <button class="logout-btn" id="logoutBtn">LOGOUT</button>
-    </div>
-  `;
-
-  document.body.prepend(nav);
+(function () {
 
   const token = localStorage.getItem("token");
-  if (!token) {
-    document.querySelector(".nav-right").style.display = "none";
+  const user = JSON.parse(localStorage.getItem("user") || "{}");
+
+  const current = location.pathname.split("/").pop() || "index.html";
+
+  const nav = document.createElement("nav");
+  nav.style.cssText = `
+    width:100%;
+    position:fixed;
+    top:0; left:0;
+    z-index:9999;
+    background:#000;
+    padding:14px 25px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    font-family:'Kanit',sans-serif;
+    border-bottom:3px solid #9c542a;
+  `;
+
+  const links = [
+    {name: "HOME", url: "index.html"},
+    {name: "EXPLORE", url: "explore.html"},
+    {name: "PROFILE", url: "profile.html"},
+  ];
+
+  let left = `<div style="display:flex;align-items:center;gap:26px;">
+      <div style="font-weight:900;font-size:20px;color:#ff9650;">D.C. TOUR</div>`;
+  links.forEach(l => {
+    const active = l.url === current;
+    left += `
+      <a href="${l.url}" 
+      style="text-decoration:none;
+      font-size:14px;
+      font-weight:800;
+      color:${active ? "#ff9650" : "#fff"};
+      transition:.2s;">
+      ${l.name}
+      </a>
+    `;
+  });
+  left += `</div>`;
+
+  let right = `<div style="display:flex;align-items:center;gap:12px;">`;
+
+  if (token) {
+    right += `
+      <span style="color:#ffd394;font-size:14px;font-weight:700;">
+        ${user.username || user.email || "user"}
+      </span>
+      <button id="logoutBtn"
+        style="background:#e63946;border:none;color:#fff;
+        padding:6px 18px;border-radius:20px;font-weight:800;
+        cursor:pointer;font-size:13px;transition:0.2s;">
+        LOGOUT
+      </button>
+    `;
   }
 
-  const logoutBtn = document.getElementById("logoutBtn");
-  if (logoutBtn) {
-    logoutBtn.addEventListener("click", () => {
+  right += `</div>`;
+
+  nav.innerHTML = left + right;
+  document.body.prepend(nav);
+
+  if (token) {
+    const btn = document.getElementById("logoutBtn");
+    btn.onclick = () => {
       localStorage.removeItem("token");
       localStorage.removeItem("user");
       location.href = "login.html";
-    });
+    };
   }
-});
+
+})();

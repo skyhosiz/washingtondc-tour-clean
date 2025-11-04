@@ -70,4 +70,117 @@
     </form>
   </div>
 </body>
+</html><!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login | Washington D.C.</title>
+
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600;700&display=swap" rel="stylesheet"/>
+
+  <!-- ✅ ปิด nav.js ไม่ให้เตะกลับ -->
+  <script> window.DISABLE_NAV_AUTH = true; </script>
+
+  <!-- ✅ External Scripts -->
+  <script src="js/auth.js" defer></script>
+  <script src="js/nav.js" defer></script>
+
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      font-family:"Kanit",sans-serif;
+      background:url("pic/dc_sunset.png") center/cover no-repeat fixed;
+      display:flex;justify-content:center;align-items:center;
+      padding:20px; /* ✅ กันไม่ให้ติดขอบหน้าจอมือถือ */
+    }
+    .login-box{
+      width:100%; max-width:420px;
+      padding:40px 34px; text-align:center; 
+      background:rgba(10,0,25,.85); border-radius:26px;
+      box-shadow:0 0 38px rgba(255,140,30,.35);
+      animation:fadeIn .6s ease-out
+    }
+    @keyframes fadeIn{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+    h2{
+      font-size:34px;margin-bottom:22px;font-weight:800;
+      background:linear-gradient(90deg,#ffd089,#ff8a25);
+      -webkit-background-clip:text;background-clip:text;color:transparent;
+      text-shadow:0 0 14px rgba(255,150,30,.45)
+    }
+    input,button{
+      width:100%;border:none;border-radius:12px;
+      font-size:17px;margin:10px 0;padding:13px
+    }
+    button{
+      font-weight:700;cursor:pointer;transition:.25s;
+      color:#222;background:linear-gradient(90deg,#ffe29c,#ff8522)
+    }
+    button:hover{transform:scale(1.05);box-shadow:0 0 26px rgba(255,140,30,.85)}
+    .forgot,.register-box{font-size:14px;margin-top:6px}
+    .forgot a{color:#ffd28a;text-decoration:none}
+    .register-box a{
+      background:#ff7a00;color:#fff;padding:4px 12px;
+      border-radius:8px;text-decoration:none;font-weight:700
+    }
+    .register-box a:hover{background:#ff9831}
+  </style>
+</head>
+
+<body>
+  <div class="login-box">
+    <h2>เข้าสู่ระบบ</h2>
+
+    <form id="loginForm">
+      <input id="email" type="email" placeholder="อีเมล" autocomplete="email" required>
+      <input id="password" type="password" placeholder="รหัสผ่าน" autocomplete="current-password" required>
+
+      <div class="forgot"><a href="forgot.html">ลืมรหัสผ่าน?</a></div>
+
+      <button type="submit">Login</button>
+
+      <div class="register-box">
+        <span>ยังไม่มีบัญชี?</span>
+        <a href="register.html">สมัครสมาชิก</a>
+      </div>
+    </form>
+  </div>
+
+<!-- ✅ Login Handler -->
+<script>
+document.getElementById("loginForm").addEventListener("submit", async (e)=>{
+  e.preventDefault();
+
+  const email = email.value.trim();
+  const password = password.value.trim();
+  if(!email || !password) return alert("กรุณากรอกข้อมูลให้ครบ!");
+
+  try{
+    const res = await fetch("/api/auth/login", {
+      method:"POST",
+      headers:{ "Content-Type":"application/json" },
+      body:JSON.stringify({ email, password }),
+    });
+
+    const data = await res.json().catch(()=>null);
+
+    if(!res.ok || !data?.token){
+      return alert(data?.message || "เข้าสู่ระบบไม่สำเร็จ ❌");
+    }
+
+    localStorage.setItem("token", data.token);
+    localStorage.setItem("user", JSON.stringify(data.user));
+
+    location.href = "index.html";
+
+  }catch(err){
+    console.error("Login Error:", err);
+    alert("🚨 เซิร์ฟเวอร์มีปัญหา กรุณาลองใหม่");
+  }
+});
+</script>
+</body>
 </html>
+
