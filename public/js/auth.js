@@ -1,4 +1,4 @@
-// ✅ หน้า Public (เข้าดูได้แม้ไม่ Login)
+// ✅ หน้า Public เข้าได้โดยไม่ต้อง login
 const PUBLIC_PAGES = new Set([
   "intro",
   "login",
@@ -8,28 +8,30 @@ const PUBLIC_PAGES = new Set([
 ]);
 
 function getPageName() {
-  let page = location.pathname.split("/").pop();
-  
-  if (!page || page === "/") page = "intro.html"; // ✅ หน้าแรก = intro
-  
-  return page.replace(".html", "").toLowerCase();
+  let name = location.pathname.split("/").pop();
+
+  // ✅ ถ้าเปิดเว็บแบบตรง link root → intro
+  if (!name || name === "/") {
+    name = "intro.html";
+  }
+
+  return name.replace(".html", "").toLowerCase();
 }
 
 document.addEventListener("DOMContentLoaded", () => {
   const page = getPageName();
   const token = localStorage.getItem("token");
+  console.log("PAGE:", page, "| TOKEN:", token ? "YES" : "NO");
 
-  console.log("PAGE:", page, "| TOKEN:", token ? "✅" : "❌");
-
-  // ✅ ยังไม่ Login → ห้ามเข้า Private pages
+  // ✅ ไม่มี Token → ห้ามเข้าหน้า Private ทั้งหมด → ส่งไป login
   if (!token && !PUBLIC_PAGES.has(page)) {
     return location.replace("login.html");
   }
 
-  // ✅ Login แล้ว แต่จะเข้า login/register/reset/forgot → ส่งกลับ index
+  // ✅ มี Token → ไม่ให้กลับไป login/register/forgot/reset
   if (token && ["login", "register", "forgot", "reset"].includes(page)) {
     return location.replace("index.html");
   }
 
-  // ✅ Login แล้วและอยู่ intro ให้ผู้ใช้เลือกว่าจะเข้าเว็บหรือเกม
+  // ✅ ถ้าอยู่ intro จะอยู่นิ่ง ๆ ไม่เด้งไปไหน
 });
