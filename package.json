@@ -5,15 +5,16 @@
   "main": "server.js",
   "type": "commonjs",
   "engines": {
-  "node": "22.x",
-  "npm": "10.x"
-},
+    "node": "22.x",
+    "npm": "10.x"
+  },
   "scripts": {
     "start": "node server.js"
   },
   "dependencies": {
     "bcryptjs": "^3.0.2",
     "cloudinary": "^1.41.3",
+    "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",
     "express": "^5.1.0",
