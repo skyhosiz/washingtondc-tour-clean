@@ -1,119 +1,231 @@
 <!DOCTYPE html>
+
 <html lang="th">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Register | Washington D.C.</title>
+  <head>
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-VGBZS316J9"
+    ></script>
 
-  <!-- ✅ Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600;800&display=swap" rel="stylesheet"/>
+    <script>
+      window.dataLayer = window.dataLayer || [];
 
-  <!-- ✅ Analytics Safe -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-VGBZS316J9"></script>
-  <script src="js/ga.js" defer></script>
+      function gtag() {
+        dataLayer.push(arguments);
+      }
 
-  <!-- ✅ External Secure Scripts -->
-  <script src="js/auth.js" defer></script>
-  <script src="js/register.js" defer></script>
+      gtag("js", new Date());
 
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+      gtag("config", "G-VGBZS316J9");
+    </script>
 
-    body {
-      font-family: "Kanit", sans-serif;
-      height: 100svh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background: url("pic/dc_sunset.png") no-repeat center/cover;
-    }
+    <script src="js/auth.js"></script>
 
-    .reg-container {
-      width: 420px;
-      background: rgba(10, 0, 25, 0.83);
-      border-radius: 26px;
-      padding: 38px;
-      text-align: center;
-      color: white;
-      box-shadow: 0 0 38px rgba(255, 140, 30, 0.28);
-      animation: fadein 0.7s ease-out;
-    }
+    <script src="js/nav.js" defer></script>
 
-    @keyframes fadein {
-      from { opacity: 0; transform: translateY(18px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
+    <meta charset="UTF-8" />
 
-    h2 {
-      font-size: 34px;
-      margin-bottom: 20px;
-      font-weight: 800;
-      background: linear-gradient(90deg, #ffd089, #ff8a25);
-      -webkit-background-clip:text;
-      background-clip:text;
-      color:transparent;
-    }
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    input {
-      width: 100%;
-      padding: 12px;
-      border-radius: 10px;
-      border: none;
-      font-size: 17px;
-      margin: 10px 0;
-      color: #333;
-    }
+    <title>Register | Washington D.C.</title>
 
-    button {
-      width: 100%;
-      padding: 12px;
-      margin-top: 12px;
-      background: linear-gradient(90deg, #ffe29c, #ff8522);
-      border: none;
-      border-radius: 12px;
-      font-size: 18px;
-      font-weight: bold;
-      cursor: pointer;
-      transition: 0.25s;
-      color: #222;
-    }
-    button:hover { transform: scale(1.05); }
+    <link
+      href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600;800&display=swap"
+      rel="stylesheet"
+    />
 
-    .login-box {
-      margin-top: 18px;
-      font-size: 15px;
-    }
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
 
-    .login-box a {
-      margin-left: 6px;
-      padding: 4px 12px;
-      background: #ff7a00;
-      border-radius: 8px;
-      text-decoration: none;
-      color: white;
-      font-weight: 700;
-    }
+      body {
+        font-family: "Kanit", sans-serif;
 
-    .login-box a:hover { background: #ff9831; }
-  </style>
-</head>
+        height: 100svh;
 
-<body>
-  <div class="reg-container">
-    <h2>สร้างบัญชี</h2>
+        display: flex;
+        justify-content: center;
+        align-items: center;
 
-    <form id="regForm" novalidate>
-      <input id="username" type="text" placeholder="ชื่อผู้ใช้" autocomplete="username" required />
-      <input id="email" type="email" placeholder="อีเมล" autocomplete="email" required />
-      <input id="password" type="password" placeholder="รหัสผ่าน" autocomplete="new-password" required />
-      <button type="submit">สมัครสมาชิก</button>
-    </form>
+        background: url("pic/dc_sunset.png") no-repeat center/cover;
+      }
 
-    <div class="login-box">
-      มีบัญชีแล้ว? <a href="login.html">เข้าสู่ระบบ</a>
+      .reg-container {
+        width: 420px;
+
+        background: rgba(10, 0, 25, 0.83);
+
+        border-radius: 26px;
+        padding: 38px;
+        text-align: center;
+        color: white;
+
+        box-shadow: 0 0 38px rgba(255, 140, 30, 0.28);
+
+        animation: fadein 0.7s ease-out;
+      }
+
+      @keyframes fadein {
+        from {
+          opacity: 0;
+          transform: translateY(18px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      h2 {
+        font-size: 34px;
+        margin-bottom: 20px;
+        font-weight: 800;
+
+        background: linear-gradient(90deg, #ffd089, #ff8a25);
+
+
+        -webkit-background-clip: text;
+
+        background-clip: text;
+
+        color: transparent;
+      }
+
+      input {
+        width: 100%;
+        padding: 12px;
+        border-radius: 10px;
+
+        border: none;
+        font-size: 17px;
+        margin: 10px 0;
+        color: #333;
+      }
+
+      button {
+        width: 100%;
+        padding: 12px;
+        margin-top: 12px;
+
+        background: linear-gradient(90deg, #ffe29c, #ff8522);
+
+        border: none;
+        border-radius: 12px;
+        font-size: 18px;
+        font-weight: bold;
+
+        cursor: pointer;
+        transition: 0.25s;
+        color: #222;
+      }
+
+      button:hover {
+        transform: scale(1.05);
+      }
+
+      .login-box {
+        margin-top: 18px;
+        font-size: 15px;
+      }
+
+      .login-box a {
+        margin-left: 6px;
+        padding: 4px 12px;
+        background: #ff7a00;
+
+        border-radius: 8px;
+        text-decoration: none;
+        color: white;
+        font-weight: 700;
+      }
+
+      .login-box a:hover {
+        background: #ff9831;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="reg-container">
+      <h2>สร้างบัญชี</h2>
+
+      <input type="text" id="username" placeholder="ชื่อผู้ใช้" />
+
+      <input type="email" id="email" placeholder="อีเมล" />
+
+      <input type="password" id="password" placeholder="รหัสผ่าน" />
+
+      <button id="regBtn" onclick="register()">สมัครสมาชิก</button>
+
+      <div class="login-box">
+        มีบัญชีแล้ว? <a href="login.html">เข้าสู่ระบบ</a>
+      </div>
     </div>
-  </div>
-</body>
+
+    <script>
+      const API_BASE =
+        location.hostname === "localhost"
+          ? "http://localhost:3000"
+          : "https://washingtondc-tour-clean-1.onrender.com";
+
+      async function register() {
+        const btn = document.getElementById("regBtn");
+
+        const username = document.getElementById("username").value.trim();
+
+        const email = document.getElementById("email").value.trim();
+
+        const password = document.getElementById("password").value.trim();
+
+        if (!username || !email || !password)
+          return alert("⚠️ กรุณากรอกข้อมูลให้ครบ!");
+
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+        if (!emailPattern.test(email))
+          return alert("📧 กรุณากรอกอีเมลให้ถูกต้อง");
+
+        btn.disabled = true;
+
+        const oldText = btn.textContent;
+
+        btn.textContent = "กำลังสมัคร...";
+
+        try {
+          const res = await fetch(`${API_BASE}/api/auth/register`, {
+            method: "POST",
+
+            headers: { "Content-Type": "application/json" },
+
+            body: JSON.stringify({ username, email, password }),
+          });
+
+          const data = await res.json().catch(() => null);
+
+          if (data?.status === "success") {
+            gtag("event", "sign_up", { method: "Email" });
+
+            alert("✅ สมัครสมาชิกสำเร็จ!");
+
+            setTimeout(() => (location.href = "login.html"), 500);
+
+          } else {
+            alert(data?.message || "❌ สมัครไม่สำเร็จ!");
+          }
+        } catch (err) {
+          console.error("Register Error:", err);
+
+          alert("🚨 เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง");
+        } finally {
+
+          btn.disabled = false;
+
+          btn.textContent = oldText;
+        }
+      }
+    </script>
+  </body>
 </html>
