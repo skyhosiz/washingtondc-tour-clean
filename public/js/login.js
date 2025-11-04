@@ -1,8 +1,3 @@
-const API_BASE =
-  location.hostname === "localhost"
-    ? "http://localhost:3000"
-    : "https://washingtondc-tour-clean-1.onrender.com";
-
 async function login() {
   const email = document.getElementById("email").value.trim();
   const password = document.getElementById("password").value.trim();

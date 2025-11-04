@@ -1,21 +1,12 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Profile | Washington D.C.</title>
 
   <!-- Google Font -->
   <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600;700&display=swap" rel="stylesheet">
-
-  <!-- Google Analytics -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-VGBZS316J9"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag("js", new Date());
-    gtag("config", "G-VGBZS316J9");
-  </script>
 
   <style>
     :root {
@@ -25,9 +16,10 @@
       --accent:#ffb86b;
       --danger:#d43f3f;
       --text:#fff;
-      --muted:#bbb;
     }
+
     *{margin:0;padding:0;box-sizing:border-box}
+    
     body {
       font-family:'Kanit',sans-serif;
       background: radial-gradient(circle at 50% 30%, var(--bg2), var(--bg1));
@@ -37,80 +29,68 @@
       flex-direction:column;
       align-items:center;
       justify-content:center;
-      overflow-x:hidden;
     }
 
-    /* Navigation Bar */
+    /* ✅ Navbar */
     nav.topbar {
-      position:fixed;top:0;left:0;right:0;height:48px;
+      position:fixed;top:0;left:0;right:0;height:50px;
       background:#0a0a0a;display:flex;align-items:center;justify-content:space-between;
-      padding:0 20px;z-index:999;border-bottom:1px solid rgba(255,255,255,0.08);
+      padding:0 20px;z-index:99;
     }
-    nav .logo {font-weight:800;font-size:18px;color:var(--gold);}
-    nav .menu {display:flex;gap:32px;align-items:center;}
-    nav a {text-decoration:none;color:#fff;font-weight:600;font-size:14px;transition:.3s;}
-    nav a.active{color:var(--gold);}
-    nav a:hover{color:var(--accent);}
-    nav .user-name{color:var(--accent);font-size:13px;}
+    nav a{color:#fff;text-decoration:none;font-weight:600;margin:0 12px}
+    nav a.active{color:var(--gold)}
     nav .logout-btn{
-      background:#d43f3f;color:#fff;font-size:13px;font-weight:600;
-      padding:5px 14px;border:none;border-radius:20px;cursor:pointer;
-      transition:.3s;
+      background:var(--danger);border:none;color:#fff;padding:6px 14px;
+      border-radius:6px;cursor:pointer;font-size:14px;font-weight:600;
     }
-    nav .logout-btn:hover{filter:brightness(1.2);}
 
-    .spacer{height:48px}
+    .spacer{height:50px}
 
-    /* Profile Card */
+    /* ✅ Profile Card */
     .card {
-      width:340px;background:rgba(255,255,255,0.07);
-      backdrop-filter:blur(10px);
-      border-radius:20px;padding:35px;text-align:center;
+      width:340px;
+      background:rgba(255,255,255,0.07);
+      border-radius:20px;
+      padding:35px;
+      text-align:center;
       box-shadow:0 0 20px rgba(255,150,60,0.4);
-      transition:all .4s ease;
-      animation:fadeIn .8s ease both;
     }
-    .card:hover{box-shadow:0 0 30px rgba(255,150,60,0.55);}
     .profile-img {
       width:120px;height:120px;border-radius:50%;
-      object-fit:cover;margin:0 auto 15px;border:3px solid var(--gold);
-      box-shadow:0 0 20px rgba(255,149,46,.3);
+      object-fit:cover;margin-bottom:15px;
+      border:3px solid var(--gold);
     }
-    h2{font-size:24px;background:linear-gradient(90deg,#ffd785,#ff952e);
-      -webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:5px;}
-    .user-email{font-size:15px;opacity:.9;margin-bottom:25px;}
+    h2 { font-size:24px;margin-bottom:5px;color:var(--gold); }
+    .user-email{font-size:15px;margin-bottom:25px;opacity:.9;}
+
     .btn {
-      width:100%;padding:12px;margin:8px 0;
-      border:none;border-radius:10px;font-size:16px;font-weight:600;
-      cursor:pointer;transition:.25s;
+      width:100%;padding:12px;margin:8px 0;border:none;
+      border-radius:10px;font-size:16px;font-weight:600;cursor:pointer;
     }
     .edit-btn{background:var(--gold);color:#000;}
     .logout2-btn{background:var(--danger);color:#fff;}
     .back-btn{background:#666;color:#fff;}
-    .btn:hover{filter:brightness(1.15);transform:translateY(-2px);}
-    @keyframes fadeIn{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
   </style>
 </head>
 
 <body>
-  <!-- Navigation -->
+
+  <!-- ✅ Navigation -->
   <nav class="topbar">
-    <div class="logo">D.C. TOUR</div>
-    <div class="menu">
+    <div class="logo" style="color:var(--gold);font-weight:800;">D.C. TOUR</div>
+    <div>
       <a href="index.html">HOME</a>
       <a href="explore.html">EXPLORE</a>
       <a href="profile.html" class="active">PROFILE</a>
     </div>
-    <div style="display:flex;align-items:center;gap:12px;">
-      <span class="user-name" id="usernameTop">fluke</span>
-      <button class="logout-btn" onclick="logout()">LOGOUT</button>
-    </div>
+    <button class="logout-btn" onclick="logout()">LOGOUT</button>
   </nav>
+
   <div class="spacer"></div>
 
-  <!-- Profile -->
+  <!-- ✅ Profile Info -->
   <div class="card" id="profileCard">
-    <img id="profileImg" class="profile-img" src="pic/default.png" alt="profile"/>
+    <img id="profileImg" class="profile-img" src="pic/default.png" alt="profile">
     <h2 id="profileName">Loading…</h2>
     <div class="user-email" id="profileEmail">Loading…</div>
 
@@ -119,56 +99,9 @@
     <button class="btn back-btn" onclick="location.href='index.html'">← ย้อนกลับ</button>
   </div>
 
-  <script>
-    const API_BASE = location.hostname === "localhost"
-      ? "http://localhost:3000"
-      : "https://washingtondc-tour-clean-1.onrender.com";
+  <!-- ✅ External Scripts -->
+  <script src="js/auth.js"></script>
+  <script src="js/profile.js"></script>
 
-    document.addEventListener("DOMContentLoaded", () => {
-      showCachedIfAny();
-      fetchProfile();
-    });
-
-    function showCachedIfAny() {
-      const cached = JSON.parse(localStorage.getItem("user") || "null");
-      if (cached) showProfile(cached);
-    }
-
-    async function fetchProfile() {
-      const card = document.getElementById("profileCard");
-      card.style.opacity = "0.35";
-      const token = localStorage.getItem("token");
-
-      try {
-        const res = await fetch(`${API_BASE}/api/auth/profile`, {
-          headers: { Authorization: "Bearer " + token },
-        });
-        const data = await res.json().catch(() => null);
-        if (data && data.status === "success" && data.user) {
-          localStorage.setItem("user", JSON.stringify(data.user));
-          showProfile(data.user);
-        }
-      } catch (err) {
-        console.error("Fetch profile failed:", err);
-      } finally {
-        card.style.opacity = "1";
-      }
-    }
-
-    function showProfile(u) {
-      const img = document.getElementById("profileImg");
-      document.getElementById("profileName").textContent = u.username || "-";
-      document.getElementById("profileEmail").textContent = u.email || "-";
-      document.getElementById("usernameTop").textContent = u.username || "User";
-      img.src = u.profileImg || "pic/default.png";
-      img.onerror = () => img.src = "pic/default.png";
-    }
-
-    function logout() {
-      localStorage.removeItem("token");
-      localStorage.removeItem("user");
-      window.location.href = "index.html";
-    }
-  </script>
 </body>
 </html>
