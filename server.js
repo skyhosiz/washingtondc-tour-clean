@@ -124,7 +124,12 @@ app.use(
     useDefaults: true,
     directives: {
       "img-src": ["'self'", "data:", "blob:", "*.cloudinary.com", "https:"],
-      "script-src": ["'self'", "'unsafe-inline'"],
+      "script-src": [
+        "'self'",
+        "'unsafe-inline'",
+        "https://www.googletagmanager.com", // ✅ New
+        "https://www.google-analytics.com"  // ✅ New
+      ],
       "connect-src": [
         "'self'",
         CLIENT_URL,
@@ -132,10 +137,12 @@ app.use(
         "https://api.brevo.com",
         "https://api.si.edu",
         "https://edan.si.edu",
+        "https://www.google-analytics.com" // ✅ for tracking
       ],
     },
   })
 );
+
 
 /* ✅ CORS */
 const allowed = [
