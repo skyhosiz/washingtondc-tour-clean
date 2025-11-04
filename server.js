@@ -75,12 +75,16 @@ const upload = multer({ storage });
    🧠 DB & SCHEMA
 ============================= */
 mongoose
-  .connect(MONGO_URI)
+  .connect(process.env.MONGO_URI, {
+    dbName: 'tourismAccountDB',
+    authMechanism: 'SCRAM-SHA-256',
+  })
   .then(() => console.log("✅ MongoDB Connected"))
   .catch((err) => {
     console.error("❌ MongoDB Error:", err.message);
     process.exit(1);
   });
+
 
 const User = mongoose.model(
   "User",
