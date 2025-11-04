@@ -196,14 +196,12 @@ app.post("/api/auth/login", async (req, res) => {
 /* =============================
    🔁 FORGOT / RESET PASSWORD
 ============================= */
-// ส่งลิงก์รีเซ็ต
 app.post("/api/auth/forgot", async (req, res) => {
   try {
     const { email = "" } = req.body || {};
     if (!email) return res.json({ status: "error", message: "กรอกอีเมล" });
 
     const u = await User.findOne({ email });
-    // security: ตอบ success เสมอ เพื่อไม่เผยว่ามี/ไม่มีอีเมล
     if (!u) return res.json({ status: "success" });
 
     const token = jwt.sign({ uid: u._id }, RESET_PASSWORD_SECRET, {
@@ -232,7 +230,6 @@ app.post("/api/auth/forgot", async (req, res) => {
   }
 });
 
-// ตั้งรหัสผ่านใหม่
 app.post("/api/auth/reset", async (req, res) => {
   try {
     const { token = "", password = "" } = req.body || {};
@@ -330,7 +327,14 @@ app.get("/api/proxy-smithsonian/:id", async (req, res) => {
 });
 
 /* =============================
-   🌐 SPA STATIC ROUTE (ต้องไว้ท้ายสุด!)
+✅ INTRO STATIC PAGE  <-- (เพิ่มเฉพาะตรงนี้)
+============================= */
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "intro.html"));
+});
+
+/* =============================
+🌐 SPA STATIC ROUTE (ต้องไว้ท้ายสุด!)
 ============================= */
 app.get(/.*/, (req, res, next) => {
   if (req.path.startsWith("/api")) return next();
@@ -338,7 +342,7 @@ app.get(/.*/, (req, res, next) => {
 });
 
 /* =============================
-   🟢 START SERVER
+🟢 START SERVER
 ============================= */
 const port = process.env.PORT || 10000;
 app.listen(port, () => console.log(`🚀 Server Online → PORT ${port}`));
