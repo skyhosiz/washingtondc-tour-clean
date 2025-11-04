@@ -1,0 +1,97 @@
+* {
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:'Kanit',sans-serif;
+}
+
+body {
+  background:#0f0f0f;
+  color:#fff;
+  overflow-x:hidden;
+}
+
+.bg-slideshow {
+  position:fixed;
+  top:0; left:0;
+  width:200%;
+  height:100%;
+  background-size:cover;
+  background-position:center;
+  z-index:-3;
+  filter:blur(18px) brightness(55%);
+  animation:slideBG 35s linear infinite;
+}
+
+@keyframes slideBG {
+  0% {background-image:url("../pic/Half-Smoke.png"); transform:translateX(0);}
+  20% {background-image:url("../pic/JumboSlicePizza.png");}
+  40% {background-image:url("../pic/CrabCakeBurger.png");}
+  60% {background-image:url("../pic/Chicken&Waffle.png");}
+  80% {background-image:url("../pic/DistrictDoughnut.png");}
+  100% {background-image:url("../pic/burger.png"); transform:translateX(-35%);}
+}
+
+.bg-overlay {
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.65);
+  z-index:-2;
+}
+
+h2 {
+  text-align:center;
+  font-size:55px;
+  font-weight:800;
+  background:linear-gradient(90deg,#ffd785,#ff952e);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  margin:100px 0 50px;
+}
+
+.big-card {
+  width:92%;
+  margin:0 auto 65px;
+  border-radius:22px;
+  background:#181818cc;
+  display:flex;
+  gap:25px;
+  padding:22px;
+  align-items:center;
+  opacity:0;
+  transform:translateY(40px) scale(0.96);
+  transition:.9s;
+}
+
+.big-card.show {
+  opacity:1;
+  transform:translateY(0) scale(1);
+}
+
+.big-card img {
+  width:48%;
+  height:300px;
+  border-radius:16px;
+  object-fit:cover;
+}
+
+.food-info h3 {
+  font-size:38px;
+  background:linear-gradient(90deg,#ffcf76,#ff8a28);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+
+.desc {font-size:20px; color:#ffe1bb;}
+.place {opacity:.9;}
+.rating-price {color:#ffaa44;}
+
+.btn-map {
+  padding:10px 25px;
+  background:#ff8a28;
+  border-radius:10px;
+  color:#000;
+  font-weight:bold;
+  text-decoration:none;
+  display:inline-block;
+}

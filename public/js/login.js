@@ -1,30 +1,35 @@
-async function login() {
-  const email = document.getElementById("email").value.trim();
-  const password = document.getElementById("password").value.trim();
+// public/js/login.js — Secure Login ✅
 
-  if (!email || !password) return alert("⚠️ กรุณากรอกข้อมูลให้ครบ!");
+document.addEventListener("DOMContentLoaded", () => {
+  const form = document.getElementById("loginForm");
+  if (!form) return;
 
-  try {
-    const res = await fetch(`${API_BASE}/api/auth/login`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password }),
-    });
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
 
-    const data = await res.json();
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value.trim();
 
-    if (data.status === "success") {
-      saveAuth(data);
-      return (location.href = "index.html");
+    if (!email || !password)
+      return alert("⚠️ กรุณากรอกข้อมูลให้ครบ!");
+
+    try {
+      const res = await authApi.apiFetch(`${API_BASE}/api/auth/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await res.json().catch(() => ({}));
+      
+      if (res.ok && data.status === "success") {
+        authApi.saveAuth(data);
+        return (location.href = "index.html");
+      }
+
+      alert(data.message || "❌ อีเมลหรือรหัสผ่านผิด!");
+    } catch (err) {
+      alert("📡 ระบบขัดข้อง กรุณาลองใหม่");
     }
-
-    alert(data.message || "❌ อีเมลหรือรหัสผ่านผิด!");
-  } catch {
-    alert("📡 ระบบมีปัญหา ลองใหม่อีกครั้ง");
-  }
-}
-
-document.getElementById("loginForm").addEventListener("submit", (e) => {
-  e.preventDefault();
-  login();
+  });
 });

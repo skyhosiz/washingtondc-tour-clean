@@ -1,185 +1,100 @@
 <!DOCTYPE html>
 <html lang="th">
-  <head>
-    <!-- 📊 Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-VGBZS316J9"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag() { dataLayer.push(arguments); }
-      gtag('js', new Date());
-      gtag('config', 'G-VGBZS316J9');
-    </script>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DC Local Food</title>
 
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>DC Local Food</title>
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600;800&display=swap" rel="stylesheet">
 
-    <!-- 🔒 Scripts -->
-    <script src="js/auth.js"></script>
-    <script src="js/nav.js" defer></script>
+  <!-- CSS -->
+  <link rel="stylesheet" href="css/food.css" />
 
-    <!-- 🖋 Font -->
-    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600;800&display=swap" rel="stylesheet" />
+  <!-- Scripts -->
+  <script src="js/auth.js" defer></script>
+  <script src="js/nav.js" defer></script>
+  <script src="js/food.js" defer></script>
+</head>
 
-    <style>
-      * {margin:0; padding:0; box-sizing:border-box; font-family:'Kanit',sans-serif;}
-      body {background:#0f0f0f; color:#fff; overflow-x:hidden;}
+<body>
 
-      /* 🔥 Background Slideshow */
-      .bg-slideshow {
-        position:fixed; top:0; left:0; width:200%; height:100%;
-        background-size:cover; background-position:center;
-        z-index:-3; filter:blur(18px) brightness(55%);
-        animation:slideBG 35s linear infinite;
-      }
-      @keyframes slideBG {
-        0% {background-image:url("pic/Half-Smoke.png"); transform:translateX(0);}
-        20% {background-image:url("pic/JumboSlicePizza.png");}
-        40% {background-image:url("pic/CrabCakeBurger.png");}
-        60% {background-image:url("pic/Chicken&Waffle.png");}
-        80% {background-image:url("pic/DistrictDoughnut.png");}
-        100% {background-image:url("pic/burger.png"); transform:translateX(-35%);}
-      }
+  <!-- Navbar auto inject -->
+  <nav class="topbar"></nav>
+  <div class="spacer"></div>
 
-      .bg-overlay {
-        position:fixed; inset:0; background:rgba(0,0,0,0.65); z-index:-2;
-      }
+  <div class="bg-slideshow"></div>
+  <div class="bg-overlay"></div>
 
-      /* 🍔 Title */
-      h2 {
-        text-align:center; font-size:55px; font-weight:800;
-        background:linear-gradient(90deg,#ffd785,#ff952e);
-        -webkit-background-clip:text; -webkit-text-fill-color:transparent;
-        background-clip:text; color:transparent;
-        text-shadow:0 0 25px rgba(255,150,50,0.7),0 0 60px rgba(255,110,20,0.8);
-        letter-spacing:1px; margin:100px 0 50px;
-      }
-      h2::after {
-        content:""; width:260px; height:4px;
-        background:linear-gradient(90deg,#ff9a3c,#ffd89b,#ff9a3c);
-        display:block; margin:12px auto 0; border-radius:2px;
-      }
+  <h2>Washington D.C. • Local Food 🍔🔥</h2>
 
-      /* 🥘 Food Cards */
-      .big-card {
-        width:92%; margin:0 auto 65px; border-radius:22px;
-        background:#181818cc; backdrop-filter:blur(6px);
-        display:flex; gap:25px; padding:22px; align-items:center;
-        opacity:0; transform:translateY(40px) scale(0.96);
-        transition:opacity 0.9s ease, transform 0.9s ease;
-      }
-      .big-card.show {opacity:1; transform:translateY(0) scale(1);}
-      .big-card:hover {transform:translateY(-8px) scale(1.03); transition:0.25s;}
-
-      .big-card img {
-        width:48%; height:300px; border-radius:16px; object-fit:cover;
-        transition:0.35s;
-      }
-      .big-card:hover img {transform:scale(1.05); filter:brightness(1.12);}
-
-      .food-info {width:50%;}
-      .food-info h3 {
-        font-size:38px; margin-bottom:8px;
-        background:linear-gradient(90deg,#ffcf76,#ff8a28);
-        -webkit-background-clip:text; -webkit-text-fill-color:transparent;
-        background-clip:text; color:transparent;
-      }
-      .desc {font-size:20px; line-height:1.45; margin-bottom:10px; color:#ffe1bb;}
-      .place {opacity:0.85; font-size:18px; margin-bottom:8px;}
-      .rating-price {color:#ffaa44; margin-bottom:12px; font-size:20px;}
-
-      .btn-map {
-        padding:10px 25px; background:#ff8a28; color:#000;
-        text-decoration:none; border-radius:10px; font-weight:bold;
-        display:inline-block; margin-top:10px; transition:0.2s;
-      }
-      .btn-map:hover {background:#ffd089; transform:scale(1.08);}
-    </style>
-  </head>
-
-  <body>
-    <div class="bg-slideshow"></div>
-    <div class="bg-overlay"></div>
-
-    <h2>Washington D.C. • Local Food 🍔🔥</h2>
-
-    <div class="big-card">
-      <img src="pic/Half-Smoke.png" alt="Half-Smoke" />
-      <div class="food-info">
-        <h3>Half-Smoke</h3>
-        <p class="desc">ไส้กรอกรมควันสุดลือชื่อ ราดซอสชิลลี่สูตรลับถึงใจ!</p>
-        <div class="place">Ben’s Chili Bowl</div>
-        <div class="rating-price">⭐⭐⭐⭐ 💲💲</div>
-        <a class="btn-map" target="_blank" href="https://maps.google.com/?q=Ben’s Chili Bowl Washington DC">View Location</a>
-      </div>
+  <div class="big-card">
+    <img src="pic/Half-Smoke.png" alt="Half-Smoke" />
+    <div class="food-info">
+      <h3>Half-Smoke</h3>
+      <p class="desc">ไส้กรอกรมควันสุดลือชื่อ ราดซอสชิลลี่สูตรลับถึงใจ!</p>
+      <div class="place">Ben’s Chili Bowl</div>
+      <div class="rating-price">⭐⭐⭐⭐ 💲💲</div>
+      <a class="btn-map" target="_blank" href="https://maps.google.com/?q=Ben’s Chili Bowl Washington DC">View Location</a>
     </div>
+  </div>
 
-    <div class="big-card">
-      <img src="pic/JumboSlicePizza.png" alt="Jumbo Slice Pizza" />
-      <div class="food-info">
-        <h3>Jumbo Slice Pizza</h3>
-        <p class="desc">พิซซ่าแผ่นใหญ่มโหฬาร ชีสทะลัก กินทีฟินยาวถึงบ้าน!</p>
-        <div class="place">Adams Morgan</div>
-        <div class="rating-price">⭐⭐⭐ 💲</div>
-        <a class="btn-map" target="_blank" href="https://maps.google.com/?q=Jumbo Slice Pizza Adams Morgan DC">View Location</a>
-      </div>
+  <div class="big-card">
+    <img src="pic/JumboSlicePizza.png" alt="Jumbo Slice Pizza" />
+    <div class="food-info">
+      <h3>Jumbo Slice Pizza</h3>
+      <p class="desc">พิซซ่าแผ่นใหญ่มโหฬาร ชีสทะลัก กินทีฟินยาวถึงบ้าน!</p>
+      <div class="place">Adams Morgan</div>
+      <div class="rating-price">⭐⭐⭐ 💲</div>
+      <a class="btn-map" target="_blank" href="https://maps.google.com/?q=Jumbo Slice Pizza Adams Morgan DC">View Location</a>
     </div>
+  </div>
 
-    <div class="big-card">
-      <img src="pic/CrabCakeBurger.png" alt="Crab Cake Burger" />
-      <div class="food-info">
-        <h3>Crab Cake Burger</h3>
-        <p class="desc">ปูสดเด้งสุดพรีเมียม ย่างกำลังดีในทุกคำ!</p>
-        <div class="place">Luke’s Lobster</div>
-        <div class="rating-price">⭐⭐⭐⭐⭐ 💲💲💲</div>
-        <a class="btn-map" target="_blank" href="https://maps.google.com/?q=Luke’s Lobster DC">View Location</a>
-      </div>
+  <div class="big-card">
+    <img src="pic/CrabCakeBurger.png" alt="Crab Cake Burger" />
+    <div class="food-info">
+      <h3>Crab Cake Burger</h3>
+      <p class="desc">ปูสดเด้งสุดพรีเมียม ย่างกำลังดีในทุกคำ!</p>
+      <div class="place">Luke’s Lobster</div>
+      <div class="rating-price">⭐⭐⭐⭐⭐ 💲💲💲</div>
+      <a class="btn-map" target="_blank" href="https://maps.google.com/?q=Luke’s Lobster DC">View Location</a>
     </div>
+  </div>
 
-    <div class="big-card">
-      <img src="pic/Chicken&Waffle.png" alt="Chicken and Waffle" />
-      <div class="food-info">
-        <h3>Chicken & Waffle</h3>
-        <p class="desc">ไก่ทอดกรอบฉ่ำ + วาฟเฟิลนุ่มละลาย ปังยิ่งกว่าคู่รักซีรีส์!</p>
-        <div class="place">Ooohh’s & Aahh’s</div>
-        <div class="rating-price">⭐⭐⭐⭐ 💲💲</div>
-        <a class="btn-map" target="_blank" href="https://www.oohhsnaahhs.com/">View Location</a>
-      </div>
+  <div class="big-card">
+    <img src="pic/Chicken&Waffle.png" alt="Chicken and Waffle" />
+    <div class="food-info">
+      <h3>Chicken & Waffle</h3>
+      <p class="desc">ไก่ทอดกรอบฉ่ำ + วาฟเฟิลนุ่มละลาย ปังยิ่งกว่าคู่รักซีรีส์!</p>
+      <div class="place">Ooohh’s & Aahh’s</div>
+      <div class="rating-price">⭐⭐⭐⭐ 💲💲</div>
+      <a class="btn-map" target="_blank" href="https://www.oohhsnaahhs.com/">View Location</a>
     </div>
+  </div>
 
-    <div class="big-card">
-      <img src="pic/DistrictDoughnut.png" alt="District Doughnut" />
-      <div class="food-info">
-        <h3>District Doughnut</h3>
-        <p class="desc">โดนัทฟูอุ่น ๆ หวานกำลังดี ฟินจนต้องสั่งอีก!</p>
-        <div class="place">The Wharf</div>
-        <div class="rating-price">⭐⭐⭐⭐ 💲💲</div>
-        <a class="btn-map" target="_blank" href="https://maps.google.com/?q=District Doughnut DC">View Location</a>
-      </div>
+  <div class="big-card">
+    <img src="pic/DistrictDoughnut.png" alt="District Doughnut" />
+    <div class="food-info">
+      <h3>District Doughnut</h3>
+      <p class="desc">โดนัทฟูอุ่น ๆ หวานกำลังดี ฟินจนต้องสั่งอีก!</p>
+      <div class="place">The Wharf</div>
+      <div class="rating-price">⭐⭐⭐⭐ 💲💲</div>
+      <a class="btn-map" target="_blank" href="https://maps.google.com/?q=District Doughnut DC">View Location</a>
     </div>
+  </div>
 
-    <div class="big-card">
-      <img src="pic/burger.png" alt="Cheese Burger" />
-      <div class="food-info">
-        <h3>Cheese Burger</h3>
-        <p class="desc">เนื้อฉ่ำหนักชีส ยิ่งกินยิ่งหลงรักเมืองนี้ 🍔❤️</p>
-        <div class="place">Cheese Burger D.C.</div>
-        <div class="rating-price">⭐⭐⭐⭐⭐ 💲💲💲</div>
-        <a class="btn-map" target="_blank" href="https://maps.google.com/?q=Cheese Burger DC">View Location</a>
-      </div>
+  <div class="big-card">
+    <img src="pic/burger.png" alt="Cheese Burger" />
+    <div class="food-info">
+      <h3>Cheese Burger</h3>
+      <p class="desc">เนื้อฉ่ำหนักชีส ยิ่งกินยิ่งหลงรักเมืองนี้ 🍔❤️</p>
+      <div class="place">Cheese Burger D.C.</div>
+      <div class="rating-price">⭐⭐⭐⭐⭐ 💲💲💲</div>
+      <a class="btn-map" target="_blank" href="https://maps.google.com/?q=Cheese Burger DC">View Location</a>
     </div>
+  </div>
 
-    <script>
-      const cards = document.querySelectorAll(".big-card");
-      const observer = new IntersectionObserver((entries)=>{
-        entries.forEach(entry=>{
-          if(entry.isIntersecting){
-            entry.target.classList.add("show");
-            observer.unobserve(entry.target);
-          }
-        });
-      },{threshold:0.25});
-      cards.forEach(card=>observer.observe(card));
-    </script>
-  </body>
+  <footer>© 2025 Washington D.C. Local Food | Developed by FlukeTON</footer>
+
+</body>
 </html>

@@ -1,0 +1,85 @@
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+  font-family:"Playfair Display",serif;
+  background:#141414;
+  color:#fff;
+  overflow-x:hidden;
+}
+
+/* HERO */
+.hero{position:relative;height:100vh;overflow:hidden}
+.hero__sky{
+  position:absolute;inset:0;
+  background:url("../pic/home.png") center/cover no-repeat;
+  animation:fadeZoom 2.4s ease-out forwards;
+}
+.hero__shade{
+  position:absolute;inset:0;
+  background:linear-gradient(to bottom,rgba(0,0,0,.38),rgba(0,0,0,.85) 70%);
+}
+@keyframes fadeZoom{
+  0%{opacity:0;transform:scale(1.22)}
+  100%{opacity:1;transform:scale(1)}
+}
+
+.hero__titleBox{
+  position:absolute;left:50%;top:50%;
+  transform:translate(-50%,-50%);
+  text-align:center;
+  opacity:0;
+  animation:fadeInTxt 2s .7s forwards;
+}
+@keyframes fadeInTxt{
+  0%{opacity:0;transform:translate(-50%,-48%) scale(1.05)}
+  100%{opacity:1;transform:translate(-50%,-50%) scale(1)}
+}
+.hero h1{
+  font-size:72px;font-weight:700;color:#ffb066;
+  text-shadow:0 0 20px rgba(255,150,80,.6);
+}
+.hero h2{
+  margin-top:10px;font-size:22px;font-family:'Kanit',sans-serif;
+}
+.hero__menuBtn{
+  margin-top:40px;background:#ff9650;
+  border:none;padding:15px 45px;
+  font-size:22px;border-radius:50px;
+  cursor:pointer;transition:.25s;font-family:'Kanit'
+}
+.hero__menuBtn:hover{background:#ffc480;transform:scale(1.07)}
+
+/* MENU AREA */
+.menu-area{
+  padding:150px 0 200px;
+  background:radial-gradient(circle at 50% -10%,#3b0060,#12002b 80%,#050013);
+  text-align:center;min-height:100vh;overflow:hidden;
+}
+.cards{
+  width:min(1200px,90%);
+  margin:auto;
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+  gap:70px;
+}
+.cards a{
+  position:relative;text-decoration:none;
+  display:block;opacity:0;transform:translateY(60px);
+  transition:.6s ease;
+}
+.cards img{
+  width:100%;border-radius:26px;
+  transition:.35s;box-shadow:0 0 14px #000
+}
+.cards a:hover{transform:translateY(-14px) scale(1.08)}
+.cards a:hover img{filter:brightness(1.22);box-shadow:0 0 35px #ffcf75aa}
+.card-title{
+  margin-top:15px;font-family:'Kanit';
+  font-size:20px;font-weight:700;
+  color:#fff;
+}
+
+/* CREDIT */
+.credit{
+  font-family:'Kanit';font-size:15px;
+  padding:40px 0;text-align:center;opacity:.9;
+}

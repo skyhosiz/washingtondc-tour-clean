@@ -1,240 +1,97 @@
 <!DOCTYPE html>
-
 <html lang="th">
-  <head>
-    <script
-      async
-      src="https://www.googletagmanager.com/gtag/js?id=G-VGBZS316J9"
-    ></script>
-
-    <script>
-      window.dataLayer = window.dataLayer || [];
-
-      function gtag() {
-        dataLayer.push(arguments);
-      }
-
-      gtag("js", new Date());
-
-      gtag("config", "G-VGBZS316J9");
-    </script>
-
-    <script src="js/auth.js"></script>
-
-    <script src="js/nav.js" defer></script>
-
-    <meta charset="UTF-8" />
-
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-    <title>Forgot Password | Washington D.C.</title>
-
-    <link
-      href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600;800&display=swap"
-      rel="stylesheet"
-    />
-
-    <style>
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-      }
-
-      body {
-        font-family: "Kanit", sans-serif;
-
-        height: 100svh;
-
-        display: flex;
-        justify-content: center;
-        align-items: center;
-
-        overflow: hidden;
-        position: relative;
-      }
-
-      .bg {
-        position: fixed;
-        inset: 0;
-
-        background: url("pic/dc_sunset.png") center/cover no-repeat;
-
-        z-index: -2;
-      }
-
-      .overlay {
-        position: fixed;
-        inset: 0;
-
-        background: rgba(0, 0, 0, 0.35);
-
-        backdrop-filter: blur(2px);
-
-        z-index: -1;
-      }
-
-      .box {
-        width: 410px;
-        background: rgba(10, 0, 25, 0.85);
-
-        padding: 36px;
-        border-radius: 24px;
-        text-align: center;
-        color: white;
-
-        box-shadow: 0 0 40px rgba(255, 140, 30, 0.35);
-      }
-
-      h2 {
-        font-size: 30px;
-        margin-bottom: 16px;
-        font-weight: 800;
-
-        background: linear-gradient(90deg, #ffd089, #ff8a25);
-
-        /* --- 1. เอากลับมา (จำเป็น!) --- */
-
-        -webkit-background-clip: text;
-
-        background-clip: text;
-
-        color: transparent;
-
-        text-shadow: 0 0 10px rgba(255, 140, 50, 0.4);
-      }
-
-      input {
-        width: 100%;
-        padding: 12px;
-        margin: 10px 0;
-
-        border-radius: 10px;
-        border: none;
-        font-size: 17px;
-        color: #222;
-      }
-
-      button {
-        width: 100%;
-        padding: 12px;
-
-        background: linear-gradient(90deg, #ffe29c, #ff8522);
-
-        border: none;
-        border-radius: 12px;
-        font-size: 18px;
-        font-weight: bold;
-
-        cursor: pointer;
-        margin-top: 10px;
-        color: #222;
-        transition: 0.25s;
-      }
-
-      button:hover {
-        transform: scale(1.05);
-        box-shadow: 0 0 18px rgba(255, 160, 50, 0.65);
-      }
-
-      a {
-        display: inline-block;
-        margin-top: 14px;
-        font-size: 15px;
-        color: #ffd28a;
-        text-decoration: none;
-      }
-
-      .small {
-        font-size: 13px;
-        opacity: 0.9;
-        margin-top: 8px;
-      }
-    </style>
-  </head>
-
-  <body>
-    <div class="bg"></div>
-
-    <div class="overlay"></div>
-
-    <div class="box">
-      <h2>กู้คืนรหัสผ่าน</h2>
-
-      <input
-        type="email"
-        id="email"
-        placeholder="อีเมลที่ลงทะเบียนไว้"
-        autocomplete="email"
-      />
-
-      <button id="sendBtn" onclick="sendReset()">ส่งลิงก์รีเซ็ต</button>
-
-      <div class="small">เราจะส่งลิงก์รีเซ็ต (หมดอายุภายใน 30 นาที)</div>
-
-      <a href="login.html">กลับไป Login</a>
-    </div>
-
-    <script>
-      localStorage.removeItem("token");
-
-      localStorage.removeItem("user");
-
-      const API_BASE =
-        location.hostname === "localhost"
-          ? "http://localhost:3000"
-          : "https://washingtondc-tour-clean-1.onrender.com";
-
-      function isEmail(s) {
-        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s);
-      }
-
-      async function sendReset() {
-        const email = document.getElementById("email").value.trim();
-
-        const btn = document.getElementById("sendBtn");
-
-        if (!email) return alert("⚠️ กรุณากรอกอีเมล");
-
-        if (!isEmail(email)) return alert("⚠️ รูปแบบอีเมลไม่ถูกต้อง");
-
-        btn.disabled = true;
-
-        const oldText = btn.textContent;
-
-        btn.innerHTML = "กำลังส่ง..."; 
-        try {
-          const res = await fetch(`${API_BASE}/api/auth/forgot`, {
-            method: "POST",
-
-            headers: { "Content-Type": "application/json" },
-
-            body: JSON.stringify({ email }),
-          });
-
-          const data = await res.json().catch(() => null);
-
-          if (data?.status === "success") {
-            gtag("event", "forgot_password", { event_category: "User" });
-
-            alert("✅ ส่งอีเมลรีเซ็ตรหัสผ่านแล้ว! กรุณาตรวจสอบกล่องจดหมาย ✉️");
-
-            setTimeout(() => (location.href = "login.html"), 1200);
-
-          } else {
-            alert(data?.message || "❌ ไม่สามารถส่งอีเมลได้ ลองใหม่อีกครั้ง");
-          }
-        } catch (err) {
-          console.error(err);
-
-          alert("🚨 ระบบมีปัญหา กรุณาลองใหม่อีกครั้ง");
-        } finally {
-         
-          btn.disabled = false;
-
-          btn.textContent = oldText;
-        }
-      }
-    </script>
-  </body>
+<head>
+  <!-- ✅ GA Safe -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-VGBZS316J9"></script>
+  <script src="js/ga.js" defer></script>
+
+  <!-- ✅ Secure Scripts -->
+  <script src="js/auth.js" defer></script>
+  <script src="js/nav.js" defer></script>
+  <script src="js/forgot.js" defer></script>
+
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Forgot Password | Washington D.C.</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600;800&display=swap" rel="stylesheet" />
+
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;}
+    body{
+      font-family:"Kanit",sans-serif;
+      height:100svh;
+      display:flex;justify-content:center;align-items:center;
+      overflow:hidden;position:relative;
+    }
+    .spacer{height:65px;} /* ✅ กัน navbar บังหัว */
+
+    .bg{
+      position:fixed;inset:0;
+      background:url("pic/dc_sunset.png") center/cover no-repeat;
+      z-index:-2;
+    }
+    .overlay{
+      position:fixed;inset:0;
+      background:rgba(0,0,0,0.35);
+      backdrop-filter:blur(2px);
+      z-index:-1;
+    }
+
+    .box{
+      width:410px;
+      background:rgba(10,0,25,0.85);
+      padding:36px;border-radius:24px;text-align:center;color:#fff;
+      box-shadow:0 0 40px rgba(255,140,30,0.35);
+    }
+    h2{
+      font-size:30px;margin-bottom:16px;font-weight:800;
+      background:linear-gradient(90deg,#ffd089,#ff8a25);
+      -webkit-background-clip:text;background-clip:text;color:transparent;
+      text-shadow:0 0 10px rgba(255,140,50,0.4);
+    }
+    input{
+      width:100%;padding:12px;margin:10px 0;
+      border-radius:10px;border:none;font-size:17px;
+      color:#222;
+    }
+    button{
+      width:100%;padding:12px;
+      background:linear-gradient(90deg,#ffe29c,#ff8522);
+      border:none;border-radius:12px;
+      font-size:18px;font-weight:700;margin-top:10px;
+      cursor:pointer;color:#222;transition:.25s;
+    }
+    button:hover{
+      transform:scale(1.05);
+      box-shadow:0 0 18px rgba(255,160,50,0.65);
+    }
+    a{
+      display:inline-block;margin-top:14px;
+      font-size:15px;color:#ffd28a;text-decoration:none;
+    }
+    .small{font-size:13px;opacity:.9;margin-top:8px;}
+  </style>
+</head>
+
+<body>
+
+  <!-- ✅ Navbar inject -->
+  <div class="spacer"></div>
+
+  <div class="bg"></div>
+  <div class="overlay"></div>
+
+  <div class="box">
+    <h2>กู้คืนรหัสผ่าน</h2>
+
+    <input type="email" id="email" placeholder="อีเมลที่ลงทะเบียนไว้" autocomplete="email">
+    <button id="sendBtn">ส่งลิงก์รีเซ็ต</button>
+
+    <div class="small">เราจะส่งลิงก์รีเซ็ต (หมดอายุภายใน 30 นาที)</div>
+
+    <a href="login.html">← กลับไป Login</a>
+  </div>
+
+</body>
 </html>

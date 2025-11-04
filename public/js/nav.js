@@ -1,127 +1,61 @@
-
 (function () {
-
-
   const token = localStorage.getItem("token");
-
-  if (!token) {
-
-    return; // หยุดทำงานทันที
-
-  }
-
-
-  const nav = document.createElement("nav");
-
-  nav.style.cssText = `
-
-    width: 100%;
-
-    position: sticky;
-
-    top: 0;
-
-    z-index: 999;
-
-    background: rgba(0,0,0,0.75);
-
-    padding: 14px 25px;
-
-    display: flex;
-
-    justify-content: space-between;
-
-    align-items: center;
-
-    font-family: 'Kanit', sans-serif;
-
-    backdrop-filter: blur(8px);
-
-    box-shadow: 0 2px 10px rgba(0,0,0,.45);
-
-  `;
-
+  if (!token) return;
 
   const user = JSON.parse(localStorage.getItem("user") || "null");
+  const username = user?.username || "User";
 
-  const username = user ? (user.username || "Profile") : "Guest";
-
-
+  const pages = [
+    { name: "HOME", url: "index.html" },
+    { name: "EXPLORE", url: "explore.html" },
+    { name: "PROFILE", url: "profile.html" }
+  ];
 
   function getPageName() {
-
-    const url = new URL(location.href);
-
-    let name = url.pathname.split("/").pop();
-
-    if (!name) name = "index.html";
-
-    return name;
-
+    const name = location.pathname.split("/").pop() || "index.html";
+    return name.toLowerCase();
   }
 
   const current = getPageName();
 
-  
-
-  const links = [
-
-    { name: "HOME", url: "index.html" },
-
-    { name: "EXPLORE", url: "explore.html" },
-
-    { name: "PROFILE", url: "profile.html" }
-
-  ];
-
-
-  let leftHtml = `<div style="display:flex; align-items:center; gap:25px;">`;
-
-  leftHtml += `<div style="font-weight:800;font-size:20px;color:#ff9650;">D.C. TOUR</div>`;
-
-  links.forEach(l => {
-
-    const isActive = (l.url === current) || (current === "edit-profile.html" && l.url === "profile.html");
-
-    const style = isActive
-
-      ? "text-decoration:none;color:#ff9650;font-weight:600;font-size:15px;"
-
-      : "text-decoration:none;color:#fff;font-size:15px;";
-
-    leftHtml += `<a href="${l.url}" style="${style}">${l.name}</a>`;
-
-  });
-
-  leftHtml += `</div>`;
-
-
-  let rightHtml = `<div style="display:flex; align-items:center; gap:15px;">`;
-
-  rightHtml += `<span style="font-size:15px; color: #ffb55b;">${username}</span>`;
-
-  rightHtml += `<button id="logoutBtn" style="background:#e63946;border:none;color:#fff;padding:8px 16px;border-radius:12px;cursor:pointer;font-weight:600;">LOGOUT</button>`;
-
-  rightHtml += `</div>`;
-
-
-  nav.innerHTML = leftHtml + rightHtml;
-
-
-  const logoutButton = nav.querySelector("#logoutBtn");
-
-  if (logoutButton) {
-
-    logoutButton.onclick = logout; 
-
-  }
-
   document.addEventListener("DOMContentLoaded", () => {
+    const nav = document.createElement("nav");
+    nav.className = "top-nav";
+
+    const left = document.createElement("div");
+    left.className = "nav-left";
+
+    const logo = document.createElement("div");
+    logo.className = "nav-logo";
+    logo.textContent = "D.C. TOUR";
+    left.appendChild(logo);
+
+    pages.forEach(p => {
+      const a = document.createElement("a");
+      a.href = p.url;
+      a.textContent = p.name;
+      a.className = (p.url === current) ? "active" : "";
+      left.appendChild(a);
+    });
+
+    const right = document.createElement("div");
+    right.className = "nav-right";
+
+    const nameSpan = document.createElement("span");
+    nameSpan.className = "nav-user";
+    nameSpan.textContent = username;
+
+    const logoutBtn = document.createElement("button");
+    logoutBtn.className = "logout-btn";
+    logoutBtn.textContent = "LOGOUT";
+    logoutBtn.addEventListener("click", () => logout());
+
+    right.appendChild(nameSpan);
+    right.appendChild(logoutBtn);
+
+    nav.appendChild(left);
+    nav.appendChild(right);
 
     document.body.prepend(nav);
-
   });
-
-
-
 })();

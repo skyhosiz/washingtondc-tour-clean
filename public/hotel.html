@@ -1,226 +1,48 @@
 <!DOCTYPE html>
-
 <html lang="th">
-  <head>
-    <script
-      async
-      src="https://www.googletagmanager.com/gtag/js?id=G-VGBZS316J9"
-    ></script>
-
-    <script>
-      window.dataLayer = window.dataLayer || [];
-
-      function gtag() {
-        dataLayer.push(arguments);
-      }
-
-      gtag("js", new Date());
-
-      gtag("config", "G-VGBZS316J9");
-    </script>
-
-    <meta charset="UTF-8" />
-
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-    <title>Hotel in Washington D.C.</title>
-
-    <script src="js/auth.js"></script>
-
-    <script src="js/nav.js" defer></script>
-
-    <link
-      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Kanit:wght@300;400;600&display=swap"
-      rel="stylesheet"
-    />
-
-    <style>
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-      }
-
-      body {
-        font-family: "Kanit", sans-serif;
-
-        background: #0f0f14;
-
-        color: white;
-
-        overflow-x: hidden;
-      }
-
-      .hero {
-        height: 100vh;
-
-        background: url("pic/hotel.png") center/cover no-repeat;
-
-        display: flex;
-
-        justify-content: center;
-
-        align-items: center;
-
-        text-align: center;
-
-        position: relative;
-      }
-
-      .hero::before {
-        content: "";
-
-        position: absolute;
-        inset: 0;
-
-        background: rgba(0, 0, 0, 0.38);
-
-        backdrop-filter: blur(3px);
-      }
-
-      .hero-content {
-        position: relative;
-
-        max-width: 780px;
-
-        animation: fadeUp 1s ease;
-      }
-
-      h1 {
-        font-family: "Playfair Display";
-
-        font-size: 68px;
-
-        color: #eacda3;
-
-        text-shadow: 0 0 20px rgba(255, 207, 150, 0.4);
-      }
-
-      h2 {
-        font-size: 24px;
-        margin: 14px 0 22px;
-
-        opacity: 0.94;
-      }
-
-      .btnBox {
-        margin-top: 25px;
-
-        display: flex;
-
-        justify-content: center;
-
-        gap: 20px;
-      }
-
-      .btn {
-        padding: 14px 32px;
-
-        border: none;
-
-        cursor: pointer;
-
-        border-radius: 14px;
-
-        font-size: 17px;
-
-        font-weight: 700;
-
-        box-shadow: 0 4px 18px rgba(0, 0, 0, 0.35);
-
-        transition: 0.25s;
-      }
-
-      .btn-back {
-        background: #ffb84a;
-        color: #222;
-      }
-
-      .btn-back:hover {
-        background: #ffd78c;
-
-        transform: translateY(-3px) scale(1.05);
-      }
-
-      .btn-web {
-        background: #e35a5a;
-        color: #fff;
-      }
-
-      .btn-web:hover {
-        background: #ff8585;
-
-        transform: translateY(-3px) scale(1.05);
-      }
-
-      .info {
-        padding: 90px 15%;
-
-        font-size: 20px;
-
-        line-height: 1.7;
-
-        color: #d8d8d8;
-
-        text-align: center;
-      }
-
-      @keyframes fadeUp {
-        from {
-          opacity: 0;
-          transform: translateY(40px);
-        }
-
-        to {
-          opacity: 1;
-          transform: translateY(0);
-        }
-      }
-
-      footer {
-        padding: 40px 0;
-
-        text-align: center;
-
-        background: #0f0f14;
-
-        opacity: 0.85;
-
-        font-size: 15px;
-      }
-    </style>
-  </head>
-
-  <body>
-    <section class="hero">
-      <div class="hero-content">
-        <h1>HOTEL IN D.C.</h1>
-
-        <h2>Premium Stay Near Washington Landmarks</h2>
-
-        <div class="btnBox">
-          <button class="btn btn-back" onclick="location.href='index.html'">
-            ← Back to Home
-          </button>
-
-          <button
-            class="btn btn-web"
-            onclick="window.open('https://www.booking.com/city/us/washington.html','_blank')"
-          >
-            🏨 Book Hotel →
-          </button>
-        </div>
+<head>
+  <!-- 🧭 Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-VGBZS316J9"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag("js", new Date());
+    gtag("config", "G-VGBZS316J9");
+  </script>
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hotel in Washington D.C.</title>
+
+  <script src="js/auth.js"></script>
+  <script src="js/nav.js" defer></script>
+  <script src="js/hotel.js" defer></script>
+
+  <link rel="stylesheet" href="css/hotel.css">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Kanit:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
+
+<body>
+  <section class="hero">
+    <div class="hero-content reveal">
+      <h1>HOTEL IN D.C.</h1>
+      <h2>Premium Stay Near Washington Landmarks</h2>
+
+      <div class="btnBox">
+        <button class="btn btn-back" onclick="goHome()">← Back to Home</button>
+        <button class="btn btn-web" onclick="openBooking()">🏨 Book Hotel →</button>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <section class="info">
-      โรงแรมในกรุงวอชิงตัน ดี.ซี. ตั้งอยู่ในย่านใจกลางเมือง
-      รายล้อมด้วยสถานที่ท่องเที่ยวระดับโลก
-      สะดวกสบายทั้งการท่องเที่ยวและการพักผ่อนระดับพรีเมียม
-    </section>
+  <section class="info reveal">
+    โรงแรมในกรุงวอชิงตัน ดี.ซี. ตั้งอยู่ในย่านใจกลางเมือง
+    รายล้อมด้วยสถานที่ท่องเที่ยวระดับโลก
+    สะดวกสบายทั้งการท่องเที่ยวและการพักผ่อนระดับพรีเมียม
+  </section>
 
-    <footer>
-      © 2025 Washington D.C. Tourism — Hotel in D.C. | Developed by FlukeTON
-    </footer>
-  </body>
+  <footer class="reveal">
+    © 2025 Washington D.C. Tourism — Hotel in D.C. | Developed by FlukeTON
+  </footer>
+</body>
 </html>

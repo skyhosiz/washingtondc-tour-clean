@@ -1,342 +1,58 @@
 <!DOCTYPE html>
-
 <html lang="th">
-  <head>
-    <script
-      async
-      src="https://www.googletagmanager.com/gtag/js?id=G-VGBZS316J9"
-    ></script>
-
-    <script>
-      window.dataLayer = window.dataLayer || [];
-
-      function gtag() {
-        dataLayer.push(arguments);
-      }
-
-      gtag("js", new Date());
-
-      gtag("config", "G-VGBZS316J9");
-    </script>
-
-    <meta charset="UTF-8" />
-
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-    <title>Washington D.C. Tourism</title>
-
-    <script src="js/auth.js"></script>
-
-    <script src="js/nav.js" defer></script>
-
-    <link
-      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Kanit:wght@300;400;600;700&display=swap"
-      rel="stylesheet"
-    />
-
-    <style>
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-      }
-
-      body {
-        font-family: "Playfair Display", serif;
-
-        background: #141414;
-
-        color: white;
-
-        overflow-x: hidden;
-      }
-
-      .hero {
-        position: relative;
-
-        height: 100vh;
-
-        overflow: hidden;
-      }
-
-      .hero__sky {
-        position: absolute;
-
-        inset: 0;
-
-        background: url("pic/home.png") center/cover no-repeat;
-
-        animation: fadeZoom 2.4s ease-out forwards;
-      }
-
-      .hero__shade {
-        position: absolute;
-
-        inset: 0;
-
-        background: linear-gradient(
-          to bottom,
-          rgba(0, 0, 0, 0.38),
-          rgba(0, 0, 0, 0.85) 70%
-        );
-      }
-
-      @keyframes fadeZoom {
-        0% {
-          opacity: 0;
-          transform: scale(1.22);
-        }
-
-        100% {
-          opacity: 1;
-          transform: scale(1);
-        }
-      }
-
-      .hero__titleBox {
-        position: absolute;
-
-        left: 50%;
-
-        top: 50%;
-
-        transform: translate(-50%, -50%);
-
-        text-align: center;
-
-        opacity: 0;
-
-        animation: fadeInTxt 2s 0.7s forwards;
-      }
-
-      @keyframes fadeInTxt {
-        0% {
-          opacity: 0;
-          transform: translate(-50%, -48%) scale(1.05);
-        }
-
-        100% {
-          opacity: 1;
-          transform: translate(-50%, -50%) scale(1);
-        }
-      }
-
-      .hero h1 {
-        font-size: 72px;
-
-        font-weight: 700;
-
-        color: #ffb066;
-
-        text-shadow: 0 0 20px rgba(255, 150, 80, 0.6);
-      }
-
-      .hero h2 {
-        margin-top: 10px;
-
-        font-size: 22px;
-
-        font-family: "Kanit", sans-serif;
-      }
-
-      .hero__menuBtn {
-        margin-top: 40px;
-
-        font-family: "Kanit";
-
-        background: #ff9650;
-
-        border: none;
-
-        padding: 15px 45px;
-
-        font-size: 22px;
-
-        border-radius: 50px;
-
-        cursor: pointer;
-
-        transition: 0.25s;
-      }
-
-      .hero__menuBtn:hover {
-        background: #ffc480;
-
-        transform: scale(1.07);
-      }
-
-      .menu-area {
-        padding: 150px 0 200px;
-
-        background: radial-gradient(
-          circle at 50% -10%,
-          #3b0060,
-          #12002b 80%,
-          #050013
-        );
-
-        text-align: center;
-
-        min-height: 100vh;
-
-        position: relative;
-
-        overflow: hidden;
-      }
-
-      .cards {
-        width: min(1200px, 90%);
-
-        margin: auto;
-
-        display: grid;
-
-        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-
-        gap: 70px;
-      }
-
-      .cards a {
-        position: relative;
-
-        text-decoration: none;
-
-        display: block;
-
-        opacity: 0;
-
-        transform: translateY(60px);
-
-        transition: 0.6s ease;
-      }
-
-      .cards img {
-        width: 100%;
-
-        border-radius: 26px;
-
-        transition: 0.35s;
-
-        box-shadow: 0 0 14px #000;
-      }
-
-      .cards a:hover {
-        transform: translateY(-14px) scale(1.08);
-      }
-
-      .cards a:hover img {
-        filter: brightness(1.22);
-
-        box-shadow: 0 0 35px #ffcf75aa;
-      }
-
-      .card-title {
-        margin-top: 15px;
-
-        font-family: "Kanit";
-
-        font-size: 20px;
-
-        font-weight: 700;
-      }
-
-      .credit {
-        font-family: "Kanit";
-
-        font-size: 15px;
-
-        padding-bottom: 40px;
-
-        opacity: 0.9;
-      }
-    </style>
-  </head>
-
-  <body>
-    <section class="hero">
-      <div class="hero__sky"></div>
-
-      <div class="hero__shade"></div>
-
-      <div class="hero__titleBox">
-        <h1>WASHINGTON D.C.</h1>
-
-        <h2>Thanks for making my celebration a memorable one.</h2>
-
-        <button class="hero__menuBtn" onclick="scrollToMenu()">MENU</button>
-      </div>
-    </section>
-
-    <section class="menu-area" id="menuHere">
-      <div class="cards">
-        <a href="museum.html"
-          ><img src="pic/museum.png" />
-          <div class="card-title">Smithsonian Museum</div></a
-        >
-
-        <a href="landmark.html"
-          ><img src="pic/landmark.png" />
-          <div class="card-title">Lincoln Memorial</div></a
-        >
-
-        <a href="hotel.html"
-          ><img src="pic/hotel.png" />
-          <div class="card-title">Hotel</div></a
-        >
-
-        <a href="food.html"
-          ><img src="pic/burger.png" />
-          <div class="card-title">Food & Burger</div></a
-        >
-
-        <a href="capital.html"
-          ><img src="pic/capital.png" />
-          <div class="card-title">US Capitol Grounds</div></a
-        >
-
-        <a href="story.html"
-          ><img src="pic/story.png" />
-          <div class="card-title">History & Story</div></a
-        >
-
-        <a href="refer.html"
-          ><img src="pic/refer.png" />
-          <div class="card-title">Reference Source</div></a
-        >
-      </div>
-    </section>
-
-    <div class="credit">
-      © 2025 Washington D.C. Tourism Project — Improved Version | Developed by
-      FlukeTON<br />
-
-      จัดทำโดย : นายวสันต์ ไชยชุมพร เลขที่ 8 ม.5/5 | นายรัชฎะ เรือนเงิน เลขที่ 7
-      ม.5/5
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>Washington D.C. Tourism</title>
+
+  <!-- Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-VGBZS316J9"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-VGBZS316J9');
+  </script>
+
+  <!-- Scripts -->
+  <script src="js/auth.js"></script>
+  <script src="js/nav.js" defer></script>
+  <script defer src="js/index.js"></script>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="css/index.css">
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Kanit:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+  <section class="hero">
+    <div class="hero__sky"></div>
+    <div class="hero__shade"></div>
+
+    <div class="hero__titleBox">
+      <h1>WASHINGTON D.C.</h1>
+      <h2>Thanks for making my celebration a memorable one.</h2>
+      <button class="hero__menuBtn" onclick="scrollToMenu()">MENU</button>
     </div>
+  </section>
 
-    <script>
-      function scrollToMenu() {
-        document
-          .getElementById("menuHere")
-          .scrollIntoView({ behavior: "smooth" });
-      }
+  <section class="menu-area" id="menuHere">
+    <div class="cards">
+      <a href="museum.html"><img src="pic/museum.png"><div class="card-title">Smithsonian Museum</div></a>
+      <a href="landmark.html"><img src="pic/landmark.png"><div class="card-title">Lincoln Memorial</div></a>
+      <a href="hotel.html"><img src="pic/hotel.png"><div class="card-title">Hotel</div></a>
+      <a href="food.html"><img src="pic/burger.png"><div class="card-title">Food & Burger</div></a>
+      <a href="capital.html"><img src="pic/capital.png"><div class="card-title">US Capitol Grounds</div></a>
+      <a href="story.html"><img src="pic/story.png"><div class="card-title">History & Story</div></a>
+      <a href="refer.html"><img src="pic/refer.png"><div class="card-title">Reference Source</div></a>
+    </div>
+  </section>
 
-      const cards = document.querySelectorAll(".cards a");
-
-      const obs = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((e) => {
-            if (e.isIntersecting) {
-              e.target.style.opacity = 1;
-
-              e.target.style.transform = "translateY(0)";
-            }
-          });
-        },
-        { threshold: 0.18 }
-      );
-
-      cards.forEach((c) => obs.observe(c));
-    </script>
-  </body>
+  <div class="credit">
+    © 2025 Washington D.C. Tourism Project — Improved Version | Developed by FlukeTON<br>
+    จัดทำโดย : นายวสันต์ ไชยชุมพร เลขที่ 8 ม.5/5 | นายรัชฎะ เรือนเงิน เลขที่ 7 ม.5/5
+  </div>
+</body>
 </html>

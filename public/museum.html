@@ -1,212 +1,53 @@
 <!DOCTYPE html>
 <html lang="th">
-  <head>
-    <script
-      async
-      src="https://www.googletagmanager.com/gtag/js?id=G-VGBZS316J9"
-    ></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag() {
-        dataLayer.push(arguments);
-      }
-      gtag("js", new Date());
-      gtag("config", "G-VGBZS316J9");
-    </script>
+<head>
+  <!-- 🧭 Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-VGBZS316J9"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag("js", new Date());
+    gtag("config", "G-VGBZS316J9");
+  </script>
 
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Smithsonian Museum — Washington D.C.</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smithsonian Museum — Washington D.C.</title>
 
-    <script src="js/auth.js"></script>
-    <script src="js/nav.js" defer></script>
+  <script src="js/auth.js"></script>
+  <script src="js/nav.js" defer></script>
 
-    <link
-      href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600;800&display=swap"
-      rel="stylesheet"
-    />
+  <link rel="stylesheet" href="css/museum.css">
+  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600;800&display=swap" rel="stylesheet">
+</head>
 
-    <style>
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-        font-family: "Kanit", sans-serif;
-      }
+<body>
 
-      body {
-        background: #000 url("pic/smith-bg.png") center/cover fixed no-repeat;
-        color: #fff;
-        text-align: center;
-        overflow-x: hidden;
-      }
+  <header class="reveal">
+    <img src="pic/smith-top.png" alt="Smithsonian Institution Poster">
+    <h1>Smithsonian Museum</h1>
+    <h2>The Heart of Knowledge in Washington D.C.</h2>
+  </header>
 
-      html {
-        scroll-behavior: smooth;
-      }
+  <section class="reveal">
+    <h3>เกี่ยวกับพิพิธภัณฑ์สมิธโซเนียน</h3>
+    <p>
+      สถาบันสมิธโซเนียนคือพิพิธภัณฑ์และสถาบันวิจัยที่ใหญ่ที่สุดในโลก
+      ประกอบด้วยพิพิธภัณฑ์กว่า 19 แห่งทั่ววอชิงตัน ดี.ซี.
+      และมีวัตถุจัดแสดงมากกว่า 136 ล้านชิ้น
+      เพื่อให้คนทั้งโลกได้เรียนรู้และเข้าถึงความรู้ใหม่ ๆ
+    </p>
 
-      .reveal {
-        opacity: 0;
-        transform: translateY(40px);
-        transition: all 0.9s cubic-bezier(0.17, 0.67, 0.83, 0.67);
-      }
+    <div class="btn-box">
+      <button class="btnBack" onclick="location.href='index.html'">← Back to Home</button>
+      <button class="btnView" onclick="openMuseum()">🔎 Official Website</button>
+    </div>
+  </section>
 
-      .reveal.show {
-        opacity: 1;
-        transform: translateY(0);
-      }
+  <footer class="reveal">
+    © 2025 Washington D.C. Tourism Project — Smithsonian Museum | Developed by FlukeTON
+  </footer>
 
-      header {
-        padding: 100px 8% 50px;
-      }
-
-      header img {
-        width: 55%;
-        max-width: 900px;
-        border-radius: 12px;
-        border: 4px solid #e09555;
-        box-shadow: 0 0 35px rgba(0, 0, 0, 0.65);
-      }
-
-      /* ✅ แก้ตรงนี้ — gradient text ไม่ให้กลายเป็นแถบ */
-      h1 {
-        font-size: 60px;
-        background: linear-gradient(90deg, #ffe7b3, #ffae52);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-        color: transparent;
-        margin-top: 25px;
-        font-weight: 800;
-      }
-
-      h2 {
-        opacity: 0.92;
-        font-size: 22px;
-        margin-top: 10px;
-      }
-
-      /* ✅ Info Box */
-      section {
-        width: 88%;
-        max-width: 980px;
-        margin: 20px auto 60px;
-        background: rgba(0, 0, 0, 0.55);
-        backdrop-filter: blur(6px);
-        padding: 45px 35px;
-        border-radius: 16px;
-      }
-
-      /* ✅ แก้ตรงนี้ด้วย — ไม่ให้ h3 มีแถบส้ม */
-      section h3 {
-        font-size: 30px;
-        background: linear-gradient(90deg, #ffd28a, #ff952e);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-        color: transparent;
-        margin-bottom: 22px;
-      }
-
-      p {
-        font-size: 19px;
-        line-height: 1.7;
-        color: #eee;
-      }
-
-      .btn-box {
-        margin-top: 30px;
-        display: flex;
-        justify-content: center;
-        gap: 15px;
-      }
-
-      .btnBack,
-      .btnView {
-        padding: 12px 28px;
-        border: none;
-        border-radius: 10px;
-        font-weight: 700;
-        font-family: "Kanit";
-        cursor: pointer;
-        transition: 0.25s;
-      }
-
-      .btnBack {
-        background: #ffb049;
-        color: #222;
-      }
-
-      .btnBack:hover {
-        background: #ffce7b;
-        transform: scale(1.07);
-      }
-
-      .btnView {
-        background: #e55b5b;
-        color: #fff;
-      }
-
-      .btnView:hover {
-        background: #ff8282;
-        transform: scale(1.07);
-      }
-
-      footer {
-        padding: 35px 0;
-        opacity: 0.85;
-        font-size: 14px;
-      }
-    </style>
-  </head>
-
-  <body>
-    <header class="reveal">
-      <img src="pic/smith-top.png" alt="Smithsonian Institution Poster" />
-      <h1>Smithsonian Museum</h1>
-      <h2>The Heart of Knowledge in Washington D.C.</h2>
-    </header>
-
-    <section class="reveal">
-      <h3>เกี่ยวกับพิพิธภัณฑ์สมิธโซเนียน</h3>
-      <p>
-        สถาบันสมิธโซเนียนคือพิพิธภัณฑ์และสถาบันวิจัยที่ใหญ่ที่สุดในโลก
-        ประกอบด้วยพิพิธภัณฑ์กว่า 19 แห่งทั่ววอชิงตัน ดี.ซี.
-        และมีวัตถุจัดแสดงมากกว่า 136
-        ล้านชิ้นให้คนทั้งโลกได้เรียนรู้และเข้าถึงความรู้ใหม่ ๆ
-      </p>
-
-      <div class="btn-box">
-        <button class="btnBack" onclick="location.href='index.html'">
-          ← Back to Home
-        </button>
-        <button
-          class="btnView"
-          onclick="window.open('https://www.si.edu/', '_blank')"
-        >
-          🔎 Official Website
-        </button>
-      </div>
-    </section>
-
-    <footer class="reveal">
-      © 2025 Washington D.C. Tourism Project — Smithsonian Museum | Developed by
-      FlukeTON
-    </footer>
-
-    <script>
-      const reveals = document.querySelectorAll(".reveal");
-      function revealElements() {
-        const windowHeight = window.innerHeight;
-        reveals.forEach((el) => {
-          const elementTop = el.getBoundingClientRect().top;
-          if (elementTop < windowHeight - 120) {
-            el.classList.add("show");
-          }
-        });
-      }
-      window.addEventListener("scroll", revealElements);
-      revealElements();
-    </script>
-  </body>
+  <script src="js/museum.js"></script>
+</body>
 </html>
