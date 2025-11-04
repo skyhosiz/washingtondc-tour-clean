@@ -11,6 +11,9 @@ const multer = require("multer");
 const cloudinary = require("cloudinary").v2;
 const { CloudinaryStorage } = require("multer-storage-cloudinary");
 
+// Polyfill fetch for Node.js environments that do not have it natively (Node <18)
+const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
+
 const app = express();
 
 /* =============================
@@ -361,23 +364,30 @@ app.put(
   upload.single("profileImg"),
   async (req, res) => {
     try {
-      const user = await User.findById(req.uid);
-      if (!user) return res.status(404).json({ status: "error", message: "ไม่พบผู้ใช้" });
+      if (req.body.username && req.body.username.trim()) {
+        const newUsername = req.body.username.trim();
+        if (newUsername.length < 3)
+          return res.status(400).json({ status: "error", message: "ชื่อผู้ใช้ต้องมีอย่างน้อย 3 ตัวอักษร" });
+        const existingUser = await User.findOne({ username: newUsername, _id: { $ne: User._id } });
+        if (existingUser)
+          return res.status(400).json({ status: "error", message: "ชื่อผู้ใช้นี้ถูกใช้แล้ว" });
+        User.username = newUsername;
+      }
 
       if (req.body.username && req.body.username.trim())
-        user.username = req.body.username.trim();
+        User.username = req.body.username.trim();
 
-      if (req.file && req.file.path) user.profileImg = req.file.path;
+      if (req.file && req.file.path) User.profileImg = req.file.path;
 
-      await user.save();
+      await User.save();
 
       res.json({
         status: "success",
         user: {
-          id: user._id,
-          username: user.username,
-          email: user.email,
-          profileImg: user.profileImg,
+          id: User._id,
+          username: User.username,
+          email: User.email,
+          profileImg: User.profileImg,
         },
       });
     } catch (err) {
