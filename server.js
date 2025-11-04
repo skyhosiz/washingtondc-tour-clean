@@ -1,4 +1,4 @@
-// server.js — WashingtonDC Auth + SPA Route (Express 5 OK)
+// server.js — WashingtonDC Auth + SPA Route (Express 5 + Security Hardening)
 require("dotenv").config();
 
 const express = require("express");
@@ -8,15 +8,14 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-// ❌ อย่า require("node-fetch") — Node 18+ มี fetch เป็น global แล้ว
+const helmet = require("helmet");
+const rateLimit = require("express-rate-limit");
 const cloudinary = require("cloudinary").v2;
 const { CloudinaryStorage } = require("multer-storage-cloudinary");
 
 const app = express();
 
-/* =============================
-   ✅ ENV CHECK & VARIABLES
-============================= */
+/* ✅ ENV CHECK */
 [
   "JWT_SECRET",
   "RESET_PASSWORD_SECRET",
@@ -46,30 +45,29 @@ const {
   CLOUDINARY_CLOUD_NAME,
   CLOUDINARY_API_KEY,
   CLOUDINARY_API_SECRET,
+  CLIENT_URL_2,
 } = process.env;
 
-/* =============================
-   ☁️ CLOUDINARY & MULTER
-============================= */
+/* ✅ CLOUDINARY */
 cloudinary.config({
   cloud_name: CLOUDINARY_CLOUD_NAME,
   api_key: CLOUDINARY_API_KEY,
   api_secret: CLOUDINARY_API_SECRET,
   secure: true,
 });
+
 const storage = new CloudinaryStorage({
   cloudinary,
   params: {
     folder: "dc-profiles",
     allowed_formats: ["jpg", "png", "jpeg"],
-    public_id: (req) => (req.uid ? `${req.uid}_${Date.now()}` : `anon_${Date.now()}`),
+    public_id: (req) =>
+      req.uid ? `${req.uid}_${Date.now()}` : `anon_${Date.now()}`,
   },
 });
 const upload = multer({ storage });
 
-/* =============================
-   🧠 DB & SCHEMA
-============================= */
+/* ✅ MongoDB */
 mongoose
   .connect(MONGO_URI)
   .then(() => console.log("✅ MongoDB Connected"))
@@ -88,15 +86,12 @@ const User = mongoose.model(
   })
 );
 
-/* =============================
-   🔐 HELPERS
-============================= */
+/* ✅ Auth Helper */
 const signToken = (uid) => jwt.sign({ uid }, JWT_SECRET, { expiresIn: "7d" });
 
 function authRequired(req, res, next) {
   try {
-    const hdr = req.headers.authorization || "";
-    const token = hdr.startsWith("Bearer ") ? hdr.slice(7) : null;
+    const token = req.headers.authorization?.replace("Bearer ", "");
     if (!token) return res.status(401).json({ status: "unauthorized" });
     const { uid } = jwt.verify(token, JWT_SECRET);
     req.uid = uid;
@@ -106,53 +101,80 @@ function authRequired(req, res, next) {
   }
 }
 
-// Brevo (Sendinblue) — ส่งอีเมล
-async function sendMailBrevo({ to, subject, html }) {
-  const r = await fetch("https://api.brevo.com/v3/smtp/email", {
-    method: "POST",
-    headers: {
-      "api-key": BREVO_API_KEY,
-      "content-type": "application/json",
-      accept: "application/json",
-    },
-    body: JSON.stringify({
-      sender: { email: SENDER_EMAIL, name: "Washington D.C. Tour" },
-      to: [{ email: to }],
-      subject,
-      htmlContent: html,
-    }),
-  });
-  if (!r.ok) {
-    const t = await r.text().catch(() => "");
-    throw new Error(`Brevo send fail: ${r.status} ${t}`);
-  }
-}
-
-/* =============================
-   ⚙️ GLOBAL MIDDLEWARE
-============================= */
+/* ✅ Security Middleware */
 app.disable("x-powered-by");
-const allowed = [CLIENT_URL, "http://localhost:3000"];
+app.set("trust proxy", 1);
+
+app.use(
+  helmet({
+    crossOriginResourcePolicy: false,
+  })
+);
+
+app.use(
+  helmet.hsts({
+    maxAge: 15552000,
+    includeSubDomains: true,
+    preload: true,
+  })
+);
+
+app.use(
+  helmet.contentSecurityPolicy({
+    useDefaults: true,
+    directives: {
+      "img-src": ["'self'", "data:", "blob:", "*.cloudinary.com", "https:"],
+      "script-src": ["'self'", "'unsafe-inline'"],
+      "connect-src": [
+        "'self'",
+        CLIENT_URL,
+        CLIENT_URL_2 || "",
+        "https://api.brevo.com",
+        "https://api.si.edu",
+        "https://edan.si.edu",
+      ],
+    },
+  })
+);
+
+/* ✅ CORS */
+const allowed = [
+  CLIENT_URL,
+  CLIENT_URL_2,
+  "http://localhost:3000",
+  "http://localhost:5173",
+].filter(Boolean);
+
 app.use(
   cors({
     origin: (origin, cb) => {
       if (!origin || allowed.includes(origin)) return cb(null, true);
-      cb(new Error("CORS blocked by server policy"));
+      return cb(new Error("CORS blocked by policy"));
     },
     methods: ["GET", "POST", "PUT", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
-app.use(express.json());
+
+app.use(express.json({ limit: "1mb" }));
 app.use(express.urlencoded({ extended: true }));
+
 app.use(express.static(path.join(__dirname, "public")));
 
-/* =============================
-   👤 AUTH ROUTES
-============================= */
+/* ✅ Rate-limit เฉพาะ Login */
+app.use(
+  "/api/auth/login",
+  rateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 50,
+    message: { status: "error", message: "Too many attempts" },
+  })
+);
+
+/* ✅ Auth Routes (REGISTER / LOGIN / FORGOT / RESET / PROFILE) */
 app.post("/api/auth/register", async (req, res) => {
   try {
-    const { username = "", email = "", password = "" } = req.body || {};
+    const { username, email, password } = req.body;
     if (!email || !password)
       return res.json({ status: "error", message: "ข้อมูลไม่ครบ!" });
     if (await User.findOne({ email }))
@@ -163,16 +185,16 @@ app.post("/api/auth/register", async (req, res) => {
       email,
       password: await bcrypt.hash(password, 10),
     });
+
     res.json({ status: "success" });
-  } catch (e) {
-    console.error("REGISTER error:", e.message);
+  } catch {
     res.json({ status: "error", message: "สมัครไม่สำเร็จ" });
   }
 });
 
 app.post("/api/auth/login", async (req, res) => {
   try {
-    const { email = "", password = "" } = req.body || {};
+    const { email, password } = req.body;
     const u = await User.findOne({ email });
     if (!u) return res.json({ status: "error", message: "บัญชีผิด!" });
     if (!(await bcrypt.compare(password, u.password)))
@@ -180,169 +202,97 @@ app.post("/api/auth/login", async (req, res) => {
 
     res.json({
       status: "success",
-      token: signToken(u._id.toString()),
-      user: {
-        id: u._id,
-        username: u.username,
-        email: u.email,
-        profileImg: u.profileImg,
-      },
+      token: signToken(u._id),
+      user: u,
     });
   } catch {
     res.json({ status: "error", message: "ล็อกอินล้มเหลว" });
   }
 });
 
-/* =============================
-   🔁 FORGOT / RESET PASSWORD
-============================= */
 app.post("/api/auth/forgot", async (req, res) => {
-  try {
-    const { email = "" } = req.body || {};
-    if (!email) return res.json({ status: "error", message: "กรอกอีเมล" });
+  const { email } = req.body;
+  if (!email) return res.json({ status: "error", message: "กรอกอีเมล" });
+  const u = await User.findOne({ email });
+  if (!u) return res.json({ status: "success" });
 
-    const u = await User.findOne({ email });
-    if (!u) return res.json({ status: "success" });
+  const token = jwt.sign({ uid: u._id }, RESET_PASSWORD_SECRET, {
+    expiresIn: "30m",
+  });
 
-    const token = jwt.sign({ uid: u._id }, RESET_PASSWORD_SECRET, {
-      expiresIn: "30m",
-    });
+  const resetUrl = `${CLIENT_URL}/reset.html?token=${encodeURIComponent(token)}`;
+  const html = `
+    <h2>รีเซ็ตรหัสผ่าน</h2>
+    <a href="${resetUrl}">กดเพื่อตั้งรหัสใหม่</a>`;
 
-    const resetUrl = `${CLIENT_URL}/reset.html?token=${encodeURIComponent(token)}`;
-    const html = `
-      <div style="font-family:Arial,sans-serif">
-        <h2>รีเซ็ตรหัสผ่าน — Washington D.C. Tour</h2>
-        <p>กดปุ่มด้านล่างเพื่อเปลี่ยนรหัสผ่านใหม่ (หมดอายุใน 30 นาที)</p>
-        <p><a href="${resetUrl}" style="background:#ff952e;color:#000;padding:12px 18px;border-radius:8px;text-decoration:none;">ตั้งรหัสผ่านใหม่</a></p>
-        <p>หากปุ่มกดไม่ได้ ให้คัดลอกลิงก์นี้ไปวางในเบราว์เซอร์:<br>${resetUrl}</p>
-      </div>`;
+  await fetch("https://api.brevo.com/v3/smtp/email", {
+    method: "POST",
+    headers: {
+      "api-key": BREVO_API_KEY,
+      "content-type": "application/json",
+    },
+    body: JSON.stringify({
+      sender: { email: SENDER_EMAIL },
+      to: [{ email }],
+      subject: "Reset Password",
+      htmlContent: html,
+    }),
+  });
 
-    await sendMailBrevo({
-      to: email,
-      subject: "ตั้งรหัสผ่านใหม่ | Washington D.C. Tour",
-      html,
-    });
-
-    res.json({ status: "success" });
-  } catch (e) {
-    console.error("FORGOT ERROR:", e.message);
-    res.status(500).json({ status: "error", message: "ส่งอีเมลไม่สำเร็จ" });
-  }
+  res.json({ status: "success" });
 });
 
 app.post("/api/auth/reset", async (req, res) => {
   try {
-    const { token = "", password = "" } = req.body || {};
-    if (!token || !password)
-      return res.json({ status: "error", message: "ข้อมูลไม่ครบ" });
-
+    const { token, password } = req.body;
     const { uid } = jwt.verify(token, RESET_PASSWORD_SECRET);
     const user = await User.findById(uid);
-    if (!user) return res.json({ status: "error", message: "ไม่พบผู้ใช้" });
-
     user.password = await bcrypt.hash(password, 10);
     await user.save();
-
-    res.json({ status: "success", message: "รีเซ็ตรหัสผ่านสำเร็จ" });
-  } catch (e) {
-    console.error("RESET ERROR:", e.message);
-    res.status(400).json({ status: "error", message: "Token ไม่ถูกต้อง/หมดอายุ" });
+    res.json({ status: "success" });
+  } catch {
+    res.json({ status: "error", message: "Token หมดอายุ" });
   }
 });
 
-/* =============================
-   🧍 PROFILE UPDATE
-============================= */
 app.put(
   "/api/auth/profile",
   authRequired,
   upload.single("profileImg"),
   async (req, res) => {
-    try {
-      const user = await User.findById(req.uid);
-      if (!user) return res.status(404).json({ status: "error", message: "ไม่พบผู้ใช้" });
+    const user = await User.findById(req.uid);
+    if (!user) return res.json({ status: "error" });
 
-      if (req.body.username && req.body.username.trim())
-        user.username = req.body.username.trim();
+    if (req.body.username) user.username = req.body.username.trim();
+    if (req.file?.path) user.profileImg = req.file.path;
 
-      if (req.file && req.file.path) user.profileImg = req.file.path;
-
-      await user.save();
-
-      res.json({
-        status: "success",
-        user: {
-          id: user._id,
-          username: user.username,
-          email: user.email,
-          profileImg: user.profileImg,
-        },
-      });
-    } catch (err) {
-      console.error("PROFILE UPDATE ERROR:", err.message);
-      res.status(500).json({ status: "error", message: "อัปเดตโปรไฟล์ล้มเหลว" });
-    }
+    await user.save();
+    res.json({ status: "success", user });
   }
 );
 
-/* =============================
-   🏛️ EXPLORE (Smithsonian Search)
-============================= */
+/* ✅ Smithsonian API */
 app.get("/api/explore", authRequired, async (req, res) => {
-  try {
-    const query = encodeURIComponent("Washington DC");
-    const url = `https://api.si.edu/openaccess/api/v1.0/search?q=${query}&api_key=${SMITHSONIAN_API_KEY}`;
-    const apiResponse = await fetch(url);
-    const data = await apiResponse.json();
-    res.json({ status: "success", data: data.response });
-  } catch (err) {
-    console.error("SMITHSONIAN API ERROR:", err.message);
-    res.status(500).json({ status: "error", message: "Failed to fetch data" });
-  }
+  const url = `https://api.si.edu/openaccess/api/v1.0/search?q=Washington DC&api_key=${SMITHSONIAN_API_KEY}`;
+  const r = await fetch(url);
+  const data = await r.json();
+  res.json({ status: "success", data: data.response });
 });
 
-/* =============================
-   ✅ PROXY Smithsonian
-============================= */
+/* ✅ Proxy Smithsonian */
 app.get("/api/proxy-smithsonian/:id", async (req, res) => {
-  try {
-    const { id } = req.params;
-    const normalizedId = id.replace(/^edanmdm:/, "edanmdm-").replace(/^edanmdm--/, "edanmdm-");
-    const url = `https://edan.si.edu/openaccess/api/v1.0/content/${normalizedId}`;
-
-    const response = await fetch(url);
-    if (!response.ok) throw new Error(`Smithsonian fetch failed: ${response.status}`);
-
-    const data = await response.json();
-
-    res.setHeader("Access-Control-Allow-Origin", "*");
-    res.setHeader("Access-Control-Allow-Methods", "GET");
-    res.setHeader("Access-Control-Allow-Headers", "Content-Type");
-
-    res.json(data);
-  } catch (err) {
-    console.error("Proxy Smithsonian Error:", err.message);
-    res.status(500).json({ error: "Failed to fetch Smithsonian data", detail: err.message });
-  }
+  const normalizedId = req.params.id.replace(/^edanmdm:/, "edanmdm-");
+  const url = `https://edan.si.edu/openaccess/api/v1.0/content/${normalizedId}`;
+  const r = await fetch(url);
+  const data = await r.json();
+  res.json(data);
 });
 
-/* =============================
-✅ INTRO STATIC PAGE  <-- (เพิ่มเฉพาะตรงนี้)
-============================= */
-app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "intro.html"));
-});
+/* ✅ Serve SPA (index.html) */
+app.get("*", (req, res) =>
+  res.sendFile(path.join(__dirname, "public", "index.html"))
+);
 
-/* =============================
-🌐 SPA STATIC ROUTE (ต้องไว้ท้ายสุด!)
-============================= */
-app.get(/.*/, (req, res, next) => {
-  if (req.path.startsWith("/api")) return next();
-  res.sendFile(path.join(__dirname, "public", "index.html"));
-});
-
-/* =============================
-🟢 START SERVER
-============================= */
+/* ✅ Start */
 const port = process.env.PORT || 10000;
-app.listen(port, () => console.log(`🚀 Server Online → PORT ${port}`));
+app.listen(port, () => console.log(`🚀 Server Running → PORT ${port}`));
