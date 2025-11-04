@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="th">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <title>WASAN | Software Engineering Portfolio</title>
+
+    <!-- SEO -->
+    <meta name="description" content="Wasan Chaichumporn — Software Engineering Portfolio (Thammasat University). Full-Stack project: Washington D.C. Tourism (Node.js, MongoDB, JWT, GA4, Smithsonian API)." />
+    <meta name="theme-color" content="#000000" />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700&family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+    <style>
+      :root{
+        --primary-glow:#00eaff;--secondary-glow:#ffd760;--dark-bg:#000;
+        --glass-bg:rgba(0,0,0,.45);--section-bg:#111a2e;--accent-blue:#00bfff;
+      }
+      *{margin:0;padding:0;box-sizing:border-box}
+      html,body{scroll-behavior:smooth}
+      body{
+        background:var(--dark-bg);color:#e0e0e0;text-align:center;
+        font-family:"IBM Plex Sans Thai",sans-serif;
+        display:flex;flex-direction:column;align-items:center;min-height:100vh;overflow-x:hidden;
+      }
+
+      /* Animations */
+      @keyframes fade-in-up{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+      @keyframes pulse-glow{
+        0%,100%{box-shadow:0 0 14px var(--primary-glow),0 0 28px var(--primary-glow),0 0 44px rgba(0,234,255,.4)}
+        50%{box-shadow:0 0 22px var(--primary-glow),0 0 42px var(--primary-glow),0 0 60px rgba(0,234,255,.6)}
+      }
+      @keyframes chevrons{
+        0%{transform:translateY(-2px);opacity:.75}
+        50%{transform:translateY(3px);opacity:1}
+        100%{transform:translateY(-2px);opacity:.75}
+      }
+
+      /* Background */
+      .bg{position:fixed;inset:0;background:url("pic/galaxy-bg.jpg") center/cover no-repeat;filter:brightness(.3) saturate(.9);transition:transform .12s ease-out;z-index:-3}
+      .tu-logo{position:fixed;top:22px;left:22px;width:115px;filter:drop-shadow(0 0 22px rgba(255,205,90,.95));z-index:100}
+
+      /* HERO */
+      .hero{position:relative;min-height:100vh;width:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.7rem;padding:1.5rem;background:linear-gradient(180deg,rgba(0,0,0,.3) 0%,rgba(0,0,0,.6) 100%)}
+      .avatar{position:relative;width:260px;height:320px;margin:0 auto .4rem}
+      .frame{position:absolute;inset:-8px;border-radius:22px;background:conic-gradient(from 140deg,var(--primary-glow),#6a00ff,var(--primary-glow));filter:blur(22px);opacity:.95;z-index:-1;animation:fade-in-up .8s ease-out .5s forwards,pulse-glow 2s infinite alternate}
+      .avatar-img{width:100%;height:100%;object-fit:cover;border-radius:18px;border:2px solid var(--primary-glow);box-shadow:0 0 36px rgba(0,238,255,.55)}
+      .title{font-family:"Orbitron",sans-serif;font-size:clamp(28px,4.8vw,52px);color:var(--primary-glow);letter-spacing:2px;text-shadow:0 0 10px var(--primary-glow),0 0 20px rgba(0,238,255,.7);animation:fade-in-up .8s ease-out .8s forwards}
+      .role{font-size:1.2rem;font-weight:700;color:var(--secondary-glow);text-shadow:0 0 10px var(--secondary-glow),0 0 15px rgba(255,205,90,.7)}
+      .text-box{backdrop-filter:blur(16px);background:var(--glass-bg);padding:22px 30px;border-radius:20px;margin:0 auto;width:min(780px,90%);box-shadow:0 4px 50px rgba(0,0,0,.65);border:1px solid rgba(255,255,255,.15);animation:fade-in-up .8s ease-out 1.1s forwards}
+      .intro{margin-top:.6rem;font-size:1.05rem;line-height:1.65rem}
+
+      .cta{margin-top:1.6rem;display:flex;justify-content:center;gap:1.2rem;animation:fade-in-up .8s ease-out 1.3s forwards}
+      .btn{padding:12px 30px;font-size:1.02rem;border-radius:14px;font-weight:700;text-decoration:none;color:#fff;transition:transform .22s,box-shadow .22s,background .22s}
+      .game{background:rgba(0,200,255,.26);border:2px solid var(--primary-glow);box-shadow:0 0 20px var(--primary-glow)}
+      .web{background:rgba(255,150,0,.26);border:2px solid var(--secondary-glow);box-shadow:0 0 20px var(--secondary-glow)}
+      .btn:hover{transform:translateY(-3px) scale(1.05)}
+
+      /* Scroll hint – ล็อกกลางนิ่ง */
+      .scroll-hint{
+        position:absolute;bottom:24px;left:0;right:0;width:max-content;margin-inline:auto;
+        display:inline-flex;align-items:center;gap:10px;padding:10px 18px;border-radius:999px;cursor:pointer;user-select:none;
+        background:linear-gradient(90deg,rgba(0,234,255,.15),rgba(123,92,255,.15));
+        border:1.5px solid rgba(0,234,255,.55);box-shadow:0 0 18px rgba(0,234,255,.45), inset 0 0 18px rgba(0,234,255,.12);
+        backdrop-filter:blur(6px);transform:translateY(0);transition:transform .2s, box-shadow .2s, background .2s;animation:fade-in-up .8s ease-out 1.6s forwards;will-change:transform;contain:layout paint
+      }
+      .scroll-hint:hover{transform:translateY(-2px);box-shadow:0 0 26px rgba(0,234,255,.65), inset 0 0 22px rgba(0,234,255,.18);background:linear-gradient(90deg,rgba(0,234,255,.22),rgba(123,92,255,.22))}
+      .scroll-hint .txt{font-weight:700;letter-spacing:.5px;color:#ccfaff;font-size:.95rem;text-shadow:0 0 10px rgba(0,234,255,.6);white-space:nowrap}
+      .scroll-hint .chev{width:18px;height:18px;border:2.5px solid var(--primary-glow);border-width:0 2.5px 2.5px 0;transform:rotate(45deg);filter:drop-shadow(0 0 6px var(--primary-glow));animation:chevrons 1.4s ease-in-out infinite}
+      .scroll-hint .chev.second{animation-delay:.2s}
+      .scroll-hint .chev.third{animation-delay:.4s}
+
+      /* PROJECT SECTION */
+      .project-showcase{background:var(--section-bg);padding:80px 20px;width:100%;border-top:3px solid rgba(0,234,255,.3);border-bottom:3px solid rgba(0,234,255,.3);box-shadow:inset 0 0 30px rgba(0,234,255,.1),0 0 40px rgba(0,234,255,.1)}
+      .project-showcase h2{font-family:"Orbitron",sans-serif;font-size:clamp(2.2rem,4.5vw,3.5rem);color:var(--primary-glow);margin-bottom:60px;text-shadow:0 0 10px var(--primary-glow),0 0 25px rgba(0,234,255,.8);letter-spacing:2px}
+
+      .project-container{max-width:1100px;margin:0 auto;display:flex;flex-direction:column;gap:70px}
+      .project-item{display:grid;grid-template-columns:1.05fr .95fr;gap:40px;align-items:center;background:rgba(0,0,0,.6);padding:28px;border-radius:20px;border:1px solid rgba(0,234,255,.2);box-shadow:0 0 24px rgba(0,234,255,.22);position:relative;overflow:hidden}
+      .project-item.reverse{grid-template-columns:.95fr 1.05fr}
+      .shot{position:relative;border-radius:16px;overflow:hidden;border:2px solid var(--accent-blue);box-shadow:0 10px 36px rgba(0,0,0,.7)}
+      .shot img{width:100%;height:auto;display:block;filter:brightness(.92) saturate(1.06);transition:transform .35s ease, filter .35s ease}
+      .shot::after{content:"";position:absolute;inset:0;border-radius:14px;pointer-events:none;box-shadow:inset 0 0 0 1px rgba(0,234,255,.18),0 0 22px rgba(0,234,255,.25)}
+      .shot:hover img{transform:scale(1.03);filter:brightness(1) saturate(1.12)}
+      .project-item-content{text-align:left}
+      .project-item h3{font-size:2rem;color:var(--secondary-glow);margin:2px 0 14px 0;font-family:"Orbitron",sans-serif;text-shadow:0 0 10px var(--secondary-glow),0 0 18px rgba(255,215,96,.55)}
+      .project-item p{font-size:1rem;line-height:1.65;margin-bottom:14px;opacity:.97}
+      .project-item ul{list-style:none}
+      .project-item li{margin:6px 0;font-size:1rem;opacity:.95;position:relative;padding-left:22px}
+      .project-item li::before{content:"▶";color:var(--primary-glow);position:absolute;left:0;top:0;filter:drop-shadow(0 0 4px var(--primary-glow))}
+
+      /* ===== GAME SLIDES: NOVA RAIDER ===== */
+      .games{background:#0b1224;padding:80px 20px;border-top:3px solid rgba(0,234,255,.25);box-shadow:inset 0 0 30px rgba(0,234,255,.08)}
+      .games .wrap{max-width:1100px;margin:0 auto}
+      .games h2{font-family:"Orbitron",sans-serif;font-size:clamp(2rem,4vw,3rem);color:var(--primary-glow);text-align:center;margin-bottom:22px;text-shadow:0 0 10px var(--primary-glow),0 0 24px rgba(0,234,255,.7)}
+      .games .sub{opacity:.9;text-align:center;margin-bottom:40px}
+
+      .carousel{position:relative;background:rgba(0,0,0,.55);border:1.5px solid rgba(0,234,255,.2);border-radius:18px;overflow:hidden;box-shadow:0 0 24px rgba(0,234,255,.18);display:grid;grid-template-columns:1.1fr .9fr;gap:20px}
+      @media (max-width:900px){.carousel{grid-template-columns:1fr}}
+      .slide-viewport{position:relative;aspect-ratio:16/9;background:#05070f}
+      .slide-viewport img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .35s}
+      .slide-viewport img.active{opacity:1}
+
+      .ctrl{position:absolute;inset:auto 0 12px 0;display:flex;justify-content:center;gap:10px;z-index:2}
+      .dot{width:10px;height:10px;border-radius:999px;border:1.5px solid var(--primary-glow);background:transparent;cursor:pointer;opacity:.85}
+      .dot[aria-current="true"]{background:var(--primary-glow);box-shadow:0 0 10px var(--primary-glow)}
+
+      .nav-btn{position:absolute;top:50%;transform:translateY(-50%);width:42px;height:42px;border-radius:50%;display:grid;place-items:center;background:rgba(0,0,0,.45);border:1.5px solid rgba(0,234,255,.55);cursor:pointer}
+      .nav-btn:hover{filter:brightness(1.1)}
+      .nav-prev{left:10px}.nav-next{right:10px}
+      .nav-btn i{width:14px;height:14px;border:3px solid var(--primary-glow);border-width:0 3px 3px 0;transform:rotate(135deg)}
+      .nav-next i{transform:rotate(-45deg)}
+
+      .panel{padding:20px 22px;text-align:left}
+      .panel h3{font-family:"Orbitron",sans-serif;color:var(--secondary-glow);font-size:1.6rem;margin-bottom:8px;text-shadow:0 0 10px var(--secondary-glow)}
+      .kicker{color:#9adfff;font-weight:700;margin-bottom:10px}
+      .desc{opacity:.95;line-height:1.6;margin-bottom:12px}
+      .meta{list-style:none;margin-top:10px}
+      .meta li{margin:6px 0;padding-left:20px;position:relative}
+      .meta li::before{content:"▶";position:absolute;left:0;color:var(--primary-glow)}
+
+      /* คำบรรยายสไลด์ */
+      .caption{
+        position:absolute;left:0;right:0;bottom:44px;margin:auto;width:min(92%,860px);
+        background:linear-gradient(90deg,rgba(0,0,0,.55),rgba(0,0,0,.35));
+        border:1px solid rgba(0,234,255,.35);color:#dff8ff;padding:10px 14px;border-radius:10px;
+        text-align:center;box-shadow:0 0 16px rgba(0,234,255,.2);font-size:.95rem
+      }
+
+      /* MOBILE tweaks */
+      @media (max-width:900px){
+        .project-item,.project-item.reverse{grid-template-columns:1fr;gap:18px;text-align:left}
+        .project-item h3{font-size:1.6rem}
+        .project-item p{font-size:.98rem}
+      }
+      @media (max-width:768px){
+        .avatar{width:180px;height:230px}
+        .title{font-size:1.8rem}
+        .role{font-size:1rem}
+        .text-box{padding:18px 22px;width:95%}
+        .intro{font-size:.95rem;line-height:1.55rem}
+        .cta{flex-direction:column;gap:1rem;margin-top:1.2rem}
+        .btn{width:90%;padding:12px 24px;font-size:1rem}
+        .project-showcase h2{font-size:2rem;margin-bottom:40px}
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="bg"></div>
+    <img class="tu-logo" src="pic/tu-logo.png" alt="Thammasat University" />
+
+    <header class="hero" id="top">
+      <figure class="avatar">
+        <div class="frame"></div>
+        <img class="avatar-img" src="pic/Fluke.jpg" alt="วสันต์ ไชยชุมพร (ฟลุ๊ค)" />
+      </figure>
+
+      <h1 class="title">WASAN CHAICHUMPORN</h1>
+
+      <div class="text-box">
+        <p class="subtitle name">วสันต์ ไชยชุมพร (ฟลุ๊ค)</p>
+        <p class="role">วิศวกรรมซอฟต์แวร์ — มหาวิทยาลัยธรรมศาสตร์</p>
+        <p class="intro">“ผมชอบสร้างเทคโนโลยีที่ใช้งานได้จริง คิดสร้างสรรค์ + แก้ปัญหาอย่างเป็นระบบ เป้าหมายคือสร้างงานที่เป็นประโยชน์ต่อผู้ใช้และสังคม”</p>
+      </div>
+
+      <nav class="cta" aria-label="Primary">
+        <a href="unityhub.html" class="btn game">🎮 ผลงานเกม</a>
+        <a id="web-project-btn" href="https://washingtondc-tour-clean.onrender.com" class="btn web" target="_blank" rel="noopener noreferrer">🕸️ เว็บไซต์ท่องเที่ยว D.C.</a>
+      </nav>
+
+      <div class="scroll-hint" id="scrollHint" role="button" aria-label="เลื่อนลงไปยังโปรเจกต์">
+        <span class="txt">ข้อมูลเกี่ยวกับผลงาน</span>
+        <i class="chev"></i><i class="chev second"></i><i class="chev third"></i>
+      </div>
+    </header>
+
+    <main>
+      <!-- D.C. PROJECT -->
+      <section class="project-showcase">
+        <h2>WASHINGTON D.C. TOURISM PROJECT</h2>
+
+        <div class="project-container">
+          <article class="project-item reverse">
+            <div class="shot">
+              <img src="pic/D.C/1.png" alt="หน้า Homepage ของโปรเจกต์ D.C. Tourism" loading="lazy" />
+            </div>
+            <div class="project-item-content">
+              <h3>ภาพรวมระบบและเทคโนโลยีหลัก</h3>
+              <p>หน้าแรกนำผู้ใช้เข้าสู่เนื้อหาแบบเรียบ-คม พร้อมเมนูหลักชัดเจน</p>
+              <ul>
+                <li><b>Stack:</b> Node.js + Express, EJS View</li>
+                <li><b>Data:</b> MongoDB (NoSQL)</li>
+                <li><b>Analytics:</b> ฝัง GA4 สำหรับ Pageviews/Events</li>
+                <li><b>External API:</b> Smithsonian API สำหรับพิพิธภัณฑ์</li>
+              </ul>
+            </div>
+          </article>
+
+          <article class="project-item">
+            <div class="shot">
+              <img src="pic/D.C/2.png" alt="หน้า Login ของระบบ" loading="lazy" />
+            </div>
+            <div class="project-item-content">
+              <h3>ระบบยืนยันตัวตนและโปรไฟล์</h3>
+              <p>หน้าล็อกอินเรียบง่าย โหลดไว ปลอดภัย</p>
+              <ul>
+                <li><b>JWT Auth:</b> Register / Login / Logout</li>
+                <li><b>Forgot/Reset:</b> ส่งลิงก์ผ่านอีเมล (Brevo)</li>
+                <li><b>Profile:</b> แก้ชื่อ-รูปโปรไฟล์ (รองรับ Cloudinary)</li>
+              </ul>
+            </div>
+          </article>
+
+          <article class="project-item reverse">
+            <div class="shot">
+              <img src="pic/D.C/6.png" alt="หน้า Explore — รายการสถานที่แบบการ์ด" loading="lazy" />
+            </div>
+            <div class="project-item-content">
+              <h3>ข้อมูลเชิงลึก (Explore)</h3>
+              <p>รวมจุดเที่ยวสำคัญแบบ Card UI เข้าถึงรายละเอียดเร็ว</p>
+              <ul>
+                <li><b>Cards:</b> แยกหมวด ดูภาพ-คำอธิบายสั้น</li>
+                <li><b>Details:</b> หน้าเฉพาะสถานที่ + ลิงก์ภายนอก</li>
+                <li><b>Responsive:</b> ใช้ได้ดีทั้ง Desktop และ Mobile</li>
+              </ul>
+            </div>
+          </article>
+
+          <article class="project-item">
+            <div class="shot">
+              <img src="pic/D.C/7.png" alt="แผนผัง L’Enfant ปี 1791 — Birth of Washington D.C." loading="lazy" />
+            </div>
+            <div class="project-item-content">
+              <h3>กำเนิดกรุงวอชิงตัน ดี.ซี. — แผนผัง L’Enfant (ค.ศ. 1791)</h3>
+              <p>ภาพแผนผังดั้งเดิมริมแม่น้ำโปโตแมค ออกแบบโดย <b>P. C. L’Enfant</b></p>
+              <ul>
+                <li><b>โครงเมือง:</b> กริด + ถนนทแยง (Avenues) เกิดวงเวียน</li>
+                <li><b>แกนหลัก:</b> จาก <b>U.S. Capitol</b> สู่ <b>ทำเนียบขาว</b> และ <b>National Mall</b></li>
+                <li><b>การสำรวจ:</b> <b>Andrew Ellicott</b> ปรับใช้ก่อสร้างจริง</li>
+              </ul>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- ===== UNITY GAME — NOVA RAIDER ===== -->
+      <section class="games" id="games">
+        <div class="wrap">
+          <h2>UNITY GAME — NOVA RAIDER</h2>
+          <p class="sub">อาร์เคดยิงอวกาศจังหวะเร็ว โทนนีออน บอสเป็นเฟส มีเอฟเฟกต์จัดเต็ม</p>
+
+          <div class="carousel" role="region" aria-label="Nova Raider gallery">
+            <div class="slide-viewport" data-gallery="raider" tabindex="0">
+              <!-- ปรับชื่อไฟล์/คำบรรยายตามภาพจริง -->
+              <img src="pic/Unity/cover_enhanced.png"  alt="Nova Raider — Cover"
+                   class="active" data-caption="คัฟเวอร์หลัก โชว์ยานกับโทนแสงนีออน"/>
+              <img src="pic/Unity/cinematic_enhanced.png" alt="Nova Raider — Cinematic"
+                   data-caption="ช็อตซีนีมาติก: มุมต่ำ + ควัน + Bloom ให้กลิ่นไซไฟ"/>
+              <img src="pic/Unity/cinematic_framed_2.png" alt="Nova Raider — Framed"
+                   data-caption="Framed UI แบบคอมิกเฟรม ใช้เล่าเหตุการณ์สั้น ๆ"/>
+              <img src="pic/Unity/Preview.png" alt="Nova Raider — Gameplay"
+                   data-caption="เกมเพลย์: กระสุน/พาร์ติเคิลแน่น + สั่นจอเมื่อโดน/ยิงบอส"/>
+
+              <button class="nav-btn nav-prev" aria-label="รูปก่อนหน้า"><i></i></button>
+              <button class="nav-btn nav-next" aria-label="รูปรถัดไป"><i></i></button>
+              <div class="ctrl" aria-label="ตัวบ่งชี้สไลด์"></div>
+
+              <!-- แถบคำบรรยาย -->
+              <div class="caption" aria-live="polite"></div>
+            </div>
+
+            <div class="panel">
+              <div class="kicker">Arcade Space Shooter · PC</div>
+              <h3>NOVA RAIDER</h3>
+              <p class="desc">ยิงรวดเร็ว เก็บพลัง หลบกระสุน บอสมีแพทเทิร์นชัด สไตล์ไซไฟนีออน</p>
+              <ul class="meta">
+                <li><b>Engine:</b> Unity (URP), C#</li>
+                <li><b>Systems:</b> Wave Spawner, Enemy AI, Object Pooling, Boss Phases</li>
+                <li><b>Cinematic:</b> Timeline + Cinemachine, Letterbox</li>
+                <li><b>FX/UI:</b> Post-processing, Particle, Hit Flash, Screen Shake, HUD/Pause</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script>
+      // Parallax background
+      const bg = document.querySelector(".bg");
+      let raf;
+      document.addEventListener("mousemove", (e) => {
+        if (raf) cancelAnimationFrame(raf);
+        raf = requestAnimationFrame(() => {
+          const x = (e.clientX / innerWidth - 0.5) * 8;
+          const y = (e.clientY / innerHeight - 0.5) * 8;
+          bg.style.transform = `translate(${x}px, ${y}px) scale(1.05)`;
+        });
+      });
+
+      // Scroll hint
+      document.getElementById("scrollHint")?.addEventListener("click", () => {
+        document.querySelector(".project-showcase")?.scrollIntoView({ behavior: "smooth" });
+      });
+
+      // target=_blank safety
+      document.querySelectorAll('a[target="_blank"]').forEach(a => (a.rel = "noopener noreferrer"));
+
+      /* ===== Simple carousel: NOVA RAIDER ===== */
+      function setupGallery(root){
+        const imgs = Array.from(root.querySelectorAll('img'));
+        const prev = root.querySelector('.nav-prev');
+        const next = root.querySelector('.nav-next');
+        const dotsWrap = root.querySelector('.ctrl');
+        const caption = root.querySelector('.caption');
+        let i = imgs.findIndex(im=>im.classList.contains('active'));
+        if(i<0){ i=0; imgs[0].classList.add('active'); }
+        caption.textContent = imgs[i].dataset.caption || imgs[i].alt || '';
+
+        // dots
+        imgs.forEach((_,k)=>{
+          const b = document.createElement('button');
+          b.className='dot';
+          b.setAttribute('aria-current', k===i ? 'true':'false');
+          b.addEventListener('click', ()=>go(k));
+          dotsWrap.appendChild(b);
+        });
+
+        function go(n){
+          imgs[i].classList.remove('active');
+          dotsWrap.children[i].setAttribute('aria-current','false');
+          i = (n+imgs.length)%imgs.length;
+          imgs[i].classList.add('active');
+          dotsWrap.children[i].setAttribute('aria-current','true');
+          caption.textContent = imgs[i].dataset.caption || imgs[i].alt || '';
+        }
+        prev.addEventListener('click', ()=>go(i-1));
+        next.addEventListener('click', ()=>go(i+1));
+        root.addEventListener('keydown', e=>{
+          if(e.key==='ArrowLeft') go(i-1);
+          if(e.key==='ArrowRight') go(i+1);
+        });
+      }
+      document.querySelectorAll('[data-gallery]').forEach(setupGallery);
+    </script>
+  </body>
+</html>
