@@ -1,35 +1,35 @@
-const PUBLIC_PAGES = new Set(["login", "register", "forgot", "reset"]);
-
-function saveAuth(data) {
-    localStorage.setItem("token", data.token);
-    localStorage.setItem("user", JSON.stringify(data.user));
-}
-
-function logout() {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
-    location.replace("login.html");
-}
+// ✅ หน้า Public (เข้าดูได้แม้ไม่ Login)
+const PUBLIC_PAGES = new Set([
+  "intro",
+  "login",
+  "register",
+  "forgot",
+  "reset"
+]);
 
 function getPageName() {
-    let name = location.pathname.split("/").pop();
-    if (!name || name === "/") name = "intro.html";
-    return name.replace(".html", "").toLowerCase();
+  let page = location.pathname.split("/").pop();
+  
+  if (!page || page === "/") page = "intro.html"; // ✅ หน้าแรก = intro
+  
+  return page.replace(".html", "").toLowerCase();
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-    const page = getPageName();
-    const token = localStorage.getItem("token");
+  const page = getPageName();
+  const token = localStorage.getItem("token");
 
-    console.log("Page:", page, "| Token:", token ? "YES" : "NO");
+  console.log("PAGE:", page, "| TOKEN:", token ? "✅" : "❌");
 
-    if (token) {
-        if (PUBLIC_PAGES.has(page)) {
-            return location.replace("index.html");
-        }
-    } else {
-        if (!PUBLIC_PAGES.has(page)) {
-            return location.replace("login.html");
-        }
-    }
+  // ✅ ยังไม่ Login → ห้ามเข้า Private pages
+  if (!token && !PUBLIC_PAGES.has(page)) {
+    return location.replace("login.html");
+  }
+
+  // ✅ Login แล้ว แต่จะเข้า login/register/reset/forgot → ส่งกลับ index
+  if (token && ["login", "register", "forgot", "reset"].includes(page)) {
+    return location.replace("index.html");
+  }
+
+  // ✅ Login แล้วและอยู่ intro ให้ผู้ใช้เลือกว่าจะเข้าเว็บหรือเกม
 });
