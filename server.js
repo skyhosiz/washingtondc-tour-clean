@@ -173,7 +173,7 @@ app.use(
   "/api/auth/login",
   rateLimit({
     windowMs: 15 * 60 * 1000,
-    max: 50,
+    max: 5,
     message: { status: "error", message: "Too many attempts" },
   })
 );

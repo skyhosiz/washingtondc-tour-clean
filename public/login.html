@@ -1,252 +1,117 @@
 <!DOCTYPE html>
-
 <html lang="th">
-  <head>
-    <script
-      async
-      src="https://www.googletagmanager.com/gtag/js?id=G-VGBZS316J9"
-    ></script>
-
-    <script>
-      window.dataLayer = window.dataLayer || [];
-
-      function gtag() {
-        dataLayer.push(arguments);
-      }
-
-      gtag("js", new Date());
-
-      gtag("config", "G-VGBZS316J9");
-    </script>
-
-    <script src="js/auth.js"></script>
-
-    <script src="js/nav.js" defer></script>
-
-    <meta charset="UTF-8" />
-
-    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
-
-    <title>Login | Washington D.C.</title>
-
-    <link
-      href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600;700&display=swap"
-      rel="stylesheet"
-    />
-
-    <style>
-      * {
-        margin: 0;
-
-        padding: 0;
-
-        box-sizing: border-box;
-      }
-
-      body {
-        font-family: "Kanit", sans-serif;
-
-        background: url("pic/dc_sunset.png") center/cover no-repeat;
-
-        min-height: 100svh;
-
-        display: flex;
-
-        justify-content: center;
-
-        align-items: center;
-      }
-
-      .login-box {
-        width: 420px;
-
-        padding: 38px;
-
-        text-align: center;
-
-        color: #fff;
-
-        background: rgba(10, 0, 25, 0.85);
-
-        border-radius: 26px;
-
-        box-shadow: 0 0 38px rgba(255, 140, 30, 0.35);
-
-        animation: fadeIn 0.6s ease-out;
-      }
-
-      @keyframes fadeIn {
-        from {
-          opacity: 0;
-
-          transform: translateY(18px);
-        }
-
-        to {
-          opacity: 1;
-
-          transform: translateY(0);
-        }
-      }
-
-      h2 {
-        font-size: 34px;
-
-        margin-bottom: 22px;
-
-        font-weight: 800;
-
-        background: linear-gradient(90deg, #ffd089, #ff8a25);
-
-        -webkit-background-clip: text;
-
-        background-clip: text;
-
-        color: transparent;
-      }
-
-      input,
-      button {
-        width: 100%;
-
-        border: none;
-
-        border-radius: 12px;
-
-        font-size: 17px;
-
-        margin: 10px 0;
-
-        padding: 13px;
-      }
-
-      button {
-        font-weight: 700;
-
-        cursor: pointer;
-
-        transition: 0.25s;
-
-        color: #222;
-
-        background: linear-gradient(90deg, #ffe29c, #ff8522);
-      }
-
-      button:hover {
-        transform: scale(1.05);
-
-        box-shadow: 0 0 26px rgba(255, 140, 30, 0.85);
-      }
-
-      .forgot,
-      .register-box {
-        font-size: 14px;
-
-        margin-top: 6px;
-      }
-
-      .forgot a {
-        color: #ffd28a;
-
-        text-decoration: none;
-      }
-
-      .register-box a {
-        background: #ff7a00;
-
-        color: #fff;
-
-        padding: 4px 12px;
-
-        border-radius: 8px;
-
-        text-decoration: none;
-
-        font-weight: 700;
-      }
-
-      .register-box a:hover {
-        background: #ff9831;
-      }
-    </style>
-  </head>
-
-  <body>
-    <div class="login-box">
-      <h2>เข้าสู่ระบบ</h2>
-
-      <form id="loginForm" onsubmit="return false;">
-        <input
-          id="email"
-          type="email"
-          placeholder="อีเมล"
-          autocomplete="email"
-        />
-
-        <input
-          id="password"
-          type="password"
-          placeholder="รหัสผ่าน"
-          autocomplete="current-password"
-        />
-
-        <div class="forgot"><a href="forgot.html">ลืมรหัสผ่าน?</a></div>
-
-        <button onclick="login()">Login</button>
-
-        <div class="register-box">
-          <span>ยังไม่มีบัญชี?</span> <a href="register.html">สมัครสมาชิก</a>
-        </div>
-      </form>
-    </div>
-
-    <script>
-      const API_BASE =
-        location.hostname === "localhost"
-          ? "http://localhost:3000"
-          : "https://washingtondc-tour-clean-1.onrender.com";
-
-      async function login() {
-        // ✅ FIX: เข้าถึง DOM โดยตรงเพื่อแก้ ReferenceError
-
-        const emailEl = document.getElementById("email");
-
-        const passwordEl = document.getElementById("password");
-
-        const email = emailEl.value.trim();
-
-        const password = passwordEl.value.trim();
-
-        if (!email || !password) return alert("กรอกข้อมูลให้ครบถ้วนครับ 😎");
-
-        try {
-          const res = await fetch(`${API_BASE}/api/auth/login`, {
-            method: "POST",
-
-            headers: { "Content-Type": "application/json" },
-
-            body: JSON.stringify({ email, password }),
-          });
-
-          const data = await res.json();
-
-          if (data.status === "success") {
-            saveAuth(data);
-
-            gtag("event", "login", { method: "Email" });
-
-            return (location.href = "index.html");
-          }
-
-          alert(data.message || "❌ รหัสผ่านผิด!");
-        } catch (e) {
-          alert("📡 เซิร์ฟเวอร์ไม่ตอบสนอง ลองใหม่อีกครั้งครับ");
-        }
-      }
-
-      document.getElementById("loginForm").addEventListener("keypress", (e) => {
-        if (e.key === "Enter") login();
-      });
-    </script>
-  </body>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+  <title>Login | Washington D.C.</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600;700&display=swap" rel="stylesheet"/>
+
+  <!-- ✅ ไม่ใส่ inline JS เพื่อผ่าน CSP -->
+  <script src="js/auth.js" defer></script>
+  <script src="js/login.js" defer></script>
+
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+
+    body {
+      font-family: "Kanit", sans-serif;
+      background: url("pic/dc_sunset.png") center/cover no-repeat;
+      min-height: 100svh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .login-box {
+      width: 420px;
+      padding: 38px;
+      text-align: center;
+      color: #fff;
+      background: rgba(10, 0, 25, 0.85);
+      border-radius: 26px;
+      box-shadow: 0 0 38px rgba(255, 140, 30, 0.35);
+      animation: fadeIn 0.6s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity:0; transform:translateY(20px); }
+      to { opacity:1; transform:translateY(0); }
+    }
+
+    h2 {
+      font-size: 34px;
+      margin-bottom: 22px;
+      font-weight: 800;
+      background: linear-gradient(90deg, #ffd089, #ff8a25);
+      -webkit-background-clip:text;
+      color:transparent;
+    }
+
+    input, button {
+      width:100%;
+      border:none;
+      border-radius:12px;
+      font-size:17px;
+      margin:10px 0;
+      padding:13px;
+    }
+
+    button {
+      font-weight:700;
+      cursor:pointer;
+      transition:.25s;
+      color:#222;
+      background:linear-gradient(90deg,#ffe29c,#ff8522);
+    }
+
+    button:hover {
+      transform:scale(1.05);
+      box-shadow:0 0 26px rgba(255,140,30,0.85);
+    }
+
+    .forgot, .register-box {
+      font-size:14px;
+      margin-top:6px;
+    }
+
+    .forgot a {
+      color:#ffd28a;
+      text-decoration:none;
+    }
+
+    .register-box a {
+      background:#ff7a00;
+      color:#fff;
+      padding:4px 12px;
+      border-radius:8px;
+      text-decoration:none;
+      font-weight:700;
+    }
+
+    .register-box a:hover {
+      background:#ff9831;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="login-box">
+    <h2>เข้าสู่ระบบ</h2>
+
+    <!-- ✅ ห้าม inline onsubmit -->
+    <form id="loginForm">
+      <input id="email" type="email" placeholder="อีเมล" autocomplete="email" />
+      <input id="password" type="password" placeholder="รหัสผ่าน" autocomplete="current-password" />
+
+      <div class="forgot"><a href="forgot.html">ลืมรหัสผ่าน?</a></div>
+
+      <button type="submit">เข้าสู่ระบบ</button>
+
+      <div class="register-box">
+        ยังไม่มีบัญชี? <a href="register.html">สมัครสมาชิก</a>
+      </div>
+    </form>
+  </div>
+</body>
 </html>
