@@ -37,9 +37,10 @@ async function verifyToken() {
       headers: { Authorization: `Bearer ${token}` },
     });
 
-    return res.ok;
-  } catch (err) {
-    console.warn("Token verify error:", err);
+    const data = await res.json();
+
+    return data.status === "success";
+  } catch {
     return false;
   }
 }

@@ -179,6 +179,7 @@ app.use(
 );
 
 /* ✅ Auth Routes (REGISTER / LOGIN / FORGOT / RESET / PROFILE) */
+/* ✅ Auth Routes (REGISTER / LOGIN / FORGOT / RESET / PROFILE) */
 app.post("/api/auth/register", async (req, res) => {
   try {
     const { username, email, password } = req.body;
@@ -209,13 +210,39 @@ app.post("/api/auth/login", async (req, res) => {
 
     res.json({
       status: "success",
-      token: signToken(u._id),
-      user: u,
+      token: signToken(u._id.toString()),
+      user: {
+        id: u._id,
+        username: u.username,
+        email: u.email,
+        profileImg: u.profileImg,
+      },
     });
   } catch {
     res.json({ status: "error", message: "ล็อกอินล้มเหลว" });
   }
 });
+
+/* ✅ GET PROFILE เพื่อ Verify Token */
+app.get("/api/auth/profile", authRequired, async (req, res) => {
+  try {
+    const user = await User.findById(req.uid).select("-password");
+    if (!user) return res.status(401).json({ status: "unauthorized" });
+
+    res.json({
+      status: "success",
+      user: {
+        id: user._id,
+        username: user.username,
+        email: user.email,
+        profileImg: user.profileImg,
+      },
+    });
+  } catch (err) {
+    res.status(500).json({ status: "error", message: "Server error" });
+  }
+});
+
 
 app.post("/api/auth/forgot", async (req, res) => {
   const { email } = req.body;
