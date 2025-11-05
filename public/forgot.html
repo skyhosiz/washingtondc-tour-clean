@@ -37,9 +37,7 @@
       text-shadow:0 0 14px rgba(255,150,30,.45)
     }
     p{
-      color:#ffd499;
-      font-size:15px;
-      margin-bottom:10px;
+      color:#ffd499;font-size:15px;margin-bottom:10px;
     }
     input,button{
       width:100%;border:none;border-radius:12px;
@@ -70,18 +68,58 @@
 
     <input type="email" id="email" placeholder="อีเมล" autocomplete="email" required>
 
-    <button onclick="onForgot()">ส่งอีเมลรีเซ็ต</button>
+    <button id="sendBtn" onclick="onForgot()">ส่งอีเมลรีเซ็ต</button>
 
     <a href="login.html">ย้อนกลับไปเข้าสู่ระบบ</a>
   </div>
 
 <script>
-async function onForgot(){
-  const email = document.getElementById("email").value.trim();
-  if(!email) return alert("กรุณากรอกอีเมล!");
+const API_BASE = location.hostname === "localhost"
+  ? "http://localhost:3000"
+  : "https://washingtondc-tour-clean-1.onrender.com";
 
-  try{
-    const res = await fetch("/api/auth/forgot", {
+const COOLDOWN = 60; // ✅ ป้องกันสแปม
+const BTN = document.getElementById("sendBtn");
+const EMAIL = document.getElementById("email");
+
+checkCooldown();
+
+function checkCooldown() {
+  const last = localStorage.getItem("resetCooldown");
+  if (!last) return;
+
+  const diff = Math.floor((Date.now() - parseInt(last)) / 1000);
+  if (diff < COOLDOWN) {
+    disableButton(COOLDOWN - diff);
+  }
+}
+
+function disableButton(t) {
+  BTN.disabled = true;
+  BTN.innerText = `รอ ${t} วิ`;
+
+  const interval = setInterval(() => {
+    t--;
+    BTN.innerText = `รอ ${t} วิ`;
+
+    if (t <= 0) {
+      clearInterval(interval);
+      BTN.disabled = false;
+      BTN.innerText = "ส่งอีเมลรีเซ็ต";
+      localStorage.removeItem("resetCooldown");
+    }
+  }, 1000);
+}
+
+async function onForgot() {
+  const email = EMAIL.value.trim();
+  if (!email) return alert("กรุณากรอกอีเมล!");
+
+  BTN.disabled = true;
+  BTN.innerText = "กำลังส่ง...";
+
+  try {
+    const res = await fetch(`${API_BASE}/api/auth/forgot`, {
       method:"POST",
       headers:{ "Content-Type":"application/json" },
       body:JSON.stringify({ email }),
@@ -90,14 +128,20 @@ async function onForgot(){
     const data = await res.json().catch(()=>null);
 
     if(res.ok){
-      alert("✅ ส่งลิงก์รีเซ็ตรหัสผ่านไปที่อีเมลแล้ว ✅\nกรุณาตรวจสอบกล่องจดหมาย");
+      alert("✅ หากอีเมลนี้อยู่ในระบบ จะได้รับลิงก์รีเซ็ตรหัสผ่าน");
+      localStorage.setItem("resetCooldown", Date.now());
+      disableButton(COOLDOWN);
     }else{
-      alert(data?.message || "❌ ไม่พบอีเมลนี้ในระบบ");
+      alert(data?.message || "❌ เกิดข้อผิดพลาด");
+      BTN.disabled = false;
+      BTN.innerText = "ส่งอีเมลรีเซ็ต";
     }
 
   }catch(err){
     console.error("Forgot Error:", err);
-    alert("🚨 ระบบมีปัญหา กรุณาลองใหม่อีกครั้ง");
+    alert("🚨 ระบบมีปัญหา กรุณาลองใหม่");
+    BTN.disabled = false;
+    BTN.innerText = "ส่งอีเมลรีเซ็ต";
   }
 }
 </script>
