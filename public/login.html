@@ -14,14 +14,13 @@
   <!-- ✅ เดิม auth.js ต้องใช้ -->
   <script src="js/auth.js" defer></script>
 
-  <!-- ✅ Navbar -->
+  <!-- ✅ Navbar (จะไม่ทำงานเพราะ DISABLE_NAV_AUTH=true) -->
   <script>
   (function () {
-    if (window.DISABLE_NAV_AUTH) return; // ✅ ปิดแถบเมนูในหน้า Login
+    if (window.DISABLE_NAV_AUTH) return;
 
     const token = localStorage.getItem("token");
     const user = JSON.parse(localStorage.getItem("user") || "{}");
-
     const current = location.pathname.split("/").pop() || "index.html";
 
     const nav = document.createElement("nav");
@@ -63,7 +62,6 @@
     left += `</div>`;
 
     let right = `<div style="display:flex;align-items:center;gap:12px;">`;
-
     if (token) {
       right += `
         <span style="color:#ffd394;font-size:14px;font-weight:700;">
@@ -77,7 +75,6 @@
         </button>
       `;
     }
-
     right += `</div>`;
 
     nav.innerHTML = left + right;
@@ -103,6 +100,7 @@
       background:url("pic/dc_sunset.png") center/cover no-repeat fixed;
       display:flex;justify-content:center;align-items:center;
       padding:20px;
+      -webkit-tap-highlight-color: transparent;
     }
     .login-box{
       width:100%; max-width:420px;
@@ -125,6 +123,7 @@
       width:100%;border:none;border-radius:12px;
       font-size:17px;margin:10px 0;padding:13px
     }
+    input{background:#fff;color:#222}
     button{
       font-weight:700;cursor:pointer;transition:.25s;
       color:#222;background:linear-gradient(90deg,#ffe29c,#ff8522)
@@ -133,6 +132,8 @@
       transform:scale(1.05);
       box-shadow:0 0 26px rgba(255,140,30,.85)
     }
+
+    /* 🔧 ลืมรหัสผ่าน */
     .forgot{
       width:100%;
       text-align:right;
@@ -145,15 +146,27 @@
       text-decoration:none;
       cursor:pointer;
     }
+
+    /* 🔧 สมัครสมาชิก – แก้สี “ยังไม่มีบัญชี?” ไม่ให้เป็นพื้นน้ำเงิน */
     .register-box{
       display:flex;
       justify-content:center;
       align-items:center;
-      gap:6px;
+      gap:10px;
       margin-top:10px
     }
+    .register-box span{
+      color:#ffd28a;            /* สีตามธีม */
+      font-weight:700;
+      background:none !important;  /* ล้างพื้นน้ำเงิน */
+      padding:0;                   /* เอาความเป็น pill ออก */
+      border-radius:0;
+      box-shadow:none;
+      line-height:1.2;
+      display:inline;
+    }
     .register-box a{
-      background:#ff7a00;color:#fff;padding:5px 14px;
+      background:#ff7a00;color:#fff;padding:6px 16px;
       border-radius:8px;text-decoration:none;font-weight:700
     }
     .register-box a:hover{background:#ff9831}
