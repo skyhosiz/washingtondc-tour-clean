@@ -1,11 +1,13 @@
-// ✅ ORIGINAL CLEAN NAVBAR (เหมือนรูปที่มึงส่งเป๊ะ)
-
+// ✅ ORIGINAL CLEAN NAVBAR (เหมือนรูปเดิม 100%)
 (function () {
 
   const token = localStorage.getItem("token");
   const user = JSON.parse(localStorage.getItem("user") || "{}");
-
   const current = location.pathname.split("/").pop() || "index.html";
+
+  // ❌ หน้า login / register / forgot / reset ไม่ต้องมี navbar
+  const HIDE_ON = new Set(["login.html", "register.html", "forgot.html", "reset.html"]);
+  if (HIDE_ON.has(current)) return;
 
   const nav = document.createElement("nav");
   nav.style.cssText = `
@@ -28,21 +30,25 @@
     {name: "PROFILE", url: "profile.html"},
   ];
 
-  let left = `<div style="display:flex;align-items:center;gap:26px;">
-      <div style="font-weight:900;font-size:20px;color:#ff9650;">D.C. TOUR</div>`;
+  let left = `
+    <div style="display:flex;align-items:center;gap:26px;">
+      <a href="index.html" 
+         style="font-weight:900;font-size:20px;color:#ff9650;text-decoration:none;">
+         D.C. TOUR
+      </a>`;
+
   links.forEach(l => {
     const active = l.url === current;
     left += `
-      <a href="${l.url}" 
-      style="text-decoration:none;
-      font-size:14px;
-      font-weight:800;
-      color:${active ? "#ff9650" : "#fff"};
-      transition:.2s;">
-      ${l.name}
-      </a>
-    `;
+      <a href="${l.url}"
+        style="text-decoration:none;
+        font-size:14px;font-weight:800;
+        color:${active ? "#ff9650" : "#fff"};
+        transition:.2s;">
+        ${l.name}
+      </a>`;
   });
+
   left += `</div>`;
 
   let right = `<div style="display:flex;align-items:center;gap:12px;">`;
@@ -57,8 +63,7 @@
         padding:6px 18px;border-radius:20px;font-weight:800;
         cursor:pointer;font-size:13px;transition:0.2s;">
         LOGOUT
-      </button>
-    `;
+      </button>`;
   }
 
   right += `</div>`;
@@ -67,8 +72,7 @@
   document.body.prepend(nav);
 
   if (token) {
-    const btn = document.getElementById("logoutBtn");
-    btn.onclick = () => {
+    document.getElementById("logoutBtn").onclick = () => {
       localStorage.removeItem("token");
       localStorage.removeItem("user");
       location.href = "login.html";
