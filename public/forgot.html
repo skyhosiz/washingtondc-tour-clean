@@ -2,58 +2,105 @@
 <html lang="th">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1.0">
-  <title>Hotel in Washington D.C.</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Forgot Password | Washington D.C.</title>
 
-  <!-- Google Analytics -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-VGBZS316J9"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date()); gtag('config', 'G-VGBZS316J9');
-  </script>
+  <!-- Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600;700&display=swap" rel="stylesheet"/>
 
-  <!-- Scripts -->
-  <script src="js/auth.js"></script>
-  <script src="js/nav.js" defer></script>
+  <!-- ปิด nav.js -->
+  <script> window.DISABLE_NAV_AUTH = true; </script>
 
-  <!-- CSS -->
-  <link rel="stylesheet" href="css/hotel.css">
+  <!-- ✅ auth.js สำหรับ Public Page -->
+  <script src="js/auth.js" defer></script>
 
-  <!-- Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Kanit:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{
+      font-family:"Kanit",sans-serif;
+      background:url("pic/dc_sunset.png") center/cover no-repeat fixed;
+      display:flex;justify-content:center;align-items:center;
+      height:100svh;padding:20px;
+    }
+    .box{
+      width:100%; max-width:420px;
+      padding:40px 34px; text-align:center;
+      background:rgba(10,0,25,.85); border-radius:26px;
+      box-shadow:0 0 38px rgba(255,140,30,.35);
+      animation:fade .6s ease-out
+    }
+    @keyframes fade{from{opacity:0;transform:translateY(20px)}to{opacity:1}}
+    h2{
+      font-size:32px;margin-bottom:20px;font-weight:800;
+      background:linear-gradient(90deg,#ffd089,#ff8a25);
+      -webkit-background-clip:text;background-clip:text;color:transparent;
+      text-shadow:0 0 14px rgba(255,150,30,.45)
+    }
+    p{
+      color:#ffd499;
+      font-size:15px;
+      margin-bottom:10px;
+    }
+    input,button{
+      width:100%;border:none;border-radius:12px;
+      font-size:17px;margin:10px 0;padding:13px
+    }
+    input{background:#fff;color:#222}
+    button{
+      font-weight:700;cursor:pointer;transition:.25s;
+      color:#222;background:linear-gradient(90deg,#ffe29c,#ff8522)
+    }
+    button:hover{
+      transform:scale(1.05);
+      box-shadow:0 0 26px rgba(255,140,30,.85)
+    }
+    a{
+      display:block;margin-top:12px;
+      color:#ffd28a;text-decoration:none;
+      font-weight:600;text-align:center
+    }
+  </style>
 </head>
 
 <body>
-  <script>
-    if (!localStorage.getItem("token")) location.href = "login.html";
-  </script>
 
-  <div class="nav-spacer"></div>
+  <div class="box">
+    <h2>ลืมรหัสผ่าน?</h2>
+    <p>กรอกอีเมลเพื่อรับลิงก์ตั้งรหัสผ่านใหม่</p>
 
-  <section class="hero">
-    <div class="hero-content">
-      <h1>HOTEL IN D.C.</h1>
-      <h2>Premium Stay Near Washington Landmarks</h2>
+    <input type="email" id="email" placeholder="อีเมล" autocomplete="email" required>
 
-      <div class="btnBox">
-        <button class="btn btn-back" onclick="location.href='index.html'">← Back to Home</button>
-        <button class="btn btn-web"
-          onclick="window.open('https://www.booking.com/city/us/washington.html','_blank')">
-          🏨 Book Hotel →
-        </button>
-      </div>
-    </div>
-  </section>
+    <button onclick="onForgot()">ส่งอีเมลรีเซ็ต</button>
 
-  <section class="info">
-    โรงแรมในกรุงวอชิงตัน ดี.ซี. ตั้งอยู่ในย่านใจกลางเมือง
-    รายล้อมด้วยสถานที่ท่องเที่ยวระดับโลก
-    สะดวกสบายทั้งการท่องเที่ยวและการพักผ่อนระดับพรีเมียม
-  </section>
+    <a href="login.html">ย้อนกลับไปเข้าสู่ระบบ</a>
+  </div>
 
-  <footer>
-    © 2025 Washington D.C. Tourism — Hotel in D.C. | Developed by FlukeTON
-  </footer>
+<script>
+async function onForgot(){
+  const email = document.getElementById("email").value.trim();
+  if(!email) return alert("กรุณากรอกอีเมล!");
+
+  try{
+    const res = await fetch("/api/auth/forgot", {
+      method:"POST",
+      headers:{ "Content-Type":"application/json" },
+      body:JSON.stringify({ email }),
+    });
+
+    const data = await res.json().catch(()=>null);
+
+    if(res.ok){
+      alert("✅ ส่งลิงก์รีเซ็ตรหัสผ่านไปที่อีเมลแล้ว ✅\nกรุณาตรวจสอบกล่องจดหมาย");
+    }else{
+      alert(data?.message || "❌ ไม่พบอีเมลนี้ในระบบ");
+    }
+
+  }catch(err){
+    console.error("Forgot Error:", err);
+    alert("🚨 ระบบมีปัญหา กรุณาลองใหม่อีกครั้ง");
+  }
+}
+</script>
+
 </body>
 </html>
