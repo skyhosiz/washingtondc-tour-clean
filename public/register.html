@@ -33,9 +33,7 @@
       width:420px;background:rgba(10,0,25,.83);
       border-radius:26px;padding:38px;text-align:center;color:white;
       box-shadow:0 0 38px rgba(255,140,30,.28);
-      animation:fadein .7s ease-out;
     }
-    @keyframes fadein{from{opacity:0;transform:translateY(18px)}}
     h2{
       font-size:34px;margin-bottom:20px;font-weight:800;
       background:linear-gradient(90deg,#ffd089,#ff8a25);
@@ -52,9 +50,7 @@
       font-weight:bold;cursor:pointer;transition:.25s;color:#222;
     }
     button:hover{transform:scale(1.05)}
-    .login-box{
-      margin-top:18px;font-size:15px;
-    }
+    .login-box{margin-top:18px;font-size:15px}
     .login-box a{
       margin-left:6px;padding:4px 12px;background:#ff7a00;
       border-radius:8px;text-decoration:none;color:white;font-weight:700;
@@ -67,9 +63,9 @@
   <div class="reg-container">
     <h2>สร้างบัญชี</h2>
 
-    <input type="text" id="username" placeholder="ชื่อผู้ใช้ (4–16 ตัว)" autocomplete="username">
+    <input type="text" id="username" placeholder="ชื่อผู้ใช้ (4–16 ตัว)">
     <input type="email" id="email" placeholder="อีเมล" autocomplete="email">
-    <input type="password" id="password" placeholder="รหัสผ่าน (≥ 6 ตัว)" autocomplete="new-password">
+    <input type="password" id="password" placeholder="รหัสผ่าน (แนะนำ: ตัวใหญ่+ตัวเลข)" autocomplete="new-password">
 
     <button id="regBtn" onclick="register()">สมัครสมาชิก</button>
 
@@ -84,11 +80,22 @@ const API_BASE =
     ? "http://localhost:3000"
     : "https://washingtondc-tour-clean-1.onrender.com";
 
+// ❌ อีเมลทิ้ง / spam domain
+const BAD_DOMAINS = [
+  "mailinator.com","yopmail.com","tempmail.com","guerrillamail.com",
+  "10minutemail.com","trashmail.com","getnada.com","fakeinbox.com"
+];
+
+// ✅ เช็ค password เบื้องต้นแบบแข็งแรง
+function strongPass(p){
+  return p.length>=8 && /[A-Z]/.test(p) && /\d/.test(p);
+}
+
 async function register(){
   const btn = document.getElementById("regBtn");
-  const username = document.getElementById("username").value.trim();
-  const email = document.getElementById("email").value.trim();
-  const password = document.getElementById("password").value.trim();
+  const username = usernameInput.value.trim();
+  const email = emailInput.value.trim().toLowerCase();
+  const password = passwordInput.value.trim();
 
   if(!username || !email || !password)
     return alert("⚠️ กรุณากรอกข้อมูลให้ครบ!");
@@ -96,16 +103,18 @@ async function register(){
   if(username.length < 4 || username.length > 16)
     return alert("⚠️ ชื่อผู้ใช้ต้อง 4–16 ตัว");
 
-  const usernamePattern = /^[A-Za-z0-9_.]+$/;
-  if(!usernamePattern.test(username))
-    return alert("⚠️ ชื่อผู้ใช้ใช้ได้เฉพาะ A-Z, 0-9, _, .");
+  if(!/^[A-Za-z0-9_.]+$/.test(username))
+    return alert("⚠️ ใช้ A-Z, 0-9, _, . เท่านั้น");
 
-  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if(!emailPattern.test(email))
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
     return alert("📧 อีเมลไม่ถูกต้อง!");
 
-  if(password.length < 6)
-    return alert("🔐 รหัสผ่านน้อยกว่า 6 ตัวไม่ได้!");
+  const domain = email.split("@")[1];
+  if(BAD_DOMAINS.includes(domain))
+    return alert("🚫 ไม่รองรับอีเมลแบบทิ้ง!");
+
+  if(!strongPass(password))
+    return alert("🔐 รหัสผ่านแนะนำ: ≥ 8 ตัว + ตัวใหญ่ + ตัวเลข");
 
   btn.disabled = true;
   const oldText = btn.textContent;
@@ -121,21 +130,26 @@ async function register(){
     const data = await res.json().catch(()=>null);
 
     if(res.ok && data.status === "success"){
-      gtag("event","sign_up",{method:"Email"});
+      gtag("event","sign_up",{ method:"Email" });
       alert("✅ สมัครสำเร็จ! โปรดเข้าสู่ระบบ");
-      location.href = "login.html";
-    }else{
-      alert(data?.message || "❌ สมัครไม่สำเร็จ!");
+      return location.href = "login.html";
     }
 
+    alert(data?.message || "❌ อีเมลถูกใช้แล้ว!");
+
   }catch(err){
-    console.error("Register Error:", err);
-    alert("🚨 ระบบขัดข้อง กรุณาลองใหม่");
-  }finally{
-    btn.disabled = false;
-    btn.textContent = oldText;
+    alert("🚨 ระบบมีปัญหา กรุณาลองใหม่");
   }
+
+  btn.disabled = false;
+  btn.textContent = oldText;
 }
+</script>
+
+<script>
+const usernameInput = document.getElementById("username");
+const emailInput = document.getElementById("email");
+const passwordInput = document.getElementById("password");
 </script>
 
 </body>
