@@ -1,30 +1,31 @@
 <!DOCTYPE html>
 <html lang="th">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login | Washington D.C.</title>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login | Washington D.C.</title>
 
-  <!-- Google Font -->
-  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600;700&display=swap" rel="stylesheet"/>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600;700&display=swap"
+      rel="stylesheet"
+    />
 
-  <!-- ✅ ปิด nav.js ในหน้านี้ -->
-  <script> window.DISABLE_NAV_AUTH = true; </script>
+    <script>
+      window.DISABLE_NAV_AUTH = true;
+    </script>
 
-  <!-- ✅ เดิม auth.js ต้องใช้ -->
-  <script src="js/auth.js" defer></script>
+    <script src="js/auth.js" defer></script>
 
-  <!-- ✅ Navbar (จะไม่ทำงานเพราะ DISABLE_NAV_AUTH=true) -->
-  <script>
-  (function () {
-    if (window.DISABLE_NAV_AUTH) return;
+    <script>
+      (function () {
+        if (window.DISABLE_NAV_AUTH) return;
 
-    const token = localStorage.getItem("token");
-    const user = JSON.parse(localStorage.getItem("user") || "{}");
-    const current = location.pathname.split("/").pop() || "index.html";
+        const token = localStorage.getItem("token");
+        const user = JSON.parse(localStorage.getItem("user") || "{}");
+        const current = location.pathname.split("/").pop() || "index.html";
 
-    const nav = document.createElement("nav");
-    nav.style.cssText = `
+        const nav = document.createElement("nav");
+        nav.style.cssText = `
       width:100%;
       position:fixed;
       top:0; left:0;
@@ -38,17 +39,17 @@
       border-bottom:3px solid #9c542a;
     `;
 
-    const links = [
-      {name: "HOME", url: "index.html"},
-      {name: "EXPLORE", url: "explore.html"},
-      {name: "PROFILE", url: "profile.html"},
-    ];
+        const links = [
+          { name: "HOME", url: "index.html" },
+          { name: "EXPLORE", url: "explore.html" },
+          { name: "PROFILE", url: "profile.html" },
+        ];
 
-    let left = `<div style="display:flex;align-items:center;gap:26px;">
+        let left = `<div style="display:flex;align-items:center;gap:26px;">
         <div style="font-weight:900;font-size:20px;color:#ff9650;">D.C. TOUR</div>`;
-    links.forEach(l => {
-      const active = l.url === current;
-      left += `
+        links.forEach((l) => {
+          const active = l.url === current;
+          left += `
         <a href="${l.url}" 
         style="text-decoration:none;
         font-size:14px;
@@ -58,12 +59,12 @@
         ${l.name}
         </a>
       `;
-    });
-    left += `</div>`;
+        });
+        left += `</div>`;
 
-    let right = `<div style="display:flex;align-items:center;gap:12px;">`;
-    if (token) {
-      right += `
+        let right = `<div style="display:flex;align-items:center;gap:12px;">`;
+        if (token) {
+          right += `
         <span style="color:#ffd394;font-size:14px;font-weight:700;">
           ${user.username || user.email}
         </span>
@@ -74,160 +75,207 @@
           LOGOUT
         </button>
       `;
-    }
-    right += `</div>`;
+        }
+        right += `</div>`;
 
-    nav.innerHTML = left + right;
-    document.body.prepend(nav);
+        nav.innerHTML = left + right;
+        document.body.prepend(nav);
 
-    if (token) {
-      const btn = document.getElementById("logoutBtn");
-      btn.onclick = () => {
-        localStorage.removeItem("token");
-        localStorage.removeItem("user");
-        location.href = "login.html";
-      };
-    }
-  })();
-  </script>
+        if (token) {
+          const btn = document.getElementById("logoutBtn");
+          btn.onclick = () => {
+            localStorage.removeItem("token");
+            localStorage.removeItem("user");
+            location.href = "login.html";
+          };
+        }
+      })();
+    </script>
 
-  <!-- ✅ CSS -->
-  <style>
-    *{margin:0;padding:0;box-sizing:border-box}
-    html,body{height:100%}
-    body{
-      font-family:"Kanit",sans-serif;
-      background:url("pic/dc_sunset.png") center/cover no-repeat fixed;
-      display:flex;justify-content:center;align-items:center;
-      padding:20px;
-      -webkit-tap-highlight-color: transparent;
-    }
-    .login-box{
-      width:100%; max-width:420px;
-      padding:40px 34px; text-align:center; 
-      background:rgba(10,0,25,.85); border-radius:26px;
-      box-shadow:0 0 38px rgba(255,140,30,.35);
-      animation:fadeIn .6s ease-out
-    }
-    @keyframes fadeIn{
-      from{opacity:0;transform:translateY(18px)}
-      to{opacity:1;transform:translateY(0)}
-    }
-    h2{
-      font-size:34px;margin-bottom:22px;font-weight:800;
-      background:linear-gradient(90deg,#ffd089,#ff8a25);
-      -webkit-background-clip:text;background-clip:text;color:transparent;
-      text-shadow:0 0 14px rgba(255,150,30,.45)
-    }
-    input,button{
-      width:100%;border:none;border-radius:12px;
-      font-size:17px;margin:10px 0;padding:13px
-    }
-    input{background:#fff;color:#222}
-    button{
-      font-weight:700;cursor:pointer;transition:.25s;
-      color:#222;background:linear-gradient(90deg,#ffe29c,#ff8522)
-    }
-    button:hover{
-      transform:scale(1.05);
-      box-shadow:0 0 26px rgba(255,140,30,.85)
-    }
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        height: 100%;
+      }
+      body {
+        font-family: "Kanit", sans-serif;
+        background: url("pic/dc_sunset.png") center/cover no-repeat fixed;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+        -webkit-tap-highlight-color: transparent;
+      }
+      .login-box {
+        width: 100%;
+        max-width: 420px;
+        padding: 40px 34px;
+        text-align: center;
+        background: rgba(10, 0, 25, 0.85);
+        border-radius: 26px;
+        box-shadow: 0 0 38px rgba(255, 140, 30, 0.35);
+        animation: fadeIn 0.6s ease-out;
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(18px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      h2 {
+        font-size: 34px;
+        margin-bottom: 22px;
+        font-weight: 800;
+        background: linear-gradient(90deg, #ffd089, #ff8a25);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        text-shadow: 0 0 14px rgba(255, 150, 30, 0.45);
+      }
+      input,
+      button {
+        width: 100%;
+        border: none;
+        border-radius: 12px;
+        font-size: 17px;
+        margin: 10px 0;
+        padding: 13px;
+      }
+      input {
+        background: #fff;
+        color: #222;
+      }
+      button {
+        font-weight: 700;
+        cursor: pointer;
+        transition: 0.25s;
+        color: #222;
+        background: linear-gradient(90deg, #ffe29c, #ff8522);
+      }
+      button:hover {
+        transform: scale(1.05);
+        box-shadow: 0 0 26px rgba(255, 140, 30, 0.85);
+      }
 
-    /* 🔧 ลืมรหัสผ่าน */
-    .forgot{
-      width:100%;
-      text-align:right;
-      margin-top:-2px;
-      margin-bottom:10px;
-    }
-    .forgot a{
-      color:#ffd28a;
-      font-weight:600;
-      text-decoration:none;
-      cursor:pointer;
-    }
+      .forgot {
+        width: 100%;
+        text-align: right;
+        margin-top: -2px;
+        margin-bottom: 10px;
+      }
+      .forgot a {
+        color: #ffd28a;
+        font-weight: 600;
+        text-decoration: none;
+        cursor: pointer;
+      }
 
-    /* 🔧 สมัครสมาชิก – แก้สี “ยังไม่มีบัญชี?” ไม่ให้เป็นพื้นน้ำเงิน */
-    .register-box{
-      display:flex;
-      justify-content:center;
-      align-items:center;
-      gap:10px;
-      margin-top:10px
-    }
-    .register-box span{
-      color:#ffd28a;            /* สีตามธีม */
-      font-weight:700;
-      background:none !important;  /* ล้างพื้นน้ำเงิน */
-      padding:0;                   /* เอาความเป็น pill ออก */
-      border-radius:0;
-      box-shadow:none;
-      line-height:1.2;
-      display:inline;
-    }
-    .register-box a{
-      background:#ff7a00;color:#fff;padding:6px 16px;
-      border-radius:8px;text-decoration:none;font-weight:700
-    }
-    .register-box a:hover{background:#ff9831}
-  </style>
-</head>
+      .register-box {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+        margin-top: 10px;
+      }
+      .register-box span {
+        color: #ffd28a;
+        font-weight: 700;
+        background: none !important;
+        padding: 0;
+        border-radius: 0;
+        box-shadow: none;
+        line-height: 1.2;
+        display: inline;
+      }
+      .register-box a {
+        background: #ff7a00;
+        color: #fff;
+        padding: 6px 16px;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 700;
+      }
+      .register-box a:hover {
+        background: #ff9831;
+      }
+    </style>
+  </head>
 
-<body>
-  <div class="login-box">
-    <h2>เข้าสู่ระบบ</h2>
+  <body>
+    <div class="login-box">
+      <h2>เข้าสู่ระบบ</h2>
 
-    <form id="loginForm">
-      <input id="email" type="email" placeholder="อีเมล" autocomplete="email" required>
-      <input id="password" type="password" placeholder="รหัสผ่าน" autocomplete="current-password" required>
+      <form id="loginForm">
+        <input
+          id="email"
+          type="email"
+          placeholder="อีเมล"
+          autocomplete="email"
+          required
+        />
+        <input
+          id="password"
+          type="password"
+          placeholder="รหัสผ่าน"
+          autocomplete="current-password"
+          required
+        />
 
-      <div class="forgot"><a href="forgot.html">ลืมรหัสผ่าน?</a></div>
+        <div class="forgot"><a href="forgot.html">ลืมรหัสผ่าน?</a></div>
 
-      <button type="submit">Login</button>
+        <button type="submit">Login</button>
 
-      <div class="register-box">
-        <span>ยังไม่มีบัญชี?</span>
-        <a href="register.html">สมัครสมาชิก</a>
-      </div>
-    </form>
-  </div>
+        <div class="register-box">
+          <span>ยังไม่มีบัญชี?</span>
+          <a href="register.html">สมัครสมาชิก</a>
+        </div>
+      </form>
+    </div>
 
-<!-- ✅ Login Handler -->
-<script>
-document.getElementById("loginForm").addEventListener("submit", async (e)=>{
-  e.preventDefault();
+    <script>
+      document
+        .getElementById("loginForm")
+        .addEventListener("submit", async (e) => {
+          e.preventDefault();
 
-  const email = document.getElementById("email").value.trim();
-  const password = document.getElementById("password").value.trim();
+          const email = document.getElementById("email").value.trim();
+          const password = document.getElementById("password").value.trim();
 
-  if(!email || !password){
-    return alert("กรุณากรอกข้อมูลให้ครบ!");
-  }
+          if (!email || !password) {
+            return alert("กรุณากรอกข้อมูลให้ครบ!");
+          }
 
-  try{
-    const res = await fetch("/api/auth/login", {
-      method:"POST",
-      headers:{ "Content-Type":"application/json" },
-      body:JSON.stringify({ email, password }),
-    });
+          try {
+            const res = await fetch("/api/auth/login", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ email, password }),
+            });
 
-    const data = await res.json().catch(()=>null);
+            const data = await res.json().catch(() => null);
 
-    if(!res.ok || !data?.token){
-      return alert(data?.message || "เข้าสู่ระบบไม่สำเร็จ ❌");
-    }
+            if (!res.ok || !data?.token) {
+              return alert(data?.message || "เข้าสู่ระบบไม่สำเร็จ ❌");
+            }
 
-    localStorage.setItem("token", data.token);
-    localStorage.setItem("user", JSON.stringify(data.user));
+            localStorage.setItem("token", data.token);
+            localStorage.setItem("user", JSON.stringify(data.user));
 
-    location.href = "index.html";
-
-  }catch(err){
-    console.error("Login Error:", err);
-    alert("🚨 เซิร์ฟเวอร์มีปัญหา กรุณาลองใหม่");
-  }
-});
-</script>
-
-</body>
+            location.href = "index.html";
+          } catch (err) {
+            console.error("Login Error:", err);
+            alert("🚨 เซิร์ฟเวอร์มีปัญหา กรุณาลองใหม่");
+          }
+        });
+    </script>
+  </body>
 </html>

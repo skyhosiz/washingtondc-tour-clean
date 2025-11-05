@@ -1,4 +1,3 @@
-// server.js — WashingtonDC Auth + SPA Route (Express 5 OK)
 require("dotenv").config();
 
 const express = require("express");
@@ -8,15 +7,12 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-// ❌ อย่า require("node-fetch") — Node 18+ มี fetch เป็น global แล้ว
 const cloudinary = require("cloudinary").v2;
 const { CloudinaryStorage } = require("multer-storage-cloudinary");
 
 const app = express();
 
-/* =============================
-   ✅ ENV CHECK & VARIABLES
-============================= */
+
 [
   "JWT_SECRET",
   "RESET_PASSWORD_SECRET",
@@ -48,9 +44,7 @@ const {
   CLOUDINARY_API_SECRET,
 } = process.env;
 
-/* =============================
-   ☁️ CLOUDINARY & MULTER
-============================= */
+
 cloudinary.config({
   cloud_name: CLOUDINARY_CLOUD_NAME,
   api_key: CLOUDINARY_API_KEY,
@@ -67,9 +61,7 @@ const storage = new CloudinaryStorage({
 });
 const upload = multer({ storage });
 
-/* =============================
-   🧠 DB & SCHEMA
-============================= */
+
 mongoose
   .connect(MONGO_URI)
   .then(() => console.log("✅ MongoDB Connected"))
@@ -88,9 +80,7 @@ const User = mongoose.model(
   })
 );
 
-/* =============================
-   🔐 HELPERS
-============================= */
+
 const signToken = (uid) => jwt.sign({ uid }, JWT_SECRET, { expiresIn: "7d" });
 
 function authRequired(req, res, next) {
@@ -106,7 +96,6 @@ function authRequired(req, res, next) {
   }
 }
 
-// Brevo (Sendinblue) — ส่งอีเมล
 async function sendMailBrevo({ to, subject, html }) {
   const r = await fetch("https://api.brevo.com/v3/smtp/email", {
     method: "POST",
@@ -128,9 +117,7 @@ async function sendMailBrevo({ to, subject, html }) {
   }
 }
 
-/* =============================
-   ⚙️ GLOBAL MIDDLEWARE
-============================= */
+
 app.disable("x-powered-by");
 const allowed = [CLIENT_URL, "http://localhost:3000"];
 app.use(
@@ -147,9 +134,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "public")));
 
-/* =============================
-   👤 AUTH ROUTES
-============================= */
+
 app.post("/api/auth/register", async (req, res) => {
   try {
     const { username = "", email = "", password = "" } = req.body || {};
@@ -193,9 +178,7 @@ app.post("/api/auth/login", async (req, res) => {
   }
 });
 
-/* =============================
-   🔁 FORGOT / RESET PASSWORD
-============================= */
+
 app.post("/api/auth/forgot", async (req, res) => {
   try {
     const { email = "" } = req.body || {};
@@ -250,9 +233,7 @@ app.post("/api/auth/reset", async (req, res) => {
   }
 });
 
-/* =============================
-   🧍 PROFILE UPDATE
-============================= */
+
 app.put(
   "/api/auth/profile",
   authRequired,
@@ -285,9 +266,7 @@ app.put(
   }
 );
 
-/* =============================
-   🏛️ EXPLORE (Smithsonian Search)
-============================= */
+
 app.get("/api/explore", authRequired, async (req, res) => {
   try {
     const query = encodeURIComponent("Washington DC");
@@ -301,9 +280,7 @@ app.get("/api/explore", authRequired, async (req, res) => {
   }
 });
 
-/* =============================
-   ✅ PROXY Smithsonian
-============================= */
+
 app.get("/api/proxy-smithsonian/:id", async (req, res) => {
   try {
     const { id } = req.params;
@@ -326,24 +303,18 @@ app.get("/api/proxy-smithsonian/:id", async (req, res) => {
   }
 });
 
-/* =============================
-✅ INTRO STATIC PAGE  <-- (เพิ่มเฉพาะตรงนี้)
-============================= */
+
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "intro.html"));
 });
 
-/* =============================
-🌐 SPA STATIC ROUTE (ต้องไว้ท้ายสุด!)
-============================= */
+
 app.get(/.*/, (req, res, next) => {
   if (req.path.startsWith("/api")) return next();
   res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
-/* =============================
-🟢 START SERVER
-============================= */
+
 const port = process.env.PORT || 10000;
 app.listen(port, () => console.log(`🚀 Server Online → PORT ${port}`));
 

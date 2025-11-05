@@ -1,219 +1,590 @@
 <!DOCTYPE html>
 <html lang="th">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Explore Washington D.C. — Virtual Tour</title>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Explore Washington D.C. — Virtual Tour</title>
 
-  <!-- Font & Analytics -->
-  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600;800&display=swap" rel="stylesheet"/>
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-VGBZS316J9"></script>
-  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}
-  gtag('js',new Date());gtag('config','G-VGBZS316J9');</script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600;800&display=swap"
+      rel="stylesheet"
+    />
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-VGBZS316J9"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+      gtag("config", "G-VGBZS316J9");
+    </script>
 
-  <!-- Preload Key Images -->
-  <link rel="preload" as="image" href="pic/explore/lincoln.jpg">
-  <link rel="preload" as="image" href="pic/explore/smithsonian.jpg">
-  <link rel="preload" as="image" href="pic/explore/capitol.jpg">
-  <link rel="preload" as="image" href="pic/explore/interior-of-ben-s-chili-bowl-jpeg.jpg">
-  <link rel="preload" as="image" href="pic/explore/chinatown5.jpg">
-  <link rel="preload" as="image" href="pic/explore/festivals6.jpg">
+    <link rel="preload" as="image" href="pic/explore/lincoln.jpg" />
+    <link rel="preload" as="image" href="pic/explore/smithsonian.jpg" />
+    <link rel="preload" as="image" href="pic/explore/capitol.jpg" />
+    <link
+      rel="preload"
+      as="image"
+      href="pic/explore/interior-of-ben-s-chili-bowl-jpeg.jpg"
+    />
+    <link rel="preload" as="image" href="pic/explore/chinatown5.jpg" />
+    <link rel="preload" as="image" href="pic/explore/festivals6.jpg" />
 
-  <style>
-    :root {
-      --bg:#0d0b22;--card:#15132b;--gold1:#fff3c5;--gold2:#ffd36b;--gold3:#ff9f43;
-      --muted:#cfcfe6;--text:#fff;--border:rgba(255,220,150,.08);
-    }
-    *{margin:0;padding:0;box-sizing:border-box}
-    html,body{background:var(--bg);color:var(--text);font-family:'Kanit',sans-serif;overflow-x:hidden;scroll-behavior:smooth}
-    ::selection{background:#ffd36b44;}
-    @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
-
-    /* Background Glow */
-    .bg-core{position:fixed;inset:-40%;z-index:-3;
-      background:radial-gradient(circle at 50% 35%,#7b2cffbb,transparent 60%),
-                 conic-gradient(from 0turn,#ffc98222 0 25%,transparent 25% 50%,#ffc98222 50% 75%,transparent 75% 100%);
-      filter:blur(80px) saturate(130%);opacity:.35;animation:spin 55s linear infinite;pointer-events:none}
-    @keyframes spin{to{transform:rotate(360deg)}}
-
-    /* Top Navigation Bar */
-    nav.topbar{
-      position:fixed;top:0;left:0;right:0;height:56px;
-      background:rgba(0,0,0,.85);backdrop-filter:blur(8px);
-      display:flex;align-items:center;justify-content:space-between;
-      padding:0 20px;z-index:999;border-bottom:1px solid rgba(255,255,255,.1);
-    }
-    nav .logo{font-weight:800;font-size:20px;color:var(--gold3)}
-    nav .menu a{color:#f5f4f4;text-decoration:none;margin:0 14px;font-weight:600;opacity:.9;transition:.3s}
-    nav .menu a:hover,nav .menu a.active{color:var(--gold2);opacity:1;}
-    .spacer{height:56px}
-
-    /* Header */
-    header{text-align:center;padding:80px 16px 25px}
-    header h1{font-size:58px;font-weight:800;
-      background:linear-gradient(90deg,var(--gold1),var(--gold2),var(--gold3));
-      -webkit-background-clip:text;-webkit-text-fill-color:transparent}
-    header p{max-width:880px;margin:14px auto;color:var(--muted);opacity:.9;font-size:18px}
-
-    /* Section */
-    section.section{position:relative;min-height:100vh;display:grid;place-items:center;isolation:isolate;transition:opacity 1.2s ease}
-    .media{position:absolute;inset:0;z-index:-2;overflow:hidden;will-change:transform,filter}
-    .media img{width:100%;height:100%;object-fit:cover;filter:brightness(.55);transform:translateY(-5%) scale(1.1);
-      transition:transform 1.6s cubic-bezier(.4,.18,.25,1),filter 1.4s ease}
-    .overlay{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(13,11,34,.25) 0%,rgba(13,11,34,.55) 55%,rgba(13,11,34,.9) 100%);z-index:-1}
-    .section.visible .media img{filter:brightness(.9);transform:translateY(0) scale(1.05)}
-
-    /* Content */
-    .content{background:rgba(21,19,43,.55);border:1px solid var(--border);
-      padding:26px 24px;border-radius:18px;box-shadow:0 8px 28px rgba(0,0,0,.45);
-      backdrop-filter:blur(8px);max-width:950px;transform:translateY(40px);opacity:0;
-      transition:opacity 1s ease,transform 1s ease}
-    .section.visible .content{opacity:1;transform:translateY(0)}
-
-    .title{font-size:42px;font-weight:800;margin-bottom:10px;text-align:center;
-      background:linear-gradient(90deg,#ffeab0,#ffd87b,#ff9f43);
-      -webkit-background-clip:text;-webkit-text-fill-color:transparent}
-    .hint{font-size:14px;color:#bfbbe2;opacity:.9;text-align:center;margin-bottom:10px}
-    .fact{display:flex;gap:12px;margin:10px 0;color:#e9e8ff;line-height:1.75;opacity:0;transform:translateY(10px);transition:opacity .8s ease,transform .8s ease}
-    .section.visible .fact{opacity:1;transform:translateY(0)}
-    .fact:nth-child(2){transition-delay:.15s}.fact:nth-child(3){transition-delay:.3s}.fact:nth-child(4){transition-delay:.45s}
-    .bullet{min-width:8px;height:8px;margin-top:10px;border-radius:50%;background:#ffd68a;box-shadow:0 0 10px rgba(255,214,138,.65)}
-
-    /* Dots */
-    .dots{position:fixed;top:50%;right:20px;transform:translateY(-50%);display:flex;flex-direction:column;gap:8px;z-index:10}
-    .dot{width:10px;height:10px;border-radius:50%;background:#6e68a4;transition:.25s;cursor:pointer}
-    .dot.active{transform:scale(1.3);background:#ffd68a;box-shadow:0 0 10px rgba(255,214,138,.7)}
-
-    footer{text-align:center;padding:40px 0 30px;color:#c9c9da;font-size:13px;border-top:1px solid rgba(255,255,255,.06)}
-    @media(max-width:768px){header h1{font-size:42px}.title{font-size:30px}}
-  </style>
-</head>
-<body>
-  <nav class="topbar">
-    <div class="logo">D.C. TOUR</div>
-    <div class="menu">
-      <a href="index.html">HOME</a>
-      <a href="explore.html" class="active">EXPLORE</a>
-      <a href="profile.html">PROFILE</a>
-    </div>
-  </nav>
-  <div class="spacer"></div>
-
-  <div class="bg-core"></div>
-
-  <header>
-    <h1>Explore Washington D.C.</h1>
-    <p>สำรวจมหานครแห่งอำนาจและอุดมการณ์ของโลก ผ่านมุมมองทางสถาปัตยกรรม ประวัติศาสตร์ และวัฒนธรรมที่ลึกซึ้ง</p>
-  </header>
-
-  <div class="dots" id="dots"></div>
-
-  <!-- ✅ ทั้ง 6 Section ของคุณเหมือนเดิม -->
-  <section class="section" data-name="Lincoln">
-    <div class="media"><picture><source srcset="pic/explore/exploreWEBP/lincoln6.webp" type="image/webp"><img src="pic/explore/lincoln.jpg" alt="Lincoln Memorial" loading="lazy"></picture></div>
-    <div class="overlay"></div>
-    <div class="content">
-      <h2 class="title">Lincoln Memorial</h2>
-      <p class="hint">สถาปัตยกรรมกรีกคลาสสิก / สร้างเสร็จปี 1922</p>
-      <div class="fact"><span class="bullet"></span><p><b>หินอ่อนกับสัญลักษณ์อุดมการณ์:</b> โครงสร้างเลียนแบบวิหารกรีก เพื่อสื่อถึง “ประชาธิปไตยกำเนิดจากเหตุผล”</p></div>
-      <div class="fact"><span class="bullet"></span><p><b>ตำแหน่งสายตา:</b> คำปราศรัย Gettysburg Address จัดวางให้ตรงระดับสายตาผู้ชม เพื่อให้ “อ่านพร้อมรู้สึก”</p></div>
-      <div class="fact"><span class="bullet"></span><p><b>เวทีเปลี่ยนโลก:</b> ปี 1963 มาร์ติน ลูเธอร์ คิง จูเนียร์ กล่าวคำว่า <i>I Have a Dream</i> จุดไฟสิทธิมนุษยชนทั่วอเมริกา</p></div>
-    </div>
-  </section>
-
-  <section class="section" data-name="Smithsonian">
-    <div class="media"><picture><source srcset="pic/explore/exploreWEBP/smithsonian.webp" type="image/webp"><img src="pic/explore/smithsonian.jpg" alt="Smithsonian" loading="lazy"></picture></div>
-    <div class="overlay"></div>
-    <div class="content">
-      <h2 class="title">Smithsonian Institution</h2>
-      <p class="hint">“เพื่อขยายองค์ความรู้ของมนุษยชาติ” — James Smithson</p>
-      <div class="fact"><span class="bullet"></span><p><b>พิพิธภัณฑ์ฟรีแห่งชาติ:</b> ก่อตั้งจากมรดกของนักวิทยาศาสตร์ชาวอังกฤษ เปิดให้เข้าชมฟรีกว่า 19 พิพิธภัณฑ์ทั่วเมือง</p></div>
-      <div class="fact"><span class="bullet"></span><p><b>คลังประวัติศาสตร์โลก:</b> เก็บสิ่งของกว่า 155 ล้านชิ้น ตั้งแต่ยานอพอลโลถึงซากไดโนเสาร์</p></div>
-      <div class="fact"><span class="bullet"></span><p><b>ห้องวิจัยลับ:</b> ห้องแล็บเบื้องหลังคือแหล่งความรู้ระดับโลกที่ประชาชนไม่เห็น</p></div>
-    </div>
-  </section>
-
-  <section class="section" data-name="Capitol">
-    <div class="media"><picture><img src="pic/explore/capitol3.jpg" alt="Capitol" loading="lazy"></picture></div>
-    <div class="overlay"></div>
-    <div class="content">
-      <h2 class="title">U.S. Capitol</h2>
-      <p class="hint">โดมแห่งอุดมการณ์ประชาธิปไตย — สูง ~88 ม.</p>
-      <div class="fact"><span class="bullet"></span><p><b>เพดานแห่งเสรีภาพ:</b> "Apotheosis of Washington" แสดงจอร์จ วอชิงตันเป็นผู้พิทักษ์อุดมการณ์</p></div>
-      <div class="fact"><span class="bullet"></span><p><b>เสียงแห่งประชาชน:</b> โครงสร้าง Rotunda ออกแบบให้สะท้อนเสียงสื่อถึง “เสียงของชาติ”</p></div>
-      <div class="fact"><span class="bullet"></span><p><b>เส้นแกนเมือง:</b> ลากตรงจาก Capitol สู่ Lincoln Memorial คือแกนพลังแห่งประชาธิปไตย</p></div>
-    </div>
-  </section>
-
-  <section class="section" data-name="Half-Smoke">
-    <div class="media"><picture><source srcset="pic/explore/exploreWEBP/halfsmoke.webp" type="image/webp"><img src="pic/explore/interior-of-ben-s-chili-bowl-jpeg.jpg" alt="Half-Smoke" loading="lazy"></picture></div>
-    <div class="overlay"></div>
-    <div class="content">
-      <h2 class="title">Local Taste: Half-Smoke</h2>
-      <p class="hint">ตำนานแห่ง “Ben’s Chili Bowl” — ตั้งแต่ปี 1958</p>
-      <div class="fact"><span class="bullet"></span><p><b>รสชาติแห่งเมือง:</b> ไส้กรอกเนื้อวัวและหมูบดหยาบครึ่งหนึ่ง รมควันหอมพริกไทยเฉพาะตัว</p></div>
-      <div class="fact"><span class="bullet"></span><p><b>อาหารแห่งความเท่าเทียม:</b> จากนักดนตรีถึงประธานาธิบดี นั่งโต๊ะเดียวกันภายใต้รสเดียว</p></div>
-    </div>
-  </section>
-
-  <section class="section" data-name="Chinatown">
-    <div class="media"><picture><source srcset="pic/explore/exploreWEBP/chinatown.webp" type="image/webp"><img src="pic/explore/chinatown5.jpg" alt="Chinatown" loading="lazy"></picture></div>
-    <div class="overlay"></div>
-    <div class="content">
-      <h2 class="title">Chinatown D.C.</h2>
-      <p class="hint">Friendship Archway (1986) — กระเบื้องทองคำ ~7,000 ชิ้น</p>
-      <div class="fact"><span class="bullet"></span><p><b>ซุ้มแห่งมิตรภาพ:</b> ฟื้นฟูย่านหลังความเปลี่ยนแปลงเชิงเมือง แสดงอัตลักษณ์จีนในอเมริกา</p></div>
-      <div class="fact"><span class="bullet"></span><p><b>จังหวะแสงเมือง:</b> เส้นแสงรถตัดกับศิลปะจีนในภาพ long-exposure คือสัญลักษณ์ของความร่วมสมัย</p></div>
-    </div>
-  </section>
-
-  <section class="section" data-name="Festivals">
-    <div class="media"><picture><img src="pic/explore/Cherry-Monument.png" alt="Festivals & Events" loading="lazy"></picture></div>
-    <div class="overlay"></div>
-    <div class="content">
-      <h2 class="title">Festivals & Events</h2>
-      <p class="hint">เทศกาลซากุระ — ของขวัญจากญี่ปุ่นปี 1912</p>
-      <div class="fact"><span class="bullet"></span><p><b>Soft Power ดอกไม้:</b> ซากุระคือเครื่องมือทางการทูตเชิงวัฒนธรรม สื่อถึงมิตรภาพที่ยั่งยืนระหว่างประเทศ</p></div>
-      <div class="fact"><span class="bullet"></span><p><b>เมืองที่มีชีพจร:</b> ปฏิทินเทศกาลกระจายทั้งปี ทำให้เมืองมีชีวิตและเศรษฐกิจไม่หลับ</p></div>
-      <div class="fact"><span class="bullet"></span><p><b>เบื้องหลังประวัติศาสตร์:</b> งานนี้เกิดจากการมอบต้นซากุระ 3,000 ต้นจากโตเกียวสู่วอชิงตัน เพื่อเชื่อมสัมพันธ์สองชาติหลังสงครามรัสเซีย–ญี่ปุ่น</p></div>
-    </div>
-  </section>
-
-  <footer>© 2025 Washington D.C. Virtual Tour | Developed by FlukeTON</footer>
-
-  <script>
-  document.addEventListener("DOMContentLoaded",()=>{
-    const sections=[...document.querySelectorAll('.section')];
-    const dotsWrap=document.getElementById('dots');
-    sections.forEach((_,i)=>{
-      const d=document.createElement('div');
-      d.className='dot';
-      d.onclick=()=>sections[i].scrollIntoView({behavior:'smooth'});
-      dotsWrap.appendChild(d);
-    });
-    const dots=[...document.querySelectorAll('.dot')];
-    const io=new IntersectionObserver(es=>{
-      es.forEach(e=>{
-        if(e.isIntersecting){
-          e.target.classList.add('visible');
-          const i=sections.indexOf(e.target);
-          dots.forEach((d,idx)=>d.classList.toggle('active',idx===i));
+    <style>
+      :root {
+        --bg: #0d0b22;
+        --card: #15132b;
+        --gold1: #fff3c5;
+        --gold2: #ffd36b;
+        --gold3: #ff9f43;
+        --muted: #cfcfe6;
+        --text: #fff;
+        --border: rgba(255, 220, 150, 0.08);
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        background: var(--bg);
+        color: var(--text);
+        font-family: "Kanit", sans-serif;
+        overflow-x: hidden;
+        scroll-behavior: smooth;
+      }
+      ::selection {
+        background: #ffd36b44;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        * {
+          animation: none !important;
+          transition: none !important;
         }
-      });
-    },{threshold:.4});
-    sections.forEach(s=>io.observe(s));
+      }
 
-    const smooth=()=>{
-      sections.forEach(s=>{
-        const img=s.querySelector('.media img');
-        if(!img) return;
-        const depth=.25,rect=s.getBoundingClientRect(),offset=rect.top*depth;
-        img.style.transform=`translateY(${offset}px) scale(1.1)`;
+      .bg-core {
+        position: fixed;
+        inset: -40%;
+        z-index: -3;
+        background: radial-gradient(
+            circle at 50% 35%,
+            #7b2cffbb,
+            transparent 60%
+          ),
+          conic-gradient(
+            from 0turn,
+            #ffc98222 0 25%,
+            transparent 25% 50%,
+            #ffc98222 50% 75%,
+            transparent 75% 100%
+          );
+        filter: blur(80px) saturate(130%);
+        opacity: 0.35;
+        animation: spin 55s linear infinite;
+        pointer-events: none;
+      }
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      nav.topbar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 56px;
+        background: rgba(0, 0, 0, 0.85);
+        backdrop-filter: blur(8px);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 20px;
+        z-index: 999;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      }
+      nav .logo {
+        font-weight: 800;
+        font-size: 20px;
+        color: var(--gold3);
+      }
+      nav .menu a {
+        color: #f5f4f4;
+        text-decoration: none;
+        margin: 0 14px;
+        font-weight: 600;
+        opacity: 0.9;
+        transition: 0.3s;
+      }
+      nav .menu a:hover,
+      nav .menu a.active {
+        color: var(--gold2);
+        opacity: 1;
+      }
+      .spacer {
+        height: 56px;
+      }
+
+      header {
+        text-align: center;
+        padding: 80px 16px 25px;
+      }
+      header h1 {
+        font-size: 58px;
+        font-weight: 800;
+        background: linear-gradient(
+          90deg,
+          var(--gold1),
+          var(--gold2),
+          var(--gold3)
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+      header p {
+        max-width: 880px;
+        margin: 14px auto;
+        color: var(--muted);
+        opacity: 0.9;
+        font-size: 18px;
+      }
+
+      section.section {
+        position: relative;
+        min-height: 100vh;
+        display: grid;
+        place-items: center;
+        isolation: isolate;
+        transition: opacity 1.2s ease;
+      }
+      .media {
+        position: absolute;
+        inset: 0;
+        z-index: -2;
+        overflow: hidden;
+        will-change: transform, filter;
+      }
+      .media img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        filter: brightness(0.55);
+        transform: translateY(-5%) scale(1.1);
+        transition: transform 1.6s cubic-bezier(0.4, 0.18, 0.25, 1),
+          filter 1.4s ease;
+      }
+      .overlay {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          to bottom,
+          rgba(13, 11, 34, 0.25) 0%,
+          rgba(13, 11, 34, 0.55) 55%,
+          rgba(13, 11, 34, 0.9) 100%
+        );
+        z-index: -1;
+      }
+      .section.visible .media img {
+        filter: brightness(0.9);
+        transform: translateY(0) scale(1.05);
+      }
+
+      .content {
+        background: rgba(21, 19, 43, 0.55);
+        border: 1px solid var(--border);
+        padding: 26px 24px;
+        border-radius: 18px;
+        box-shadow: 0 8px 28px rgba(0, 0, 0, 0.45);
+        backdrop-filter: blur(8px);
+        max-width: 950px;
+        transform: translateY(40px);
+        opacity: 0;
+        transition: opacity 1s ease, transform 1s ease;
+      }
+      .section.visible .content {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .title {
+        font-size: 42px;
+        font-weight: 800;
+        margin-bottom: 10px;
+        text-align: center;
+        background: linear-gradient(90deg, #ffeab0, #ffd87b, #ff9f43);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+      .hint {
+        font-size: 14px;
+        color: #bfbbe2;
+        opacity: 0.9;
+        text-align: center;
+        margin-bottom: 10px;
+      }
+      .fact {
+        display: flex;
+        gap: 12px;
+        margin: 10px 0;
+        color: #e9e8ff;
+        line-height: 1.75;
+        opacity: 0;
+        transform: translateY(10px);
+        transition: opacity 0.8s ease, transform 0.8s ease;
+      }
+      .section.visible .fact {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      .fact:nth-child(2) {
+        transition-delay: 0.15s;
+      }
+      .fact:nth-child(3) {
+        transition-delay: 0.3s;
+      }
+      .fact:nth-child(4) {
+        transition-delay: 0.45s;
+      }
+      .bullet {
+        min-width: 8px;
+        height: 8px;
+        margin-top: 10px;
+        border-radius: 50%;
+        background: #ffd68a;
+        box-shadow: 0 0 10px rgba(255, 214, 138, 0.65);
+      }
+
+      .dots {
+        position: fixed;
+        top: 50%;
+        right: 20px;
+        transform: translateY(-50%);
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        z-index: 10;
+      }
+      .dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: #6e68a4;
+        transition: 0.25s;
+        cursor: pointer;
+      }
+      .dot.active {
+        transform: scale(1.3);
+        background: #ffd68a;
+        box-shadow: 0 0 10px rgba(255, 214, 138, 0.7);
+      }
+
+      footer {
+        text-align: center;
+        padding: 40px 0 30px;
+        color: #c9c9da;
+        font-size: 13px;
+        border-top: 1px solid rgba(255, 255, 255, 0.06);
+      }
+      @media (max-width: 768px) {
+        header h1 {
+          font-size: 42px;
+        }
+        .title {
+          font-size: 30px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="topbar">
+      <div class="logo">D.C. TOUR</div>
+      <div class="menu">
+        <a href="index.html">HOME</a>
+        <a href="explore.html" class="active">EXPLORE</a>
+        <a href="profile.html">PROFILE</a>
+      </div>
+    </nav>
+    <div class="spacer"></div>
+
+    <div class="bg-core"></div>
+
+    <header>
+      <h1>Explore Washington D.C.</h1>
+      <p>
+        สำรวจมหานครแห่งอำนาจและอุดมการณ์ของโลก ผ่านมุมมองทางสถาปัตยกรรม
+        ประวัติศาสตร์ และวัฒนธรรมที่ลึกซึ้ง
+      </p>
+    </header>
+
+    <div class="dots" id="dots"></div>
+
+    <section class="section" data-name="Lincoln">
+      <div class="media">
+        <picture
+          ><source
+            srcset="pic/explore/exploreWEBP/lincoln6.webp"
+            type="image/webp" />
+          <img
+            src="pic/explore/lincoln.jpg"
+            alt="Lincoln Memorial"
+            loading="lazy"
+        /></picture>
+      </div>
+      <div class="overlay"></div>
+      <div class="content">
+        <h2 class="title">Lincoln Memorial</h2>
+        <p class="hint">สถาปัตยกรรมกรีกคลาสสิก / สร้างเสร็จปี 1922</p>
+        <div class="fact">
+          <span class="bullet"></span>
+          <p>
+            <b>หินอ่อนกับสัญลักษณ์อุดมการณ์:</b> โครงสร้างเลียนแบบวิหารกรีก
+            เพื่อสื่อถึง “ประชาธิปไตยกำเนิดจากเหตุผล”
+          </p>
+        </div>
+        <div class="fact">
+          <span class="bullet"></span>
+          <p>
+            <b>ตำแหน่งสายตา:</b> คำปราศรัย Gettysburg Address
+            จัดวางให้ตรงระดับสายตาผู้ชม เพื่อให้ “อ่านพร้อมรู้สึก”
+          </p>
+        </div>
+        <div class="fact">
+          <span class="bullet"></span>
+          <p>
+            <b>เวทีเปลี่ยนโลก:</b> ปี 1963 มาร์ติน ลูเธอร์ คิง จูเนียร์
+            กล่าวคำว่า <i>I Have a Dream</i> จุดไฟสิทธิมนุษยชนทั่วอเมริกา
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" data-name="Smithsonian">
+      <div class="media">
+        <picture
+          ><source
+            srcset="pic/explore/exploreWEBP/smithsonian.webp"
+            type="image/webp" />
+          <img
+            src="pic/explore/smithsonian.jpg"
+            alt="Smithsonian"
+            loading="lazy"
+        /></picture>
+      </div>
+      <div class="overlay"></div>
+      <div class="content">
+        <h2 class="title">Smithsonian Institution</h2>
+        <p class="hint">“เพื่อขยายองค์ความรู้ของมนุษยชาติ” — James Smithson</p>
+        <div class="fact">
+          <span class="bullet"></span>
+          <p>
+            <b>พิพิธภัณฑ์ฟรีแห่งชาติ:</b>
+            ก่อตั้งจากมรดกของนักวิทยาศาสตร์ชาวอังกฤษ เปิดให้เข้าชมฟรีกว่า 19
+            พิพิธภัณฑ์ทั่วเมือง
+          </p>
+        </div>
+        <div class="fact">
+          <span class="bullet"></span>
+          <p>
+            <b>คลังประวัติศาสตร์โลก:</b> เก็บสิ่งของกว่า 155 ล้านชิ้น
+            ตั้งแต่ยานอพอลโลถึงซากไดโนเสาร์
+          </p>
+        </div>
+        <div class="fact">
+          <span class="bullet"></span>
+          <p>
+            <b>ห้องวิจัยลับ:</b>
+            ห้องแล็บเบื้องหลังคือแหล่งความรู้ระดับโลกที่ประชาชนไม่เห็น
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" data-name="Capitol">
+      <div class="media">
+        <picture
+          ><img src="pic/explore/capitol3.jpg" alt="Capitol" loading="lazy"
+        /></picture>
+      </div>
+      <div class="overlay"></div>
+      <div class="content">
+        <h2 class="title">U.S. Capitol</h2>
+        <p class="hint">โดมแห่งอุดมการณ์ประชาธิปไตย — สูง ~88 ม.</p>
+        <div class="fact">
+          <span class="bullet"></span>
+          <p>
+            <b>เพดานแห่งเสรีภาพ:</b> "Apotheosis of Washington" แสดงจอร์จ
+            วอชิงตันเป็นผู้พิทักษ์อุดมการณ์
+          </p>
+        </div>
+        <div class="fact">
+          <span class="bullet"></span>
+          <p>
+            <b>เสียงแห่งประชาชน:</b> โครงสร้าง Rotunda
+            ออกแบบให้สะท้อนเสียงสื่อถึง “เสียงของชาติ”
+          </p>
+        </div>
+        <div class="fact">
+          <span class="bullet"></span>
+          <p>
+            <b>เส้นแกนเมือง:</b> ลากตรงจาก Capitol สู่ Lincoln Memorial
+            คือแกนพลังแห่งประชาธิปไตย
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" data-name="Half-Smoke">
+      <div class="media">
+        <picture
+          ><source
+            srcset="pic/explore/exploreWEBP/halfsmoke.webp"
+            type="image/webp" />
+          <img
+            src="pic/explore/interior-of-ben-s-chili-bowl-jpeg.jpg"
+            alt="Half-Smoke"
+            loading="lazy"
+        /></picture>
+      </div>
+      <div class="overlay"></div>
+      <div class="content">
+        <h2 class="title">Local Taste: Half-Smoke</h2>
+        <p class="hint">ตำนานแห่ง “Ben’s Chili Bowl” — ตั้งแต่ปี 1958</p>
+        <div class="fact">
+          <span class="bullet"></span>
+          <p>
+            <b>รสชาติแห่งเมือง:</b> ไส้กรอกเนื้อวัวและหมูบดหยาบครึ่งหนึ่ง
+            รมควันหอมพริกไทยเฉพาะตัว
+          </p>
+        </div>
+        <div class="fact">
+          <span class="bullet"></span>
+          <p>
+            <b>อาหารแห่งความเท่าเทียม:</b> จากนักดนตรีถึงประธานาธิบดี
+            นั่งโต๊ะเดียวกันภายใต้รสเดียว
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" data-name="Chinatown">
+      <div class="media">
+        <picture
+          ><source
+            srcset="pic/explore/exploreWEBP/chinatown.webp"
+            type="image/webp" />
+          <img src="pic/explore/chinatown5.jpg" alt="Chinatown" loading="lazy"
+        /></picture>
+      </div>
+      <div class="overlay"></div>
+      <div class="content">
+        <h2 class="title">Chinatown D.C.</h2>
+        <p class="hint">
+          Friendship Archway (1986) — กระเบื้องทองคำ ~7,000 ชิ้น
+        </p>
+        <div class="fact">
+          <span class="bullet"></span>
+          <p>
+            <b>ซุ้มแห่งมิตรภาพ:</b> ฟื้นฟูย่านหลังความเปลี่ยนแปลงเชิงเมือง
+            แสดงอัตลักษณ์จีนในอเมริกา
+          </p>
+        </div>
+        <div class="fact">
+          <span class="bullet"></span>
+          <p>
+            <b>จังหวะแสงเมือง:</b> เส้นแสงรถตัดกับศิลปะจีนในภาพ long-exposure
+            คือสัญลักษณ์ของความร่วมสมัย
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" data-name="Festivals">
+      <div class="media">
+        <picture
+          ><img
+            src="pic/explore/Cherry-Monument.png"
+            alt="Festivals & Events"
+            loading="lazy"
+        /></picture>
+      </div>
+      <div class="overlay"></div>
+      <div class="content">
+        <h2 class="title">Festivals & Events</h2>
+        <p class="hint">เทศกาลซากุระ — ของขวัญจากญี่ปุ่นปี 1912</p>
+        <div class="fact">
+          <span class="bullet"></span>
+          <p>
+            <b>Soft Power ดอกไม้:</b> ซากุระคือเครื่องมือทางการทูตเชิงวัฒนธรรม
+            สื่อถึงมิตรภาพที่ยั่งยืนระหว่างประเทศ
+          </p>
+        </div>
+        <div class="fact">
+          <span class="bullet"></span>
+          <p>
+            <b>เมืองที่มีชีพจร:</b> ปฏิทินเทศกาลกระจายทั้งปี
+            ทำให้เมืองมีชีวิตและเศรษฐกิจไม่หลับ
+          </p>
+        </div>
+        <div class="fact">
+          <span class="bullet"></span>
+          <p>
+            <b>เบื้องหลังประวัติศาสตร์:</b> งานนี้เกิดจากการมอบต้นซากุระ 3,000
+            ต้นจากโตเกียวสู่วอชิงตัน
+            เพื่อเชื่อมสัมพันธ์สองชาติหลังสงครามรัสเซีย–ญี่ปุ่น
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <footer>© 2025 Washington D.C. Virtual Tour | Developed by FlukeTON</footer>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const sections = [...document.querySelectorAll(".section")];
+        const dotsWrap = document.getElementById("dots");
+        sections.forEach((_, i) => {
+          const d = document.createElement("div");
+          d.className = "dot";
+          d.onclick = () => sections[i].scrollIntoView({ behavior: "smooth" });
+          dotsWrap.appendChild(d);
+        });
+        const dots = [...document.querySelectorAll(".dot")];
+        const io = new IntersectionObserver(
+          (es) => {
+            es.forEach((e) => {
+              if (e.isIntersecting) {
+                e.target.classList.add("visible");
+                const i = sections.indexOf(e.target);
+                dots.forEach((d, idx) =>
+                  d.classList.toggle("active", idx === i)
+                );
+              }
+            });
+          },
+          { threshold: 0.4 }
+        );
+        sections.forEach((s) => io.observe(s));
+
+        const smooth = () => {
+          sections.forEach((s) => {
+            const img = s.querySelector(".media img");
+            if (!img) return;
+            const depth = 0.25,
+              rect = s.getBoundingClientRect(),
+              offset = rect.top * depth;
+            img.style.transform = `translateY(${offset}px) scale(1.1)`;
+          });
+          requestAnimationFrame(smooth);
+        };
+        requestAnimationFrame(smooth);
       });
-      requestAnimationFrame(smooth);
-    };
-    requestAnimationFrame(smooth);
-  });
-  </script>
-</body>
+    </script>
+    <script src="js/auth.js" defer></script>
+  </body>
 </html>

@@ -1,11 +1,9 @@
-// ✅ ORIGINAL CLEAN NAVBAR (เหมือนรูปเดิม 100%)
 (function () {
 
   const token = localStorage.getItem("token");
   const user = JSON.parse(localStorage.getItem("user") || "{}");
   const current = location.pathname.split("/").pop() || "index.html";
 
-  // ❌ หน้า login / register / forgot / reset ไม่ต้องมี navbar
   const HIDE_ON = new Set(["login.html", "register.html", "forgot.html", "reset.html"]);
   if (HIDE_ON.has(current)) return;
 

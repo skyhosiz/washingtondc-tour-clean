@@ -1,156 +1,385 @@
 <!DOCTYPE html>
 <html lang="th">
-<head>
-  <!-- 📊 Google Analytics -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-VGBZS316J9"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag("js", new Date());
-    gtag("config","G-VGBZS316J9");
-  </script>
+  <head>
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-VGBZS316J9"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+      gtag("config", "G-VGBZS316J9");
+    </script>
 
-  <!-- 🔐 Auth & Navbar -->
-  <script src="js/auth.js"></script>
-  <script src="js/nav.js" defer></script>
+    <script src="js/auth.js"></script>
+    <script src="js/nav.js" defer></script>
 
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Register | Washington D.C.</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Register | Washington D.C.</title>
 
-  <!-- 🖋 Font -->
-  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600;800&display=swap" rel="stylesheet" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600;800&display=swap"
+      rel="stylesheet"
+    />
 
-  <style>
-    *{margin:0;padding:0;box-sizing:border-box}
-    body{
-      font-family:"Kanit",sans-serif;
-      height:100svh;
-      display:flex;justify-content:center;align-items:center;
-      background:url("pic/dc_sunset.png") no-repeat center/cover;
-    }
-    .reg-container{
-      width:420px;background:rgba(10,0,25,.83);
-      border-radius:26px;padding:38px;text-align:center;color:white;
-      box-shadow:0 0 38px rgba(255,140,30,.28);
-    }
-    h2{
-      font-size:34px;margin-bottom:20px;font-weight:800;
-      background:linear-gradient(90deg,#ffd089,#ff8a25);
-      -webkit-background-clip:text;background-clip:text;color:transparent;
-    }
-    input{
-      width:100%;padding:12px;border-radius:10px;border:none;
-      font-size:17px;margin:10px 0;color:#333;
-    }
-    button{
-      width:100%;padding:12px;margin-top:12px;
-      background:linear-gradient(90deg,#ffe29c,#ff8522);
-      border:none;border-radius:12px;font-size:18px;
-      font-weight:bold;cursor:pointer;transition:.25s;color:#222;
-    }
-    button:hover{transform:scale(1.05)}
-    .login-box{margin-top:18px;font-size:15px}
-    .login-box a{
-      margin-left:6px;padding:4px 12px;background:#ff7a00;
-      border-radius:8px;text-decoration:none;color:white;font-weight:700;
-    }
-    .login-box a:hover{background:#ff9831}
-  </style>
-</head>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: "Kanit", sans-serif;
+        height: 100svh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: url("pic/dc_sunset.png") no-repeat center/cover;
+      }
+      .reg-container {
+        width: 420px;
+        background: rgba(10, 0, 25, 0.83);
+        border-radius: 26px;
+        padding: 38px;
+        text-align: center;
+        color: white;
+        box-shadow: 0 0 38px rgba(255, 140, 30, 0.28);
+      }
+      h2 {
+        font-size: 34px;
+        margin-bottom: 20px;
+        font-weight: 800;
+        background: linear-gradient(90deg, #ffd089, #ff8a25);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+      }
+      input {
+        width: 100%;
+        padding: 12px;
+        border-radius: 10px;
+        border: none;
+        font-size: 17px;
+        margin: 10px 0;
+        color: #333;
+      }
+      button {
+        width: 100%;
+        padding: 12px;
+        margin-top: 12px;
+        background: linear-gradient(90deg, #ffe29c, #ff8522);
+        border: none;
+        border-radius: 12px;
+        font-size: 18px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: 0.25s;
+        color: #222;
+      }
+      button:hover {
+        transform: scale(1.05);
+      }
+      .login-box {
+        margin-top: 18px;
+        font-size: 15px;
+      }
+      .login-box a {
+        margin-left: 6px;
+        padding: 4px 12px;
+        background: #ff7a00;
+        border-radius: 8px;
+        text-decoration: none;
+        color: white;
+        font-weight: 700;
+      }
+      .login-box a:hover {
+        background: #ff9831;
+      }
+    </style>
+  </head>
 
-<body>
-  <div class="reg-container">
-    <h2>สร้างบัญชี</h2>
+  <body>
+    <div class="reg-container">
+      <h2>สร้างบัญชี</h2>
 
-    <input type="text" id="username" placeholder="ชื่อผู้ใช้ (4–16 ตัว)">
-    <input type="email" id="email" placeholder="อีเมล" autocomplete="email">
-    <input type="password" id="password" placeholder="รหัสผ่าน (แนะนำ: ตัวใหญ่+ตัวเลข)" autocomplete="new-password">
+      <input type="text" id="username" placeholder="ชื่อผู้ใช้ (4–16 ตัว)" />
+      <input type="email" id="email" placeholder="อีเมล" autocomplete="email" />
+      <input
+        type="password"
+        id="password"
+        placeholder="รหัสผ่าน (≥ 8 ตัว + ตัวใหญ่ + ตัวเลข)"
+        autocomplete="new-password"
+      />
 
-    <button id="regBtn" onclick="register()">สมัครสมาชิก</button>
+      <button id="regBtn" onclick="register()">สมัครสมาชิก</button>
 
-    <div class="login-box">
-      มีบัญชีแล้ว? <a href="login.html">เข้าสู่ระบบ</a>
+      <div class="login-box">
+        มีบัญชีแล้ว? <a href="login.html">เข้าสู่ระบบ</a>
+      </div>
     </div>
-  </div>
 
-<script>
-const API_BASE =
-  location.hostname === "localhost"
-    ? "http://localhost:3000"
-    : "https://washingtondc-tour-clean-1.onrender.com";
+    <script>
+      const API_BASE =
+        location.hostname === "localhost"
+          ? "http://localhost:3000"
+          : "https://washingtondc-tour-clean-1.onrender.com";
 
-// ❌ อีเมลทิ้ง / spam domain
-const BAD_DOMAINS = [
-  "mailinator.com","yopmail.com","tempmail.com","guerrillamail.com",
-  "10minutemail.com","trashmail.com","getnada.com","fakeinbox.com"
-];
+      const BAD_DOMAINS = [
+        "0-mail.com",
+        "0815.ru",
+        "10minutemail.com",
+        "10minutemail.co.uk",
+        "10minutemail.de",
+        "10minutemail.fr",
+        "10minutemail.net",
+        "10minutemail.org",
+        "10minutemailbox.com",
+        "10minutemails.in",
+        "10minutemail.us",
+        "1st-forms.com",
+        "20minutemail.com",
+        "2prong.com",
+        "3mail.ga",
+        "4warding.net",
+        "6paq.com",
+        "9ox.net",
+        "a-bc.net",
+        "anonbox.net",
+        "anonymbox.com",
+        "antichef.com",
+        "antichef.net",
+        "antispam.de",
+        "armyspy.com",
+        "discard.email",
+        "discardmail.com",
+        "discardmail.de",
+        "disposable-mail.com",
+        "dodgeit.com",
+        "dodgit.com",
+        "dropmail.me",
+        "e4ward.com",
+        "emailondeck.com",
+        "emailtemporanea.net",
+        "emailtemporar.ro",
+        "fakeinbox.com",
+        "fakeinbox.net",
+        "fakemail.fr",
+        "fakemailgenerator.com",
+        "flyspam.com",
+        "getairmail.com",
+        "getnada.com",
+        "getonemail.com",
+        "guerrillamail.biz",
+        "guerrillamail.com",
+        "guerrillamail.de",
+        "guerrillamail.info",
+        "guerrillamail.net",
+        "guerrillamail.org",
+        "guerrillamailblock.com",
+        "inboxclean.com",
+        "incognitomail.com",
+        "instant-mail.de",
+        "kasmail.com",
+        "killmail.com",
+        "killmail.net",
+        "kismail.ru",
+        "klassmaster.com",
+        "klassmaster.net",
+        "lol.ovpn.to",
+        "lroid.com",
+        "mail-temporaire.fr",
+        "maildrop.cc",
+        "mailnesia.com",
+        "mailnull.com",
+        "mailinator.com",
+        "mailinator.org",
+        "mailinator2.com",
+        "mintemail.com",
+        "moakt.com",
+        "my10minutemail.com",
+        "mytrashmail.com",
+        "mytemp.email",
+        "mailsac.com",
+        "mailcatch.com",
+        "mailtothis.com",
+        "mailbox52.ga",
+        "spam4.me",
+        "spambooger.com",
+        "spambog.com",
+        "spambog.de",
+        "spambog.ru",
+        "spamex.com",
+        "spamfree.eu",
+        "spamfree24.de",
+        "spamfree24.eu",
+        "spamfree24.info",
+        "spamfree24.net",
+        "spamfree24.org",
+        "spamfree24.com",
+        "spamgourmet.com",
+        "spammotel.com",
+        "spamspot.com",
+        "stop-my-spam.pp.ua",
+        "superrito.com",
+        "tagyourself.com",
+        "temp-mail.com",
+        "temp-mail.de",
+        "temp-mail.org",
+        "temp-mail.io",
+        "tempmail.eu",
+        "tempmail.de",
+        "tempmailaddress.com",
+        "tempmailbox.com",
+        "tempmaildemo.com",
+        "tempmailer.com",
+        "tempmailer.de",
+        "tempmailo.com",
+        "tempmailpro.com",
+        "tempmail.tork.org",
+        "tempmail.us",
+        "tempinbox.com",
+        "tempmail.ca",
+        "throwawaymail.com",
+        "trashmail.com",
+        "trash-mail.com",
+        "trashmail.de",
+        "trashmail.me",
+        "trashmail.net",
+        "trashmail.org",
+        "instantemailaddress.com",
+        "mvrht.net",
+        "10minmail.info",
+        "easytrashmail.com",
+        "dudmail.com",
+        "deadaddress.com",
+        "0815.ru",
+        "ezstest.com",
+        "litedrop.com",
+        "nowmymail.com",
+        "rcpt.at",
+        "spammail.me",
+        "yopmail.com",
+        "yopmail.fr",
+        "yopmail.net",
+        "yopmail.org",
+        "yopmail.biz",
+        " yopmail.info",
+        "yopmail.pp.ua",
+        "cool.fr.nf",
+        "jetable.org",
+        "hidemail.de",
+        "sharklasers.com",
+        "grr.la",
+        "spam.su",
+        "spamavert.com",
+        "gishpuppy.com",
+        "trashmail.io",
+        "fux0ringduh.com",
+        "mailme.lv",
+        "nospam.wins.com",
+        "nomail.ch",
+        "nobulk.com",
+        "kurzepost.de",
+        "plexolan.de",
+        "putthisinyourspamdatabase.com",
+        "sendspamhere.com",
+        "shitmail.me",
+        "sneakemail.com",
+        "stuffmail.de",
+        "teleworm.us",
+        "thismail.net",
+        "wh4f.org",
+        "whyspam.me",
+        "wegwerpmailadres.nl",
+        "wegwerfmail.de",
+        "wegwerfemail.com",
+        "wegwerf-email-addressen.de",
+        "webemail.me",
+        "walkmail.net",
+        "veryrealemail.com",
+        "trashymail.com",
+        "20minutemail.it",
+        "binkmail.com",
+        "bugmenot.com",
+        "meltmail.com",
+        "spamcero.com",
+        "spamthis.co.uk",
+        "tempemail.net",
+        "trbvm.com",
+        "zoemail.org",
+        "guerrillamailblock.com",
+        "mailmoat.com",
+        "uroid.com",
+        "mailnesia.com",
+        "spammotel.com",
+      ];
 
-// ✅ เช็ค password เบื้องต้นแบบแข็งแรง
-function strongPass(p){
-  return p.length>=8 && /[A-Z]/.test(p) && /\d/.test(p);
-}
+      function strongPass(p) {
+        return p.length >= 8 && /[A-Z]/.test(p) && /\d/.test(p);
+      }
 
-async function register(){
-  const btn = document.getElementById("regBtn");
-  const username = usernameInput.value.trim();
-  const email = emailInput.value.trim().toLowerCase();
-  const password = passwordInput.value.trim();
+      async function register() {
+        const btn = document.getElementById("regBtn");
+        const username = usernameInput.value.trim();
+        const email = emailInput.value.trim().toLowerCase();
+        const password = passwordInput.value.trim();
 
-  if(!username || !email || !password)
-    return alert("⚠️ กรุณากรอกข้อมูลให้ครบ!");
+        if (!username || !email || !password)
+          return alert("⚠️ กรุณากรอกข้อมูลให้ครบ!");
 
-  if(username.length < 4 || username.length > 16)
-    return alert("⚠️ ชื่อผู้ใช้ต้อง 4–16 ตัว");
+        if (username.length < 4 || username.length > 16)
+          return alert("⚠️ ชื่อผู้ใช้ต้อง 4–16 ตัว");
 
-  if(!/^[A-Za-z0-9_.]+$/.test(username))
-    return alert("⚠️ ใช้ A-Z, 0-9, _, . เท่านั้น");
+        if (!/^[A-Za-z0-9_.]+$/.test(username))
+          return alert("⚠️ ใช้ A-Z, 0-9, _, . เท่านั้น");
 
-  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
-    return alert("📧 อีเมลไม่ถูกต้อง!");
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
+          return alert("📧 อีเมลไม่ถูกต้อง!");
 
-  const domain = email.split("@")[1];
-  if(BAD_DOMAINS.includes(domain))
-    return alert("🚫 ไม่รองรับอีเมลแบบทิ้ง!");
+        const domain = email.split("@")[1];
+        if (BAD_DOMAINS.includes(domain))
+          return alert("🚫 ไม่รองรับอีเมลแบบทิ้ง!");
 
-  if(!strongPass(password))
-    return alert("🔐 รหัสผ่านแนะนำ: ≥ 8 ตัว + ตัวใหญ่ + ตัวเลข");
+        if (!strongPass(password))
+          return alert("🔐 ใช้รหัสผ่านแนะนำ: ≥ 8 ตัว + ตัวใหญ่ + ตัวเลข");
 
-  btn.disabled = true;
-  const oldText = btn.textContent;
-  btn.textContent = "กำลังสมัคร...";
+        btn.disabled = true;
+        const oldText = btn.textContent;
+        btn.textContent = "กำลังสมัคร...";
 
-  try{
-    const res = await fetch(`${API_BASE}/api/auth/register`, {
-      method:"POST",
-      headers:{ "Content-Type":"application/json" },
-      body:JSON.stringify({ username, email, password }),
-    });
+        try {
+          const res = await fetch(`${API_BASE}/api/auth/register`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ username, email, password }),
+          });
 
-    const data = await res.json().catch(()=>null);
+          const data = await res.json().catch(() => null);
 
-    if(res.ok && data.status === "success"){
-      gtag("event","sign_up",{ method:"Email" });
-      alert("✅ สมัครสำเร็จ! โปรดเข้าสู่ระบบ");
-      return location.href = "login.html";
-    }
+          if (res.ok && data.status === "success") {
+            alert("✅ สมัครสำเร็จ!\n🟡 โปรดยืนยันอีเมลก่อนเข้าสู่ระบบ");
+            return (location.href = "login.html");
+          }
 
-    alert(data?.message || "❌ อีเมลถูกใช้แล้ว!");
+          alert(data?.message || "❌ อีเมลนี้ถูกใช้แล้ว!");
+        } catch (err) {
+          console.error(err);
+          alert("🚨 ระบบมีปัญหา กรุณาลองใหม่");
+        }
 
-  }catch(err){
-    alert("🚨 ระบบมีปัญหา กรุณาลองใหม่");
-  }
+        btn.disabled = false;
+        btn.textContent = oldText;
+      }
+    </script>
 
-  btn.disabled = false;
-  btn.textContent = oldText;
-}
-</script>
-
-<script>
-const usernameInput = document.getElementById("username");
-const emailInput = document.getElementById("email");
-const passwordInput = document.getElementById("password");
-</script>
-
-</body>
+    <script>
+      const usernameInput = document.getElementById("username");
+      const emailInput = document.getElementById("email");
+      const passwordInput = document.getElementById("password");
+    </script>
+  </body>
 </html>

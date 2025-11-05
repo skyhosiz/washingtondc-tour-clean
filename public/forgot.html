@@ -1,150 +1,194 @@
 <!DOCTYPE html>
 <html lang="th">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Forgot Password | Washington D.C.</title>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Forgot Password | Washington D.C.</title>
 
-  <!-- Font -->
-  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600;700&display=swap" rel="stylesheet"/>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600;700&display=swap"
+      rel="stylesheet"
+    />
 
-  <!-- ปิด nav.js -->
-  <script> window.DISABLE_NAV_AUTH = true; </script>
+    <script>
+      window.DISABLE_NAV_AUTH = true;
+    </script>
 
-  <!-- ✅ auth.js สำหรับ Public Page -->
-  <script src="js/auth.js" defer></script>
+    <script src="js/auth.js" defer></script>
 
-  <style>
-    *{margin:0;padding:0;box-sizing:border-box}
-    body{
-      font-family:"Kanit",sans-serif;
-      background:url("pic/dc_sunset.png") center/cover no-repeat fixed;
-      display:flex;justify-content:center;align-items:center;
-      height:100svh;padding:20px;
-    }
-    .box{
-      width:100%; max-width:420px;
-      padding:40px 34px; text-align:center;
-      background:rgba(10,0,25,.85); border-radius:26px;
-      box-shadow:0 0 38px rgba(255,140,30,.35);
-      animation:fade .6s ease-out
-    }
-    @keyframes fade{from{opacity:0;transform:translateY(20px)}to{opacity:1}}
-    h2{
-      font-size:32px;margin-bottom:20px;font-weight:800;
-      background:linear-gradient(90deg,#ffd089,#ff8a25);
-      -webkit-background-clip:text;background-clip:text;color:transparent;
-      text-shadow:0 0 14px rgba(255,150,30,.45)
-    }
-    p{
-      color:#ffd499;font-size:15px;margin-bottom:10px;
-    }
-    input,button{
-      width:100%;border:none;border-radius:12px;
-      font-size:17px;margin:10px 0;padding:13px
-    }
-    input{background:#fff;color:#222}
-    button{
-      font-weight:700;cursor:pointer;transition:.25s;
-      color:#222;background:linear-gradient(90deg,#ffe29c,#ff8522)
-    }
-    button:hover{
-      transform:scale(1.05);
-      box-shadow:0 0 26px rgba(255,140,30,.85)
-    }
-    a{
-      display:block;margin-top:12px;
-      color:#ffd28a;text-decoration:none;
-      font-weight:600;text-align:center
-    }
-  </style>
-</head>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: "Kanit", sans-serif;
+        background: url("pic/dc_sunset.png") center/cover no-repeat fixed;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100svh;
+        padding: 20px;
+      }
+      .box {
+        width: 100%;
+        max-width: 420px;
+        padding: 40px 34px;
+        text-align: center;
+        background: rgba(10, 0, 25, 0.85);
+        border-radius: 26px;
+        box-shadow: 0 0 38px rgba(255, 140, 30, 0.35);
+        animation: fade 0.6s ease-out;
+      }
+      @keyframes fade {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+        }
+      }
+      h2 {
+        font-size: 32px;
+        margin-bottom: 20px;
+        font-weight: 800;
+        background: linear-gradient(90deg, #ffd089, #ff8a25);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        text-shadow: 0 0 14px rgba(255, 150, 30, 0.45);
+      }
+      p {
+        color: #ffd499;
+        font-size: 15px;
+        margin-bottom: 10px;
+      }
+      input,
+      button {
+        width: 100%;
+        border: none;
+        border-radius: 12px;
+        font-size: 17px;
+        margin: 10px 0;
+        padding: 13px;
+      }
+      input {
+        background: #fff;
+        color: #222;
+      }
+      button {
+        font-weight: 700;
+        cursor: pointer;
+        transition: 0.25s;
+        color: #222;
+        background: linear-gradient(90deg, #ffe29c, #ff8522);
+      }
+      button:hover {
+        transform: scale(1.05);
+        box-shadow: 0 0 26px rgba(255, 140, 30, 0.85);
+      }
+      a {
+        display: block;
+        margin-top: 12px;
+        color: #ffd28a;
+        text-decoration: none;
+        font-weight: 600;
+        text-align: center;
+      }
+    </style>
+  </head>
 
-<body>
+  <body>
+    <div class="box">
+      <h2>ลืมรหัสผ่าน?</h2>
+      <p>กรอกอีเมลเพื่อรับลิงก์ตั้งรหัสผ่านใหม่</p>
 
-  <div class="box">
-    <h2>ลืมรหัสผ่าน?</h2>
-    <p>กรอกอีเมลเพื่อรับลิงก์ตั้งรหัสผ่านใหม่</p>
+      <input
+        type="email"
+        id="email"
+        placeholder="อีเมล"
+        autocomplete="email"
+        required
+      />
 
-    <input type="email" id="email" placeholder="อีเมล" autocomplete="email" required>
+      <button id="sendBtn" onclick="onForgot()">ส่งอีเมลรีเซ็ต</button>
 
-    <button id="sendBtn" onclick="onForgot()">ส่งอีเมลรีเซ็ต</button>
+      <a href="login.html">ย้อนกลับไปเข้าสู่ระบบ</a>
+    </div>
 
-    <a href="login.html">ย้อนกลับไปเข้าสู่ระบบ</a>
-  </div>
+    <script>
+      const API_BASE =
+        location.hostname === "localhost"
+          ? "http://localhost:3000"
+          : "https://washingtondc-tour-clean-1.onrender.com";
 
-<script>
-const API_BASE = location.hostname === "localhost"
-  ? "http://localhost:3000"
-  : "https://washingtondc-tour-clean-1.onrender.com";
+      const COOLDOWN = 150;
+      const BTN = document.getElementById("sendBtn");
+      const EMAIL = document.getElementById("email");
 
-const COOLDOWN = 60; // ✅ ป้องกันสแปม
-const BTN = document.getElementById("sendBtn");
-const EMAIL = document.getElementById("email");
+      checkCooldown();
 
-checkCooldown();
+      function checkCooldown() {
+        const last = localStorage.getItem("resetCooldown");
+        if (!last) return;
 
-function checkCooldown() {
-  const last = localStorage.getItem("resetCooldown");
-  if (!last) return;
+        const diff = Math.floor((Date.now() - parseInt(last)) / 1000);
+        if (diff < COOLDOWN) {
+          disableButton(COOLDOWN - diff);
+        }
+      }
 
-  const diff = Math.floor((Date.now() - parseInt(last)) / 1000);
-  if (diff < COOLDOWN) {
-    disableButton(COOLDOWN - diff);
-  }
-}
+      function disableButton(t) {
+        BTN.disabled = true;
+        BTN.innerText = `รอ ${t} วิ`;
 
-function disableButton(t) {
-  BTN.disabled = true;
-  BTN.innerText = `รอ ${t} วิ`;
+        const interval = setInterval(() => {
+          t--;
+          BTN.innerText = `รอ ${t} วิ`;
 
-  const interval = setInterval(() => {
-    t--;
-    BTN.innerText = `รอ ${t} วิ`;
+          if (t <= 0) {
+            clearInterval(interval);
+            BTN.disabled = false;
+            BTN.innerText = "ส่งอีเมลรีเซ็ต";
+            localStorage.removeItem("resetCooldown");
+          }
+        }, 1000);
+      }
 
-    if (t <= 0) {
-      clearInterval(interval);
-      BTN.disabled = false;
-      BTN.innerText = "ส่งอีเมลรีเซ็ต";
-      localStorage.removeItem("resetCooldown");
-    }
-  }, 1000);
-}
+      async function onForgot() {
+        const email = EMAIL.value.trim();
+        if (!email) return alert("กรุณากรอกอีเมล!");
 
-async function onForgot() {
-  const email = EMAIL.value.trim();
-  if (!email) return alert("กรุณากรอกอีเมล!");
+        BTN.disabled = true;
+        BTN.innerText = "กำลังส่ง...";
 
-  BTN.disabled = true;
-  BTN.innerText = "กำลังส่ง...";
+        try {
+          const res = await fetch(`${API_BASE}/api/auth/forgot`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email }),
+          });
 
-  try {
-    const res = await fetch(`${API_BASE}/api/auth/forgot`, {
-      method:"POST",
-      headers:{ "Content-Type":"application/json" },
-      body:JSON.stringify({ email }),
-    });
+          const data = await res.json().catch(() => null);
 
-    const data = await res.json().catch(()=>null);
-
-    if(res.ok){
-      alert("✅ หากอีเมลนี้อยู่ในระบบ จะได้รับลิงก์รีเซ็ตรหัสผ่าน");
-      localStorage.setItem("resetCooldown", Date.now());
-      disableButton(COOLDOWN);
-    }else{
-      alert(data?.message || "❌ เกิดข้อผิดพลาด");
-      BTN.disabled = false;
-      BTN.innerText = "ส่งอีเมลรีเซ็ต";
-    }
-
-  }catch(err){
-    console.error("Forgot Error:", err);
-    alert("🚨 ระบบมีปัญหา กรุณาลองใหม่");
-    BTN.disabled = false;
-    BTN.innerText = "ส่งอีเมลรีเซ็ต";
-  }
-}
-</script>
-
-</body>
+          if (res.ok) {
+            alert("✅ หากอีเมลนี้อยู่ในระบบ จะได้รับลิงก์รีเซ็ตรหัสผ่าน");
+            localStorage.setItem("resetCooldown", Date.now());
+            disableButton(COOLDOWN);
+          } else {
+            alert(data?.message || "❌ เกิดข้อผิดพลาด");
+            BTN.disabled = false;
+            BTN.innerText = "ส่งอีเมลรีเซ็ต";
+          }
+        } catch (err) {
+          console.error("Forgot Error:", err);
+          alert("🚨 ระบบมีปัญหา กรุณาลองใหม่");
+          BTN.disabled = false;
+          BTN.innerText = "ส่งอีเมลรีเซ็ต";
+        }
+      }
+    </script>
+  </body>
 </html>

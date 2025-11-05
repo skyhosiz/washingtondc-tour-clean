@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="th">
   <head>
-    <!-- 📊 Google Analytics -->
     <script
       async
       src="https://www.googletagmanager.com/gtag/js?id=G-VGBZS316J9"
@@ -19,11 +18,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>History & Story | Washington D.C.</title>
 
-    <!-- 🔒 Auth / Nav -->
     <script src="js/auth.js"></script>
     <script src="js/nav.js" defer></script>
 
-    <!-- 🖋 Font -->
     <link
       href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600;800&display=swap"
       rel="stylesheet"
@@ -61,7 +58,6 @@
         border-radius: 2px;
       }
 
-      /* 🌌 Animated Background */
       .circuit-bg,
       .circuit-lines {
         position: fixed;
@@ -116,7 +112,6 @@
         }
       }
 
-      /* 📘 Section Styling */
       .section {
         width: 90%;
         background: linear-gradient(145deg, #1b1333, #2a1b55);
@@ -176,7 +171,6 @@
         }
       }
 
-      /* 🏛 Popup */
       .popup {
         position: fixed;
         inset: 0;
@@ -265,7 +259,6 @@
     <div class="circuit-lines"></div>
     <h1>History & Story</h1>
 
-    <!-- 🕰️ Sections -->
     <div class="section">
       <img src="pic/His/HIS.png" />
       <div>
@@ -379,7 +372,6 @@
       </div>
     </div>
 
-    <!-- 📖 Popup -->
     <div id="popup" class="popup">
       <div class="popup-content">
         <span class="close">&times;</span>
@@ -394,7 +386,6 @@
     </div>
 
     <script>
-      // 👁 Section Reveal
       const observer = new IntersectionObserver(
         (entries) => {
           entries.forEach((e) => {
@@ -407,7 +398,6 @@
         .querySelectorAll(".section")
         .forEach((sec) => observer.observe(sec));
 
-      // 🧠 Popup Data (ครบทุกหัวข้อ)
       const deepInfo = {
         "Birth of Washington D.C.": {
           img: "pic/His/HIS.png",
@@ -539,7 +529,6 @@
         },
       };
 
-      // 🎬 Popup Logic
       const popup = document.getElementById("popup"),
         popupImg = document.getElementById("popup-img"),
         popupTitle = document.getElementById("popup-title"),
