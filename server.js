@@ -9,6 +9,7 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const cloudinary = require("cloudinary").v2;
 const { CloudinaryStorage } = require("multer-storage-cloudinary");
+const quizRouter = require("./routes/quiz");
 
 const app = express();
 
@@ -133,6 +134,7 @@ app.use(
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "public")));
+app.use("/api", quizRouter);
 
 
 app.post("/api/auth/register", async (req, res) => {
@@ -280,6 +282,20 @@ app.get("/api/explore", authRequired, async (req, res) => {
   }
 });
 
+app.get("/api/proxy-smithsonian/:id", async (req, res) => {
+  try {
+    const id = req.params.id.replace(/^edanmdm:/, "edanmdm-").replace(/^edanmdm--/, "edanmdm-");
+    const url = `https://edan.si.edu/openaccess/api/v1.0/content/${id}`;
+    const r = await fetch(url);
+    if (!r.ok) throw new Error(`Smithsonian fetch failed: ${r.status}`);
+    const data = await r.json();
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    res.json(data);
+  } catch (err) {
+    res.status(500).json({ error: "Failed to fetch Smithsonian data", detail: err.message });
+  }
+});
+
 
 app.get("/api/proxy-smithsonian/:id", async (req, res) => {
   try {
@@ -302,6 +318,8 @@ app.get("/api/proxy-smithsonian/:id", async (req, res) => {
     res.status(500).json({ error: "Failed to fetch Smithsonian data", detail: err.message });
   }
 });
+
+  app.use("/api", require("./routes/quiz"));
 
 
 app.get("/", (req, res) => {

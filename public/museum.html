@@ -27,133 +27,40 @@
     />
 
     <style>
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-        font-family: "Kanit", sans-serif;
+      *{margin:0;padding:0;box-sizing:border-box;font-family:"Kanit",sans-serif}
+      body{
+        background:#000 url("pic/smith-bg.png") center/cover fixed no-repeat;
+        color:#fff;text-align:center;overflow-x:hidden
       }
-
-      body {
-        background: #000 url("pic/smith-bg.png") center/cover fixed no-repeat;
-        color: #fff;
-        text-align: center;
-        overflow-x: hidden;
+      html{scroll-behavior:smooth}
+      .reveal{opacity:0;transform:translateY(40px);transition:all .9s cubic-bezier(.17,.67,.83,.67)}
+      .reveal.show{opacity:1;transform:translateY(0)}
+      header{padding:100px 8% 50px}
+      header img{width:55%;max-width:900px;border-radius:12px;border:4px solid #e09555;box-shadow:0 0 35px rgba(0,0,0,.65)}
+      h1{
+        font-size:60px;margin-top:25px;font-weight:800;
+        background:linear-gradient(90deg,#ffe7b3,#ffae52);
+        -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;color:transparent
       }
-
-      html {
-        scroll-behavior: smooth;
+      h2{opacity:.92;font-size:22px;margin-top:10px}
+      section{
+        width:88%;max-width:980px;margin:20px auto 60px;
+        background:rgba(0,0,0,.55);backdrop-filter:blur(6px);
+        padding:45px 35px;border-radius:16px
       }
-
-      .reveal {
-        opacity: 0;
-        transform: translateY(40px);
-        transition: all 0.9s cubic-bezier(0.17, 0.67, 0.83, 0.67);
+      section h3{
+        font-size:30px;margin-bottom:22px;
+        background:linear-gradient(90deg,#ffd28a,#ff952e);
+        -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;color:transparent
       }
-
-      .reveal.show {
-        opacity: 1;
-        transform: translateY(0);
-      }
-
-      header {
-        padding: 100px 8% 50px;
-      }
-
-      header img {
-        width: 55%;
-        max-width: 900px;
-        border-radius: 12px;
-        border: 4px solid #e09555;
-        box-shadow: 0 0 35px rgba(0, 0, 0, 0.65);
-      }
-
-      h1 {
-        font-size: 60px;
-        background: linear-gradient(90deg, #ffe7b3, #ffae52);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-        color: transparent;
-        margin-top: 25px;
-        font-weight: 800;
-      }
-
-      h2 {
-        opacity: 0.92;
-        font-size: 22px;
-        margin-top: 10px;
-      }
-
-      section {
-        width: 88%;
-        max-width: 980px;
-        margin: 20px auto 60px;
-        background: rgba(0, 0, 0, 0.55);
-        backdrop-filter: blur(6px);
-        padding: 45px 35px;
-        border-radius: 16px;
-      }
-
-      section h3 {
-        font-size: 30px;
-        background: linear-gradient(90deg, #ffd28a, #ff952e);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-        color: transparent;
-        margin-bottom: 22px;
-      }
-
-      p {
-        font-size: 19px;
-        line-height: 1.7;
-        color: #eee;
-      }
-
-      .btn-box {
-        margin-top: 30px;
-        display: flex;
-        justify-content: center;
-        gap: 15px;
-      }
-
-      .btnBack,
-      .btnView {
-        padding: 12px 28px;
-        border: none;
-        border-radius: 10px;
-        font-weight: 700;
-        font-family: "Kanit";
-        cursor: pointer;
-        transition: 0.25s;
-      }
-
-      .btnBack {
-        background: #ffb049;
-        color: #222;
-      }
-
-      .btnBack:hover {
-        background: #ffce7b;
-        transform: scale(1.07);
-      }
-
-      .btnView {
-        background: #e55b5b;
-        color: #fff;
-      }
-
-      .btnView:hover {
-        background: #ff8282;
-        transform: scale(1.07);
-      }
-
-      footer {
-        padding: 35px 0;
-        opacity: 0.85;
-        font-size: 14px;
-      }
+      p{font-size:19px;line-height:1.7;color:#eee}
+      .btn-box{margin-top:30px;display:flex;justify-content:center;gap:15px}
+      .btnBack,.btnView{padding:12px 28px;border:none;border-radius:10px;font-weight:700;cursor:pointer;transition:.25s}
+      .btnBack{background:#ffb049;color:#222}
+      .btnBack:hover{background:#ffce7b;transform:scale(1.07)}
+      .btnView{background:#e55b5b;color:#fff}
+      .btnView:hover{background:#ff8282;transform:scale(1.07)}
+      footer{padding:35px 0;opacity:.85;font-size:14px}
     </style>
   </head>
 
@@ -174,21 +81,13 @@
       </p>
 
       <div class="btn-box">
-        <button class="btnBack" onclick="location.href='index.html'">
-          ← Back to Home
-        </button>
-        <button
-          class="btnView"
-          onclick="window.open('https://www.si.edu/', '_blank')"
-        >
-          🔎 Official Website
-        </button>
+        <button class="btnBack" onclick="location.href='index.html'">← Back to Home</button>
+        <button class="btnView" onclick="window.open('https://www.si.edu/', '_blank')">🔎 Official Website</button>
       </div>
     </section>
 
     <footer class="reveal">
-      © 2025 Washington D.C. Tourism Project — Smithsonian Museum | Developed by
-      FlukeTON
+      © 2025 Washington D.C. Tourism Project — Smithsonian Museum | Developed by FlukeTON
     </footer>
 
     <script>
@@ -197,13 +96,136 @@
         const windowHeight = window.innerHeight;
         reveals.forEach((el) => {
           const elementTop = el.getBoundingClientRect().top;
-          if (elementTop < windowHeight - 120) {
-            el.classList.add("show");
-          }
+          if (elementTop < windowHeight - 120) el.classList.add("show");
         });
       }
       window.addEventListener("scroll", revealElements);
       revealElements();
+    </script>
+
+    <div id="quiz-widget" style="position:fixed;right:18px;bottom:18px;z-index:9999">
+      <button id="quiz-btn" style="padding:10px 14px;border:0;border-radius:12px;background:#00eaff;color:#001018;font-weight:700;cursor:pointer;box-shadow:0 8px 24px rgba(0,234,255,.25)">
+        Quiz Me 🎯
+      </button>
+    </div>
+
+    <div id="quiz-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:10000;align-items:center;justify-content:center">
+      <div style="width:min(520px,92%);background:#0b0f14;color:#eaf7ff;border:1px solid #163544;border-radius:16px;box-shadow:0 20px 60px rgba(0,0,0,.5)">
+        <div style="padding:16px 18px;border-bottom:1px solid #163544;display:flex;justify-content:space-between;align-items:center">
+          <strong>Quiz Challenge</strong>
+          <button id="quiz-close" style="background:transparent;border:0;color:#9ecfe0;font-size:18px;cursor:pointer">✕</button>
+        </div>
+        <div id="quiz-body" style="padding:18px;max-height:70vh;overflow:auto">กำลังเตรียม…</div>
+      </div>
+    </div>
+
+    <script>
+    (() => {
+      const $ = (s, r = document) => r.querySelector(s);
+      const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+
+      function extractSummary() {
+        const el = document.querySelector("#main") || document.body;
+        return el.innerText.replace(/\s+/g, " ").trim().slice(0, 2000);
+      }
+
+      async function fetchQuiz() {
+        const payload = { url: location.pathname || location.href, lang: "th", summary: extractSummary() };
+        const res = await fetch("/api/quiz", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+        if (!res.ok) throw new Error("quiz_fetch_fail");
+        return res.json();
+      }
+
+      function renderQuiz(quiz) {
+        const box = $("#quiz-body");
+        box.innerHTML = "";
+        const qs = quiz.questions || [];
+
+        qs.forEach((q, i) => {
+          const wrap = document.createElement("div");
+          wrap.style.marginBottom = "16px";
+          wrap.innerHTML = `
+            <div style="margin-bottom:8px;font-weight:700">${i + 1}. ${q.stem}</div>
+            ${q.choices.map((c, idx) => `
+              <label style="display:block;margin:6px 0;cursor:pointer">
+                <input type="radio" name="q${i}" value="${idx}" style="margin-right:6px"> ${c}
+              </label>
+            `).join("")}
+            <div class="explain" style="display:none;margin-top:6px;color:#9dd8ff;font-size:14px"></div>
+            <hr style="border:0;border-top:1px solid #163544;margin:12px 0 0">
+          `;
+          box.appendChild(wrap);
+        });
+
+        const submit = document.createElement("button");
+        submit.textContent = "ส่งคำตอบ";
+        submit.style = "margin-top:8px;padding:10px 14px;border:0;border-radius:10px;background:#28e07c;color:#00230f;font-weight:800;cursor:pointer";
+        submit.onclick = async () => {
+          let correctCount = 0;
+          const answers = [];
+
+          qs.forEach((q, i) => {
+            const pick = parseInt((box.querySelector(`input[name="q${i}"]:checked`) || {}).value ?? "-1", 10);
+            const ok = pick === (q.answerIndex | 0);
+            if (ok) correctCount++;
+            answers.push({ qIndex: i, pick });
+
+            const exp = $$(".explain", box)[i];
+            exp.style.display = "block";
+            exp.textContent = (ok ? "✔ ถูกต้อง — " : "✖ ยังไม่ใช่ — ") + (q.explain || "");
+          });
+
+          if (window.gtag) gtag("event", "quiz_submit", { page_path: location.pathname, score: correctCount, total: qs.length });
+
+          try {
+            await fetch("/api/quiz/submit", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ url: location.pathname, answers, questions: qs })
+            });
+          } catch {}
+
+          const done = document.createElement("div");
+          done.style = "margin-top:10px;font-weight:800";
+          done.textContent = `สรุปคะแนน: ${correctCount}/${qs.length}`;
+          box.appendChild(done);
+
+          if (correctCount === qs.length) {
+            localStorage.setItem("quiz:mastered:" + location.pathname, "1");
+          }
+        };
+
+        box.appendChild(submit);
+      }
+
+      $("#quiz-btn").onclick = async () => {
+        $("#quiz-modal").style.display = "flex";
+        $("#quiz-body").textContent = "กำลังสร้างคำถาม…";
+        try {
+          const quiz = await fetchQuiz();
+          renderQuiz(quiz);
+        } catch (e) {
+          $("#quiz-body").textContent = "โหลดควิซไม่สำเร็จ ลองรีเฟรชอีกครั้ง";
+        }
+      };
+      $("#quiz-close").onclick = () => $("#quiz-modal").style.display = "none";
+
+      const main = document.querySelector("#main") || document.body;
+      let t = 0, hinted = false;
+      setInterval(() => {
+        const r = main.getBoundingClientRect();
+        const inView = r.top < innerHeight * 0.9 && r.bottom > innerHeight * 0.1;
+        if (inView) t += 1;
+        if (!hinted && t >= 20) {
+          hinted = true;
+          $("#quiz-btn").textContent = "พร้อมทดสอบสั้น ๆ ไหม? 🎯";
+        }
+      }, 1000);
+    })();
     </script>
   </body>
 </html>
