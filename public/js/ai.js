@@ -121,7 +121,7 @@
   // ✅ เชื่อมต่อ API จริง (สอดคล้องกับ server.js)
   async function askAI(q) {
     try {
-      const res = await fetch("/api/assistant", {
+      const res = await fetch(window.location.origin + "/api/assistant", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ q }),
