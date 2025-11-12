@@ -282,7 +282,7 @@ app.post("/api/assistant", async (req, res) => {
     // --- ยิง Gemini โดยตรง ---
     // ✅ รุ่นใหม่ล่าสุด (2025)
 const geminiRes = await fetch(
-  `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`,
+  `https://generativelanguage.googleapis.com/v1/models/gemini-2.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`,
   {
     method: "POST",
     headers: { "Content-Type": "application/json" },
