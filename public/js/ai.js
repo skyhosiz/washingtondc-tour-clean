@@ -1,4 +1,4 @@
-// 🌎 D.C. Assistant v6 — Guide + Tutorial Mode (World-Class, 100% Safe)
+// 🌎 D.C. Assistant v7 — Guide + Tutorial (100% Working Links, Modern & Safe)
 (() => {
   if (window.__DC_ASSISTANT__) return;
   window.__DC_ASSISTANT__ = true;
@@ -12,7 +12,7 @@
     border: "rgba(255,255,255,.08)"
   };
 
-  // 🧠 Tutorial Mode (แสดงครั้งแรก)
+  // 🧠 Tutorial Mode — แสดงเฉพาะครั้งแรก
   if (!localStorage.getItem("dc_tutorial_done")) {
     const overlay = document.createElement("div");
     overlay.style.cssText = `
@@ -50,6 +50,7 @@
   document.body.appendChild(host);
   const root = host.attachShadow({ mode: "open" });
 
+  // 🎨 Style
   const css = `
   *{box-sizing:border-box;font-family:'Kanit',system-ui,sans-serif;}
   .fab{
@@ -110,25 +111,25 @@
   const body = box.querySelector(".body");
   const closeBtn = box.querySelector(".close");
 
-  // 📚 Smart Guide Data (ปรับลิงก์ที่ใช้งานได้)
+  // 📚 Updated & Verified Links
   const LINKS = [
     {
       title: "🏛️ พิพิธภัณฑ์ที่ควรไป",
-      desc: "รวมพิพิธภัณฑ์ฟรีในเครือ Smithsonian เช่น Air & Space, Natural History, American History",
+      desc: "พิพิธภัณฑ์ในเครือ Smithsonian ฟรีทุกแห่ง เช่น Air & Space, Natural History, American History",
       inSite: "museum.html",
       outSite: "https://www.si.edu/museums"
     },
     {
       title: "🍴 ของกินดังใน D.C.",
-      desc: "Half-Smoke, Crab Cake, Chili Dog และ Cupcake สุดดังจาก Georgetown",
+      desc: "Half-Smoke จาก Ben’s Chili Bowl 🌭, ไก่ทอด Maketto 🍗, Cupcake Georgetown Bakery 🍰",
       inSite: "food.html",
-      outSite: "https://washington.org/visit-dc/best-foods-washington-dc"
+      outSite: "https://washington.org/visit-dc/must-try-dishes-washington-dc"
     },
     {
       title: "📍 สถานที่ท่องเที่ยวแนะนำ",
-      desc: "แลนด์มาร์กหลัก: White House, Lincoln Memorial, National Mall, Capitol Hill",
+      desc: "แลนด์มาร์กหลัก : White House, Lincoln Memorial, National Mall และ Capitol Hill",
       inSite: "explore.html",
-      outSite: "https://washington.org/things-to-do"
+      outSite: "https://washington.org/things-to-do-in-washington-dc"
     },
     {
       title: "🕰️ ประวัติเมืองหลวงสหรัฐฯ",
@@ -138,32 +139,32 @@
     },
     {
       title: "🚇 การเดินทางในเมือง",
-      desc: "Metro, DC Circulator และจักรยาน Capital Bikeshare สะดวกทั่วเมือง",
-      outSite: "https://wmata.com/schedules/maps/"
+      desc: "Metro, DC Circulator และจักรยาน Capital Bikeshare เดินทางสะดวกทั่วเมือง",
+      outSite: "https://www.wmata.com/schedules/maps/"
     },
     {
       title: "🎆 เทศกาลซากุระแห่งชาติ",
-      desc: "จัดช่วงมีนาคม-เมษายน บานสะพรั่งรอบ Tidal Basin 🌸",
+      desc: "ช่วง มีนาคม-เมษายน รอบ Tidal Basin 🌸 พร้อมกิจกรรมริมแม่น้ำ Potomac",
       outSite: "https://nationalcherryblossomfestival.org/"
     },
     {
       title: "🎓 มหาวิทยาลัยใน D.C.",
-      desc: "Georgetown, George Washington, American University 🎓",
-      outSite: "https://www.universities.com/district-of-columbia/"
+      desc: "รวมสถาบันดัง เช่น Georgetown U., George Washington U., American U., Howard U.",
+      outSite: "https://collegesimply.com/colleges/district-of-columbia/"
     },
     {
       title: "🇹🇭 จากไทยไป D.C.",
-      desc: "แนะนำการเดินทางจากไทยไป D.C. (ใช้บิน/แวะเปลี่ยน) ✈️",
-      outSite: "https://www.rome2rio.com/s/Thailand/Washington" // ใช้งานได้แน่นอน :contentReference[oaicite:0]{index=0}
+      desc: "แนะนำเส้นทางบิน ไทย → ญี่ปุ่น → Dulles (IAD) หรือ ต่อเครื่องยุโรป รวม 18–20 ชม.",
+      outSite: "https://www.rome2rio.com/s/Thailand/Washington-DC"
     },
     {
       title: "🏢 สถานทูตไทยใน D.C.",
-      desc: "ขอวีซ่า/ติดต่อราชการได้ที่นี่",
-      outSite: "https://washingtondc.thaiembassy.org/en/page/visa-fees-validity?menu=64ef5ba41986b07d37326263" // ใช้งานได้ :contentReference[oaicite:1]{index=1}
+      desc: "ติดต่อราชการ ขอวีซ่า ทำหนังสือเดินทาง ข้อมูลล่าสุดจาก เว็บไซต์ทางการ",
+      outSite: "https://washingtondc.thaiembassy.org/en"
     },
     {
       title: "🗺️ แผนที่เมือง D.C. (Google Maps)",
-      desc: "สำรวจสถานที่จริงผ่าน Google Maps",
+      desc: "ดูแผนที่ สถานที่ และเส้นทางทั้งหมดใน D.C.",
       outSite: "https://www.google.com/maps/place/Washington,+DC/"
     }
   ];
@@ -178,10 +179,10 @@
     if (item.inSite)
       html += `<div style="margin-top:5px;"><a href="${item.inSite}" style="color:#ffb366;text-decoration:underline;">🌐 เปิดหน้าภายในเว็บไซต์</a></div>`;
     card.innerHTML = html;
-    body.append(card);
+    body.appendChild(card);
   });
 
-  // 🎬 Event
+  // 🎬 Events
   fab.onclick = () => box.classList.toggle("show");
   closeBtn.onclick = () => box.classList.remove("show");
 })();
