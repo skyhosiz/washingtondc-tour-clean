@@ -1,7 +1,7 @@
-// 🌎 D.C. Assistant v5 — Guide Mode (No Input, Smart Links + Real Sources)
+// 🌎 D.C. Assistant v6 — Guide + Tutorial Mode (World-Class, 100% Safe)
 (() => {
-  if (window.__DC_GUIDE__) return;
-  window.__DC_GUIDE__ = true;
+  if (window.__DC_ASSISTANT__) return;
+  window.__DC_ASSISTANT__ = true;
 
   const COLOR = {
     brand: "#ff9650",
@@ -12,7 +12,34 @@
     border: "rgba(255,255,255,.08)"
   };
 
-  // === Root ===
+  // 🧠 Tutorial Mode (แสดงครั้งแรก)
+  if (!localStorage.getItem("dc_tutorial_done")) {
+    const overlay = document.createElement("div");
+    overlay.style.cssText = `
+      position:fixed;inset:0;background:rgba(0,0,0,.85);
+      color:white;z-index:999999;display:flex;flex-direction:column;
+      align-items:center;justify-content:center;text-align:center;
+      font-family:'Kanit',sans-serif;padding:30px;
+    `;
+    overlay.innerHTML = `
+      <h1 style="color:${COLOR.brand};font-size:28px;">👋 ยินดีต้อนรับสู่ Washington D.C. Tour</h1>
+      <p style="max-width:480px;margin:20px 0 25px;">
+        เว็บไซต์นี้มีผู้ช่วยอัจฉริยะที่จะพาคุณสำรวจเมืองหลวงแห่งสหรัฐฯ —
+        <br>คลิกปุ่ม <b style="color:${COLOR.brand};">📍 มุมขวาล่าง</b> เพื่อดูข้อมูลแนะนำทั้งหมด!
+      </p>
+      <button id="startTutorial" style="
+        background:${COLOR.accent};border:none;padding:10px 24px;
+        border-radius:8px;color:#111;font-weight:700;font-size:15px;cursor:pointer;
+      ">เข้าใจแล้ว เริ่มเลย!</button>
+    `;
+    document.body.appendChild(overlay);
+    document.getElementById("startTutorial").onclick = () => {
+      overlay.remove();
+      localStorage.setItem("dc_tutorial_done", "1");
+    };
+  }
+
+  // 🌍 Root shadow host
   const host = document.createElement("div");
   Object.assign(host.style, {
     position: "fixed",
@@ -23,7 +50,6 @@
   document.body.appendChild(host);
   const root = host.attachShadow({ mode: "open" });
 
-  // === Styles ===
   const css = `
   *{box-sizing:border-box;font-family:'Kanit',system-ui,sans-serif;}
   .fab{
@@ -33,7 +59,7 @@
     cursor:pointer;box-shadow:0 10px 30px rgba(0,0,0,.45);
     transition:all .25s ease;
   }
-  .fab:hover{transform:scale(1.1);}
+  .fab:hover{transform:scale(1.08);}
   .box{
     position:fixed;right:10px;bottom:70px;
     width:clamp(280px,90vw,360px);
@@ -51,21 +77,18 @@
   .body{padding:10px;overflow-y:auto;max-height:60vh;font-size:14px;line-height:1.5;}
   .link-card{
     background:${COLOR.card};border:1px solid ${COLOR.border};
-    border-radius:10px;padding:10px;margin:6px 0;transition:.2s;
+    border-radius:10px;padding:10px;margin:6px 0;transition:.25s;
   }
-  .link-card:hover{background:#1f1844;transform:scale(1.02);}
-  .link-card a{
-    text-decoration:none;color:${COLOR.text};display:block;
-  }
+  .link-card:hover{background:#1f1844;transform:scale(1.03);}
+  .link-card a{text-decoration:none;color:${COLOR.text};display:block;}
   .link-card strong{color:${COLOR.brand};font-size:15px;}
   @media(max-width:480px){
     .fab{width:50px;height:50px;font-size:22px;}
     .body{max-height:55vh;}
-  }
-  `;
+  }`;
   root.appendChild(Object.assign(document.createElement("style"), { textContent: css }));
 
-  // === Elements ===
+  // 🧩 Elements
   const fab = Object.assign(document.createElement("div"), {
     className: "fab",
     innerHTML: "📍",
@@ -84,11 +107,10 @@
     <div class="body"></div>
   `;
   root.append(fab, box);
-
   const body = box.querySelector(".body");
   const closeBtn = box.querySelector(".close");
 
-  // === Guide Data ===
+  // 📚 Smart Guide Data
   const LINKS = [
     {
       title: "🏛️ พิพิธภัณฑ์ที่ควรไป",
@@ -98,7 +120,7 @@
     },
     {
       title: "🍴 ของกินดังใน D.C.",
-      desc: "เมนูท้องถิ่น: Half-Smoke, Crab Cake, Chili Dog และ Cupcake สุดดังจาก Georgetown",
+      desc: "Half-Smoke, Crab Cake, Chili Dog และ Cupcake สุดดังจาก Georgetown",
       inSite: "food.html",
       outSite: "https://washington.org/visit-dc/best-foods-washington-dc"
     },
@@ -110,35 +132,33 @@
     },
     {
       title: "🕰️ ประวัติเมืองหลวงสหรัฐฯ",
-      desc: "วอชิงตัน ดี.ซี. ก่อตั้งปี 1790 ตั้งชื่อตาม George Washington เป็นศูนย์กลางรัฐบาลสหรัฐฯ",
+      desc: "ก่อตั้งปี 1790 ตั้งชื่อตาม George Washington เป็นศูนย์กลางรัฐบาลสหรัฐฯ",
       inSite: "story.html",
       outSite: "https://en.wikipedia.org/wiki/Washington,_D.C."
     },
     {
       title: "🚇 การเดินทางในเมือง",
-      desc: "เดินทางสะดวกด้วย Metro, DC Circulator Bus และจักรยาน Capital Bikeshare",
-      inSite: "explore.html",
+      desc: "Metro, DC Circulator, และจักรยาน Capital Bikeshare สะดวกทั่วเมือง",
       outSite: "https://wmata.com/schedules/maps/"
     },
     {
-      title: "🎆 เทศกาลและกิจกรรมประจำปี",
-      desc: "เทศกาลซากุระแห่งชาติ (Cherry Blossom Festival) เดือนมีนาคม–เมษายน คือช่วงคึกคักที่สุด",
-      inSite: "explore.html",
+      title: "🎆 เทศกาลซากุระแห่งชาติ",
+      desc: "จัดช่วงมีนาคม–เมษายน บานสะพรั่งรอบ Tidal Basin 🌸",
       outSite: "https://nationalcherryblossomfestival.org/"
     },
     {
       title: "🎓 มหาวิทยาลัยใน D.C.",
-      desc: "Georgetown University, George Washington University, American University",
+      desc: "Georgetown, George Washington, American University 🎓",
       outSite: "https://www.universities.com/district-of-columbia/"
     },
     {
       title: "🇹🇭 จากไทยไป D.C.",
-      desc: "บินตรงหรือแวะต่อได้ เช่น ไทย→ญี่ปุ่น→Dulles (IAD). ใช้เวลาเฉลี่ย ~18–20 ชม.",
-      outSite: "https://www.bangkokairline.org/flights-to-washington-dc"
+      desc: "บินตรงหรือแวะเปลี่ยน เช่น ไทย→ญี่ปุ่น→Dulles (IAD) ใช้เวลา ~18–20 ชม.",
+      outSite: "https://thaiembdc.org/th/travel-to-dc/"
     },
     {
-      title: "🏢 สถานทูตไทย ณ กรุงวอชิงตัน ดี.ซี.",
-      desc: "ติดต่อวีซ่า/เอกสารได้ที่สถานทูตไทยใน D.C.",
+      title: "🏢 สถานทูตไทยใน D.C.",
+      desc: "ขอวีซ่า/ทำหนังสือเดินทาง/ติดต่อราชการได้ที่นี่",
       outSite: "https://thaiembdc.org/"
     },
     {
@@ -148,24 +168,20 @@
     }
   ];
 
-  // === Render cards ===
+  // 🪄 Render Cards
   LINKS.forEach(item => {
     const card = document.createElement("div");
     card.className = "link-card";
-    let inner = `<a href="${item.outSite}" target="_blank">
+    let html = `<a href="${item.outSite}" target="_blank" rel="noopener">
       <strong>${item.title}</strong><br>${item.desc || ""}
     </a>`;
     if (item.inSite)
-      inner += `<div style="margin-top:5px;"><a href="${item.inSite}" style="color:#ffb366;text-decoration:underline;">🌐 เปิดหน้าภายในเว็บไซต์</a></div>`;
-    card.innerHTML = inner;
+      html += `<div style="margin-top:5px;"><a href="${item.inSite}" style="color:#ffb366;text-decoration:underline;">🌐 เปิดหน้าภายในเว็บไซต์</a></div>`;
+    card.innerHTML = html;
     body.appendChild(card);
   });
 
-  // === Events ===
-  fab.onclick = () => {
-    const show = box.classList.contains("show");
-    if (show) box.classList.remove("show");
-    else box.classList.add("show");
-  };
+  // 🎬 Event
+  fab.onclick = () => box.classList.toggle("show");
   closeBtn.onclick = () => box.classList.remove("show");
 })();
