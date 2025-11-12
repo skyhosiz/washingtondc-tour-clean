@@ -44,7 +44,7 @@ const {
   CLOUDINARY_CLOUD_NAME,
   CLOUDINARY_API_KEY,
   CLOUDINARY_API_SECRET,
-  OPENAI_API_KEY,
+  GEMINI_API_KEY,
 } = process.env;
 
 cloudinary.config({
