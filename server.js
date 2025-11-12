@@ -271,7 +271,7 @@ app.get("/api/explore", authRequired, async (req, res) => {
   }
 });
 
-// === AI Assistant (Gemini Only, Stable + Retry) ===
+// === AI Assistant (Gemini Only — Stable + Retry + Timeout) ===
 app.post("/api/assistant", async (req, res) => {
   try {
     const { q } = req.body || {};
@@ -279,11 +279,14 @@ app.post("/api/assistant", async (req, res) => {
       return res.json({ reply: "โปรดพิมพ์คำถามมาก่อนนะครับ 😊" });
     }
 
-    // === ฟังก์ชันเรียก Gemini พร้อมระบบ retry เมื่อโมเดลหนาแน่น ===
+    // 🧠 ฟังก์ชันเรียก Gemini พร้อม retry สูงสุด 3 รอบ + timeout 25s
     async function callGemini(question, retry = 0) {
       try {
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 25000); // 25 วิ
+
         const response = await fetch(
-          `https://generativelanguage.googleapis.com/v1/models/gemini-2.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`,
+          `https://generativelanguage.googleapis.com/v1/models/gemini-2.0-flash:generateContent?key=${process.env.GEMINI_API_KEY}`,
           {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -292,18 +295,20 @@ app.post("/api/assistant", async (req, res) => {
                 {
                   parts: [
                     {
-                      text: `ตอบคำถามนี้เป็นภาษาไทยแบบไกด์ทัวร์วอชิงตัน ดี.ซี. ที่เป็นมิตร ให้ข้อมูลจริง และกระชับ:\n${question}`,
+                      text: `ตอบคำถามนี้เป็นภาษาไทยแบบไกด์ทัวร์วอชิงตัน ดี.ซี. ที่เป็นมิตร ให้ข้อมูลจริง กระชับ และสุภาพ:\n${question}`,
                     },
                   ],
                 },
               ],
             }),
+            signal: controller.signal,
           }
         );
 
+        clearTimeout(timeout);
         const data = await response.json();
 
-        // ✅ ถ้าตอบได้ปกติ
+        // ✅ ถ้าสำเร็จ → คืนข้อความตอบกลับ
         if (response.ok) {
           return (
             data?.candidates?.[0]?.content?.parts?.[0]?.text ||
@@ -311,14 +316,16 @@ app.post("/api/assistant", async (req, res) => {
           );
         }
 
-        // ⚠️ ถ้าเจอ overload → ลองใหม่ 2 ครั้ง
+        // ⚠️ ถ้า server overload → ลองใหม่
         if (
-          data?.error?.message?.includes("overloaded") &&
-          retry < 2
+          data?.error?.message?.includes("overloaded") ||
+          data?.error?.status === "UNAVAILABLE"
         ) {
-          console.warn("⚠️ Gemini overloaded, retrying...");
-          await new Promise((r) => setTimeout(r, 800));
-          return callGemini(question, retry + 1);
+          if (retry < 2) {
+            console.warn(`⚠️ Gemini overloaded, retrying... (${retry + 1})`);
+            await new Promise((r) => setTimeout(r, 1500));
+            return callGemini(question, retry + 1);
+          }
         }
 
         console.error("❌ Gemini API Error:", data);
@@ -326,7 +333,7 @@ app.post("/api/assistant", async (req, res) => {
       } catch (err) {
         console.error("Gemini Fetch Error:", err.message);
         if (retry < 2) {
-          await new Promise((r) => setTimeout(r, 800));
+          await new Promise((r) => setTimeout(r, 1500));
           return callGemini(question, retry + 1);
         }
         return "ระบบ Gemini กำลังหนาแน่น โปรดลองอีกครั้งภายหลัง 😅";
@@ -342,6 +349,7 @@ app.post("/api/assistant", async (req, res) => {
     });
   }
 });
+
 
 
 
