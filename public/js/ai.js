@@ -215,3 +215,46 @@
   if (!hist.length) addMsg("สวัสดี! ฉันคือไกด์ทัวร์วอชิงตัน D.C. ถามเรื่องเวลาเปิด เส้นทาง ของกิน หรือกดไปหน้า Explore ได้เลย ✨");
   else hist.forEach(m => addMsg(m.html, m.who));
 })();
+// ====== เชื่อมต่อ Backend AI (GPT) ======
+window.DCAI = {
+  ask: async (q) => {
+    try {
+      const res = await fetch("/api/assistant", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ q })
+      });
+      const data = await res.json();
+      return data.reply || "ขอโทษครับ ฉันยังไม่เข้าใจคำถามนี้";
+    } catch (err) {
+      console.error("AI fetch error:", err);
+      return "เกิดข้อผิดพลาดในการเชื่อมต่อเซิร์ฟเวอร์ 😢";
+    }
+  }
+};
+
+// ✅ แก้ให้ฟังก์ชัน send() ใช้โมเดลจริงเมื่อไม่พบใน FAQ
+(async () => {
+  const oldSend = send;
+  send = async () => {
+    const q = input.value.trim();
+    if (!q) return;
+    if (!canSend()) return;
+    lastSend = Date.now();
+    addMsg(q.replace(/</g, "&lt;").replace(/>/g, "&gt;"), "me");
+    input.value = "";
+
+    const typing = showTyping();
+    await new Promise(r => setTimeout(r, 180));
+    typing.remove();
+
+    let reply = answer(q);
+    // ถ้าไม่เข้าใจ → ยิงไป backend
+    if (/ยังไม่เข้าใจ/.test(reply)) {
+      reply = await window.DCAI.ask(q);
+    }
+
+    addMsg(reply, "bot");
+    input.focus();
+  };
+})();

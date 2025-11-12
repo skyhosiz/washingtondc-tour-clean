@@ -280,6 +280,58 @@ app.get("/api/explore", authRequired, async (req, res) => {
   }
 });
 
+// === AI Assistant (GPT) Endpoint ===
+app.post("/api/assistant", async (req, res) => {
+  try {
+    const { q } = req.body || {};
+    if (!q || !q.trim()) {
+      return res.json({ reply: "โปรดพิมพ์คำถามมาก่อนนะครับ 😊" });
+    }
+
+    const response = await fetch("https://api.openai.com/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${process.env.OPENAI_API_KEY}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        model: "gpt-4o-mini",
+        messages: [
+          {
+            role: "system",
+            content:
+              "You are D.C. Assistant, a friendly and factual Washington D.C. tour guide who answers in Thai. Give clear, concise, and polite responses."
+          },
+          { role: "user", content: q }
+        ],
+        temperature: 0.7,
+        max_tokens: 350
+      })
+    });
+
+    if (!response.ok) {
+      const text = await response.text();
+      console.error("OpenAI API Error:", text);
+      throw new Error("OpenAI API returned an error");
+    }
+
+    const data = await response.json();
+    const reply =
+      data?.choices?.[0]?.message?.content ||
+      "ขอโทษครับ ตอนนี้ฉันยังไม่เข้าใจคำถามนี้";
+
+    res.json({ reply });
+  } catch (err) {
+    console.error("AI Route Error:", err.message);
+    res.json({
+      reply:
+        "เกิดข้อผิดพลาดในการเชื่อมต่อ AI 😢 โปรดลองอีกครั้งภายหลัง",
+    });
+  }
+});
+
+
+
 
 app.get("/api/proxy-smithsonian/:id", async (req, res) => {
   try {
