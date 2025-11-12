@@ -271,7 +271,7 @@ app.get("/api/explore", authRequired, async (req, res) => {
   }
 });
 
-// === AI Assistant (Gemini Only) ===
+// === AI Assistant (Gemini Only, Stable + Retry) ===
 app.post("/api/assistant", async (req, res) => {
   try {
     const { q } = req.body || {};
@@ -279,38 +279,61 @@ app.post("/api/assistant", async (req, res) => {
       return res.json({ reply: "โปรดพิมพ์คำถามมาก่อนนะครับ 😊" });
     }
 
-    // --- ยิง Gemini โดยตรง ---
-    // ✅ รุ่นใหม่ล่าสุด (2025)
-const geminiRes = await fetch(
-  `https://generativelanguage.googleapis.com/v1/models/gemini-2.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`,
-  {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      contents: [
-        {
-          parts: [
-            {
-              text: `ตอบคำถามนี้เป็นภาษาไทยแบบไกด์วอชิงตัน ดี.ซี. ที่เป็นมิตรและให้ข้อมูลจริง:\n${q}`
-            }
-          ]
-        }
-      ]
-    }),
-  }
-);
+    // === ฟังก์ชันเรียก Gemini พร้อมระบบ retry เมื่อโมเดลหนาแน่น ===
+    async function callGemini(question, retry = 0) {
+      try {
+        const response = await fetch(
+          `https://generativelanguage.googleapis.com/v1/models/gemini-2.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`,
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              contents: [
+                {
+                  parts: [
+                    {
+                      text: `ตอบคำถามนี้เป็นภาษาไทยแบบไกด์ทัวร์วอชิงตัน ดี.ซี. ที่เป็นมิตร ให้ข้อมูลจริง และกระชับ:\n${question}`,
+                    },
+                  ],
+                },
+              ],
+            }),
+          }
+        );
 
-    if (!geminiRes.ok) {
-      const text = await geminiRes.text();
-      console.error("❌ Gemini API Error:", text);
-      throw new Error("Gemini API returned an error");
+        const data = await response.json();
+
+        // ✅ ถ้าตอบได้ปกติ
+        if (response.ok) {
+          return (
+            data?.candidates?.[0]?.content?.parts?.[0]?.text ||
+            "ขอโทษครับ ฉันยังไม่เข้าใจคำถามนี้"
+          );
+        }
+
+        // ⚠️ ถ้าเจอ overload → ลองใหม่ 2 ครั้ง
+        if (
+          data?.error?.message?.includes("overloaded") &&
+          retry < 2
+        ) {
+          console.warn("⚠️ Gemini overloaded, retrying...");
+          await new Promise((r) => setTimeout(r, 800));
+          return callGemini(question, retry + 1);
+        }
+
+        console.error("❌ Gemini API Error:", data);
+        throw new Error("Gemini API returned an error");
+      } catch (err) {
+        console.error("Gemini Fetch Error:", err.message);
+        if (retry < 2) {
+          await new Promise((r) => setTimeout(r, 800));
+          return callGemini(question, retry + 1);
+        }
+        return "ระบบ Gemini กำลังหนาแน่น โปรดลองอีกครั้งภายหลัง 😅";
+      }
     }
 
-    const data = await geminiRes.json();
-    const reply =
-      data?.candidates?.[0]?.content?.parts?.[0]?.text ||
-      "ขอโทษครับ ฉันยังไม่เข้าใจคำถามนี้";
-
+    const reply = await callGemini(q);
     res.json({ reply });
   } catch (err) {
     console.error("Gemini Route Error:", err.message);
