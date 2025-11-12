@@ -271,49 +271,56 @@ app.get("/api/explore", authRequired, async (req, res) => {
   }
 });
 
-// === AI Assistant (GPT) Endpoint + Rate Limit ===
-const aiLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 20,
-  message: { reply: "คุณถามบ่อยเกินไป กรุณารอสักครู่ก่อนคุยกับ AI ต่อครับ 😅" },
-});
-
-app.post("/api/assistant", aiLimiter, async (req, res) => {
+// === AI Assistant (Gemini Only) ===
+app.post("/api/assistant", async (req, res) => {
   try {
     const { q } = req.body || {};
-    if (!q || !q.trim()) return res.json({ reply: "โปรดพิมพ์คำถามมาก่อนนะครับ 😊" });
-
-    const response = await fetch("https://api.openai.com/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        "Authorization": `Bearer ${OPENAI_API_KEY}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        model: "gpt-4o-mini",
-        messages: [
-          { role: "system", content: "You are D.C. Assistant, a friendly Thai-speaking tour guide for Washington D.C. Answer politely, clearly, and concisely." },
-          { role: "user", content: q },
-        ],
-        temperature: 0.7,
-        max_tokens: 350,
-      }),
-    });
-
-    if (!response.ok) {
-      const text = await response.text();
-      console.error("OpenAI API Error:", text);
-      throw new Error("OpenAI API returned an error");
+    if (!q || !q.trim()) {
+      return res.json({ reply: "โปรดพิมพ์คำถามมาก่อนนะครับ 😊" });
     }
 
-    const data = await response.json();
-    const reply = data?.choices?.[0]?.message?.content || "ขอโทษครับ ตอนนี้ฉันยังไม่เข้าใจคำถามนี้";
+    // --- ยิง Gemini โดยตรง ---
+    const geminiRes = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${process.env.GEMINI_API_KEY}`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          contents: [
+            {
+              parts: [
+                {
+                  text: `ตอบคำถามนี้เป็นภาษาไทยอย่างสุภาพและให้ข้อมูลจริงในฐานะไกด์นำเที่ยววอชิงตัน ดี.ซี.:
+${q}`
+                }
+              ]
+            }
+          ]
+        })
+      }
+    );
+
+    if (!geminiRes.ok) {
+      const text = await geminiRes.text();
+      console.error("❌ Gemini API Error:", text);
+      throw new Error("Gemini API returned an error");
+    }
+
+    const data = await geminiRes.json();
+    const reply =
+      data?.candidates?.[0]?.content?.parts?.[0]?.text ||
+      "ขอโทษครับ ฉันยังไม่เข้าใจคำถามนี้";
+
     res.json({ reply });
   } catch (err) {
-    console.error("AI Route Error:", err.message);
-    res.json({ reply: "เกิดข้อผิดพลาดในการเชื่อมต่อ AI 😢 โปรดลองอีกครั้งภายหลัง" });
+    console.error("Gemini Route Error:", err.message);
+    res.json({
+      reply: "เกิดข้อผิดพลาดในการเชื่อมต่อ Gemini 😢 โปรดลองอีกครั้งภายหลัง",
+    });
   }
 });
+
+
 
 app.get("/api/proxy-smithsonian/:id", async (req, res) => {
   try {
