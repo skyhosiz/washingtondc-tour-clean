@@ -26,56 +26,72 @@
   const root = host.attachShadow({ mode: "open" });
 
   const css = `
-    *{box-sizing:border-box;font-family:'Kanit',system-ui,sans-serif;}
-    .fab{width:56px;height:56px;border-radius:50%;
-      background:${COLOR.brand};color:#fff;font-size:26px;
-      display:flex;align-items:center;justify-content:center;
-      cursor:pointer;box-shadow:0 12px 28px rgba(0,0,0,.45);
-      transition:all .25s ease;user-select:none;}
-    .fab:hover{transform:scale(1.08);background:${COLOR.brandHover};}
-    .fab::after{content:"คำถามพบบ่อย";position:absolute;bottom:62px;right:0;
-      background:rgba(0,0,0,.7);color:#fff;font-size:11px;
-      padding:4px 8px;border-radius:5px;opacity:0;transition:opacity .2s;}
-    .fab:hover::after{opacity:1;}
-    .box{position:fixed;right:0;bottom:70px;
-      width:min(340px,calc(100vw - 28px));background:${COLOR.bg};
-      color:${COLOR.text};border:1px solid ${COLOR.border};
-      border-radius:16px;box-shadow:0 20px 50px rgba(0,0,0,.55);
-      display:none;flex-direction:column;overflow:hidden;
-      opacity:0;transform:translateY(10px);transition:all .25s ease;}
-    .box.show{display:flex;opacity:1;transform:translateY(0);}
-    .hd{display:flex;align-items:center;justify-content:space-between;
-      padding:8px 12px;background:${COLOR.card};font-weight:700;font-size:14px;}
-    .dot{width:7px;height:7px;border-radius:999px;
-      background:${COLOR.accent};box-shadow:0 0 10px ${COLOR.accent};}
-    .suggest{display:flex;flex-wrap:wrap;gap:5px;
-      padding:6px 10px;background:${COLOR.card};}
-    .suggest button{background:${COLOR.accent};color:#111;border:none;
-      border-radius:10px;padding:4px 8px;font-weight:600;cursor:pointer;
-      font-size:12px;transition:transform .15s;}
-    .suggest button:hover{transform:scale(1.05);}
-    .body{padding:8px 10px;overflow-y:auto;max-height:50vh;
-      scroll-behavior:smooth;font-size:13px;}
-    .msg{margin:6px 0;display:flex;}
-    .msg .b{padding:7px 10px;border-radius:12px;max-width:80%;
-      word-break:break-word;line-height:1.45;animation:fadeIn .2s ease;}
-    .me{justify-content:flex-end;}
-    .me .b{background:${COLOR.me};color:#fff;}
-    .bot .b{background:${COLOR.bot};border:1px solid ${COLOR.border};}
-    @keyframes fadeIn{from{opacity:0;transform:translateY(5px);}
-                      to{opacity:1;transform:translateY(0);}}
-    .input{display:flex;gap:5px;padding:8px;background:${COLOR.card};
-      border-top:1px solid ${COLOR.border};}
-    .input input{flex:1;background:#140f2c;border:1px solid ${COLOR.border};
-      color:${COLOR.text};border-radius:8px;padding:8px 9px;font-size:13px;outline:none;}
-    .input input:focus{border-color:${COLOR.accent};}
-    .input button{background:${COLOR.accent};border:none;color:#111;
-      font-weight:800;border-radius:8px;padding:8px 10px;font-size:13px;
-      cursor:pointer;transition:transform .2s,opacity .2s;}
-    .input button:hover{transform:scale(1.05);opacity:.9;}
-    .close{cursor:pointer;opacity:.6;transition:opacity .2s;}
-    .close:hover{opacity:1;}
-  `;
+  *{box-sizing:border-box;font-family:'Kanit',system-ui,sans-serif;}
+  .fab{
+    width:54px;height:54px;border-radius:50%;
+    background:${COLOR.brand};color:#fff;font-size:26px;
+    display:flex;align-items:center;justify-content:center;
+    cursor:pointer;box-shadow:0 12px 28px rgba(0,0,0,.45);
+    transition:all .25s ease;user-select:none;
+    transform:translateZ(0);
+  }
+  .fab:hover{transform:scale(1.08);background:${COLOR.brandHover};}
+  .fab::after{
+    content:"คำถามพบบ่อย";
+    position:absolute;bottom:58px;right:0;
+    background:rgba(0,0,0,.7);color:#fff;font-size:11px;
+    padding:4px 8px;border-radius:5px;opacity:0;transition:opacity .2s;
+  }
+  .fab:hover::after{opacity:1;}
+
+  .box{
+    position:fixed;right:10px;bottom:70px;
+    width:clamp(280px, 85vw, 360px);
+    background:${COLOR.bg};color:${COLOR.text};
+    border:1px solid ${COLOR.border};
+    border-radius:14px;box-shadow:0 20px 50px rgba(0,0,0,.55);
+    display:none;flex-direction:column;overflow:hidden;
+    opacity:0;transform:translateY(8px);transition:all .25s ease;
+    touch-action:manipulation;
+  }
+  .box.show{display:flex;opacity:1;transform:translateY(0);}
+  .hd{display:flex;align-items:center;justify-content:space-between;
+    padding:8px 12px;background:${COLOR.card};font-weight:700;font-size:14px;}
+  .dot{width:7px;height:7px;border-radius:999px;
+    background:${COLOR.accent};box-shadow:0 0 10px ${COLOR.accent};}
+  .suggest{display:flex;flex-wrap:wrap;gap:5px;padding:6px 10px;background:${COLOR.card};}
+  .suggest button{background:${COLOR.accent};color:#111;border:none;border-radius:8px;
+    padding:4px 8px;font-weight:600;cursor:pointer;font-size:12px;transition:transform .15s;}
+  .suggest button:hover{transform:scale(1.05);}
+  .body{padding:8px 10px;overflow-y:auto;max-height:48vh;
+    scroll-behavior:smooth;font-size:13px;}
+  .msg{margin:6px 0;display:flex;}
+  .msg .b{padding:7px 10px;border-radius:12px;max-width:80%;
+    word-break:break-word;line-height:1.45;animation:fadeIn .2s ease;}
+  .me{justify-content:flex-end;}
+  .me .b{background:${COLOR.me};color:#fff;}
+  .bot .b{background:${COLOR.bot};border:1px solid ${COLOR.border};}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(5px);}to{opacity:1;transform:translateY(0);}}
+  .input{display:flex;gap:5px;padding:8px;background:${COLOR.card};
+    border-top:1px solid ${COLOR.border};}
+  .input input{flex:1;background:#140f2c;border:1px solid ${COLOR.border};
+    color:${COLOR.text};border-radius:8px;padding:8px 9px;font-size:13px;outline:none;}
+  .input input:focus{border-color:${COLOR.accent};}
+  .input button{background:${COLOR.accent};border:none;color:#111;font-weight:800;
+    border-radius:8px;padding:8px 10px;font-size:13px;cursor:pointer;transition:transform .2s,opacity .2s;}
+  .input button:hover{transform:scale(1.05);opacity:.9;}
+  .close{cursor:pointer;opacity:.6;transition:opacity .2s;}
+  .close:hover{opacity:1;}
+
+  /* 📱 Mobile optimize */
+  @media (max-width:480px){
+    .fab{width:50px;height:50px;font-size:22px;}
+    .box{right:8px;bottom:65px;width:90vw;max-width:340px;}
+    .body{max-height:45vh;}
+    .suggest button{font-size:11px;padding:3px 7px;}
+  }
+`;
+
   root.appendChild(Object.assign(document.createElement("style"), { textContent: css }));
 
   const fab = Object.assign(document.createElement("div"), {
