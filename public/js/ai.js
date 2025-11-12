@@ -233,6 +233,34 @@ window.DCAI = {
   }
 };
 
+
+let send; // ✅ ประกาศก่อนใช้
+
+(async () => {
+  const oldSend = send;
+  send = async () => {
+    const q = input.value.trim();
+    if (!q) return;
+    if (!canSend()) return;
+    lastSend = Date.now();
+
+    addMsg(q.replace(/</g,"&lt;").replace(/>/g,"&gt;"), "me");
+    input.value = "";
+
+    const typing = showTyping();
+    await new Promise(r => setTimeout(r, 180));
+    typing.remove();
+
+    let reply = answer(q);
+    if (!/ยังไม่เข้าใจ/.test(reply)) {
+      reply = await window.DCAI.ask(q);
+    }
+
+    addMsg(reply, "bot");
+    input.focus();
+  };
+})();
+
 // ✅ แก้ให้ฟังก์ชัน send() ใช้โมเดลจริงเมื่อไม่พบใน FAQ
 (async () => {
   const oldSend = send;
