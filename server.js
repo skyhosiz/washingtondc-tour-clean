@@ -9,9 +9,10 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const cloudinary = require("cloudinary").v2;
 const { CloudinaryStorage } = require("multer-storage-cloudinary");
+const rateLimit = require("express-rate-limit"); // ✅ เพิ่มตรงนี้
+const fetch = (...args) => import("node-fetch").then(({ default: f }) => f(...args)); // ✅ รองรับ fetch ใน Node.js
 
 const app = express();
-
 
 [
   "JWT_SECRET",
@@ -24,6 +25,7 @@ const app = express();
   "CLOUDINARY_CLOUD_NAME",
   "CLOUDINARY_API_KEY",
   "CLOUDINARY_API_SECRET",
+  "OPENAI_API_KEY", // ✅ เพิ่มตัวนี้เผื่อพลาด
 ].forEach((v) => {
   if (!process.env[v]) {
     console.error(`🚨 Missing ENV: ${v}`);
@@ -42,8 +44,8 @@ const {
   CLOUDINARY_CLOUD_NAME,
   CLOUDINARY_API_KEY,
   CLOUDINARY_API_SECRET,
+  OPENAI_API_KEY,
 } = process.env;
-
 
 cloudinary.config({
   cloud_name: CLOUDINARY_CLOUD_NAME,
@@ -60,7 +62,6 @@ const storage = new CloudinaryStorage({
   },
 });
 const upload = multer({ storage });
-
 
 mongoose
   .connect(MONGO_URI)
@@ -79,7 +80,6 @@ const User = mongoose.model(
     profileImg: String,
   })
 );
-
 
 const signToken = (uid) => jwt.sign({ uid }, JWT_SECRET, { expiresIn: "7d" });
 
@@ -117,7 +117,6 @@ async function sendMailBrevo({ to, subject, html }) {
   }
 }
 
-
 app.disable("x-powered-by");
 const allowed = [CLIENT_URL, "http://localhost:3000"];
 app.use(
@@ -134,7 +133,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "public")));
 
-
+// ✅ Auth routes
 app.post("/api/auth/register", async (req, res) => {
   try {
     const { username = "", email = "", password = "" } = req.body || {};
@@ -177,7 +176,6 @@ app.post("/api/auth/login", async (req, res) => {
     res.json({ status: "error", message: "ล็อกอินล้มเหลว" });
   }
 });
-
 
 app.post("/api/auth/forgot", async (req, res) => {
   try {
@@ -233,39 +231,32 @@ app.post("/api/auth/reset", async (req, res) => {
   }
 });
 
+app.put("/api/auth/profile", authRequired, upload.single("profileImg"), async (req, res) => {
+  try {
+    const user = await User.findById(req.uid);
+    if (!user) return res.status(404).json({ status: "error", message: "ไม่พบผู้ใช้" });
 
-app.put(
-  "/api/auth/profile",
-  authRequired,
-  upload.single("profileImg"),
-  async (req, res) => {
-    try {
-      const user = await User.findById(req.uid);
-      if (!user) return res.status(404).json({ status: "error", message: "ไม่พบผู้ใช้" });
+    if (req.body.username && req.body.username.trim())
+      user.username = req.body.username.trim();
 
-      if (req.body.username && req.body.username.trim())
-        user.username = req.body.username.trim();
+    if (req.file && req.file.path) user.profileImg = req.file.path;
 
-      if (req.file && req.file.path) user.profileImg = req.file.path;
+    await user.save();
 
-      await user.save();
-
-      res.json({
-        status: "success",
-        user: {
-          id: user._id,
-          username: user.username,
-          email: user.email,
-          profileImg: user.profileImg,
-        },
-      });
-    } catch (err) {
-      console.error("PROFILE UPDATE ERROR:", err.message);
-      res.status(500).json({ status: "error", message: "อัปเดตโปรไฟล์ล้มเหลว" });
-    }
+    res.json({
+      status: "success",
+      user: {
+        id: user._id,
+        username: user.username,
+        email: user.email,
+        profileImg: user.profileImg,
+      },
+    });
+  } catch (err) {
+    console.error("PROFILE UPDATE ERROR:", err.message);
+    res.status(500).json({ status: "error", message: "อัปเดตโปรไฟล์ล้มเหลว" });
   }
-);
-
+});
 
 app.get("/api/explore", authRequired, async (req, res) => {
   try {
@@ -280,33 +271,33 @@ app.get("/api/explore", authRequired, async (req, res) => {
   }
 });
 
-// === AI Assistant (GPT) Endpoint ===
-app.post("/api/assistant", async (req, res) => {
+// === AI Assistant (GPT) Endpoint + Rate Limit ===
+const aiLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 20,
+  message: { reply: "คุณถามบ่อยเกินไป กรุณารอสักครู่ก่อนคุยกับ AI ต่อครับ 😅" },
+});
+
+app.post("/api/assistant", aiLimiter, async (req, res) => {
   try {
     const { q } = req.body || {};
-    if (!q || !q.trim()) {
-      return res.json({ reply: "โปรดพิมพ์คำถามมาก่อนนะครับ 😊" });
-    }
+    if (!q || !q.trim()) return res.json({ reply: "โปรดพิมพ์คำถามมาก่อนนะครับ 😊" });
 
     const response = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
       headers: {
-        "Authorization": `Bearer ${process.env.OPENAI_API_KEY}`,
-        "Content-Type": "application/json"
+        "Authorization": `Bearer ${OPENAI_API_KEY}`,
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
         model: "gpt-4o-mini",
         messages: [
-          {
-            role: "system",
-            content:
-              "You are D.C. Assistant, a friendly and factual Washington D.C. tour guide who answers in Thai. Give clear, concise, and polite responses."
-          },
-          { role: "user", content: q }
+          { role: "system", content: "You are D.C. Assistant, a friendly Thai-speaking tour guide for Washington D.C. Answer politely, clearly, and concisely." },
+          { role: "user", content: q },
         ],
         temperature: 0.7,
-        max_tokens: 350
-      })
+        max_tokens: 350,
+      }),
     });
 
     if (!response.ok) {
@@ -316,38 +307,24 @@ app.post("/api/assistant", async (req, res) => {
     }
 
     const data = await response.json();
-    const reply =
-      data?.choices?.[0]?.message?.content ||
-      "ขอโทษครับ ตอนนี้ฉันยังไม่เข้าใจคำถามนี้";
-
+    const reply = data?.choices?.[0]?.message?.content || "ขอโทษครับ ตอนนี้ฉันยังไม่เข้าใจคำถามนี้";
     res.json({ reply });
   } catch (err) {
     console.error("AI Route Error:", err.message);
-    res.json({
-      reply:
-        "เกิดข้อผิดพลาดในการเชื่อมต่อ AI 😢 โปรดลองอีกครั้งภายหลัง",
-    });
+    res.json({ reply: "เกิดข้อผิดพลาดในการเชื่อมต่อ AI 😢 โปรดลองอีกครั้งภายหลัง" });
   }
 });
-
-
-
 
 app.get("/api/proxy-smithsonian/:id", async (req, res) => {
   try {
     const { id } = req.params;
     const normalizedId = id.replace(/^edanmdm:/, "edanmdm-").replace(/^edanmdm--/, "edanmdm-");
     const url = `https://edan.si.edu/openaccess/api/v1.0/content/${normalizedId}`;
-
     const response = await fetch(url);
     if (!response.ok) throw new Error(`Smithsonian fetch failed: ${response.status}`);
-
     const data = await response.json();
 
     res.setHeader("Access-Control-Allow-Origin", "*");
-    res.setHeader("Access-Control-Allow-Methods", "GET");
-    res.setHeader("Access-Control-Allow-Headers", "Content-Type");
-
     res.json(data);
   } catch (err) {
     console.error("Proxy Smithsonian Error:", err.message);
@@ -355,18 +332,11 @@ app.get("/api/proxy-smithsonian/:id", async (req, res) => {
   }
 });
 
-
-app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "intro.html"));
-});
-
-
+app.get("/", (req, res) => res.sendFile(path.join(__dirname, "public", "intro.html")));
 app.get(/.*/, (req, res, next) => {
   if (req.path.startsWith("/api")) return next();
   res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
-
 const port = process.env.PORT || 10000;
 app.listen(port, () => console.log(`🚀 Server Online → PORT ${port}`));
-
