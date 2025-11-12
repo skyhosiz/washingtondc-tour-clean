@@ -25,7 +25,8 @@
   document.body.appendChild(host);
   const root = host.attachShadow({ mode: "open" });
 
-  const css = `
+    const css = `
+   html,body{touch-action:manipulation;-webkit-text-size-adjust:100%;font-size:16px;}
   *{box-sizing:border-box;font-family:'Kanit',system-ui,sans-serif;}
   .fab{
     width:54px;height:54px;border-radius:50%;
@@ -53,6 +54,7 @@
     display:none;flex-direction:column;overflow:hidden;
     opacity:0;transform:translateY(8px);transition:all .25s ease;
     touch-action:manipulation;
+    max-width: 360px !important;
   }
   .box.show{display:flex;opacity:1;transform:translateY(0);}
   .hd{display:flex;align-items:center;justify-content:space-between;
