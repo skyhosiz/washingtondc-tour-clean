@@ -280,25 +280,25 @@ app.post("/api/assistant", async (req, res) => {
     }
 
     // --- ยิง Gemini โดยตรง ---
-    const geminiRes = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${process.env.GEMINI_API_KEY}`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          contents: [
+    // ✅ รุ่นใหม่ล่าสุด (2025)
+const geminiRes = await fetch(
+  `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`,
+  {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      contents: [
+        {
+          parts: [
             {
-              parts: [
-                {
-                  text: `ตอบคำถามนี้เป็นภาษาไทยอย่างสุภาพและให้ข้อมูลจริงในฐานะไกด์นำเที่ยววอชิงตัน ดี.ซี.:
-${q}`
-                }
-              ]
+              text: `ตอบคำถามนี้เป็นภาษาไทยแบบไกด์วอชิงตัน ดี.ซี. ที่เป็นมิตรและให้ข้อมูลจริง:\n${q}`
             }
           ]
-        })
-      }
-    );
+        }
+      ]
+    }),
+  }
+);
 
     if (!geminiRes.ok) {
       const text = await geminiRes.text();
