@@ -25,7 +25,7 @@ const app = express();
   "CLOUDINARY_CLOUD_NAME",
   "CLOUDINARY_API_KEY",
   "CLOUDINARY_API_SECRET",
-  "OPENAI_API_KEY", // ✅ เพิ่มตัวนี้เผื่อพลาด
+  "GEMINI_API_KEY", // ✅ เพิ่มตัวนี้เผื่อพลาด
 ].forEach((v) => {
   if (!process.env[v]) {
     console.error(`🚨 Missing ENV: ${v}`);
