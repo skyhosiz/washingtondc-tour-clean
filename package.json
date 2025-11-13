@@ -9,7 +9,8 @@
     "npm": "10.x"
   },
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "prepare": "husky"
   },
   "dependencies": {
     "bcryptjs": "^3.0.2",
@@ -32,6 +33,18 @@
     "zod": "^4.1.12"
   },
   "devDependencies": {
-    "@types/node": "^24.10.0"
+    "@types/node": "^24.10.0",
+    "eslint": "^9.39.1",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.4",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.6",
+    "prettier": "^3.6.2"
+  },
+  "lint-staged": {
+    "*.js": [
+      "eslint --fix",
+      "prettier --write"
+    ]
   }
 }
