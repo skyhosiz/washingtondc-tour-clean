@@ -1,4 +1,3 @@
-// 🌎 D.C. Assistant v7 — Guide + Tutorial (100% Working Links, Modern & Safe)
 (() => {
   if (window.__DC_ASSISTANT__) return;
   window.__DC_ASSISTANT__ = true;
@@ -12,7 +11,6 @@
     border: "rgba(255,255,255,.08)"
   };
 
-  // 🧠 Tutorial Mode — แสดงเฉพาะครั้งแรก
   if (!localStorage.getItem("dc_tutorial_done")) {
     const overlay = document.createElement("div");
     overlay.style.cssText = `
@@ -39,7 +37,6 @@
     };
   }
 
-  // 🌍 Root shadow host
   const host = document.createElement("div");
   Object.assign(host.style, {
     position: "fixed",
