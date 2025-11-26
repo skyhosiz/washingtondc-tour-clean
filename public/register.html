@@ -18,7 +18,10 @@
     <script src="js/nav.js" defer></script>
 
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
 
     <title>Register | Washington D.C.</title>
 
@@ -47,7 +50,7 @@
         border-radius: 26px;
         padding: 38px;
         text-align: center;
-        color: white;
+        color: #fff;
         box-shadow: 0 0 38px rgba(255, 140, 30, 0.28);
       }
       h2 {
@@ -94,7 +97,7 @@
         background: #ff7a00;
         border-radius: 8px;
         text-decoration: none;
-        color: white;
+        color: #fff;
         font-weight: 700;
       }
       .login-box a:hover {
@@ -257,7 +260,6 @@
         "easytrashmail.com",
         "dudmail.com",
         "deadaddress.com",
-        "0815.ru",
         "ezstest.com",
         "litedrop.com",
         "nowmymail.com",
@@ -268,7 +270,7 @@
         "yopmail.net",
         "yopmail.org",
         "yopmail.biz",
-        " yopmail.info",
+        "yopmail.info",
         "yopmail.pp.ua",
         "cool.fr.nf",
         "jetable.org",
@@ -312,11 +314,8 @@
         "tempemail.net",
         "trbvm.com",
         "zoemail.org",
-        "guerrillamailblock.com",
         "mailmoat.com",
         "uroid.com",
-        "mailnesia.com",
-        "spammotel.com",
       ];
 
       function strongPass(p) {
@@ -329,24 +328,30 @@
         const email = emailInput.value.trim().toLowerCase();
         const password = passwordInput.value.trim();
 
-        if (!username || !email || !password)
-          return alert(⚠️ กรุณากรอกข้อมูลให้ครบ!");
+        if (!username || !email || !password) {
+          return alert("⚠️ กรุณากรอกข้อมูลให้ครบ!");
+        }
 
-        if (username.length < 4 || username.length > 16)
+        if (username.length < 4 || username.length > 16) {
           return alert("⚠️ ชื่อผู้ใช้ต้อง 4–16 ตัว");
+        }
 
-        if (!/^[A-Za-z0-9_.]+$/.test(username))
+        if (!/^[A-Za-z0-9_.]+$/.test(username)) {
           return alert("⚠️ ใช้ A-Z, 0-9, _, . เท่านั้น");
+        }
 
-        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
           return alert("📧 อีเมลไม่ถูกต้อง!");
+        }
 
         const domain = email.split("@")[1];
-        if (BAD_DOMAINS.includes(domain))
+        if (BAD_DOMAINS.includes(domain)) {
           return alert("🚫 ไม่รองรับอีเมลแบบทิ้ง!");
+        }
 
-        if (!strongPass(password))
+        if (!strongPass(password)) {
           return alert("🔐 ใช้รหัสผ่านแนะนำ: ≥ 8 ตัว + ตัวใหญ่ + ตัวเลข");
+        }
 
         btn.disabled = true;
         const oldText = btn.textContent;
@@ -361,9 +366,10 @@
 
           const data = await res.json().catch(() => null);
 
-          if (res.ok && data.status === "success") {
+          if (res.ok && data?.status === "success") {
             alert("✅ สมัครสำเร็จ!");
-            return (location.href = "login.html");
+            location.href = "login.html";
+            return;
           }
 
           alert(data?.message || "❌ อีเมลนี้ถูกใช้แล้ว!");
