@@ -11,7 +11,6 @@ const cloudinary = require("cloudinary").v2;
 const { CloudinaryStorage } = require("multer-storage-cloudinary");
 const rateLimit = require("express-rate-limit");
 const helmet = require("helmet");
-const mongoSanitize = require("express-mongo-sanitize");
 const fetch = (...args) =>
   import("node-fetch").then(({ default: f }) => f(...args));
 
@@ -131,12 +130,15 @@ async function sendMailBrevo({ to, subject, html }) {
   }
 }
 
-function isStrongPassword(p = "") {
-  return p.length >= 8 && /[A-Z]/.test(p) && /\d/.test(p);
-}
-
-// ---------- Middleware ----------
+// ---------- Basic security middlewares ----------
 app.disable("x-powered-by");
+
+app.use(
+  helmet({
+    contentSecurityPolicy: false, // กัน CSP ไปชน inline script ของเว็บ
+  })
+);
+
 const allowed = [CLIENT_URL, "http://localhost:3000"];
 
 app.use(
@@ -150,32 +152,38 @@ app.use(
   })
 );
 
-// security middlewares
-app.use(
-  helmet({
-    crossOriginResourcePolicy: false, // กันรูป/ไฟล์ static พัง
-  })
-);
-app.use(
-  mongoSanitize({
-    replaceWith: "_",
-  })
-);
-
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "public")));
 
-// ---------- Rate limit ----------
+// ---------- Custom Mongo sanitize (แทน express-mongo-sanitize) ----------
+function sanitizeObject(obj) {
+  if (!obj || typeof obj !== "object") return;
+  for (const key of Object.keys(obj)) {
+    if (key.startsWith("$") || key.includes(".")) {
+      delete obj[key];
+      continue;
+    }
+    const value = obj[key];
+    if (typeof value === "object") {
+      sanitizeObject(value);
+    }
+  }
+}
+
+app.use((req, res, next) => {
+  if (req.body) sanitizeObject(req.body);
+  if (req.query) sanitizeObject(req.query);
+  if (req.params) sanitizeObject(req.params);
+  next();
+});
+
+// ---------- Rate limits ----------
 const registerLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 5,
   standardHeaders: true,
   legacyHeaders: false,
-  message: {
-    status: "error",
-    message: "สมัครบ่อยเกินไป กรุณาลองใหม่ภายหลัง",
-  },
 });
 
 const loginLimiter = rateLimit({
@@ -183,10 +191,6 @@ const loginLimiter = rateLimit({
   max: 10,
   standardHeaders: true,
   legacyHeaders: false,
-  message: {
-    status: "error",
-    message: "พยายามล็อกอินบ่อยเกินไป กรุณาลองใหม่อีกสักพัก",
-  },
 });
 
 const forgotLimiter = rateLimit({
@@ -194,10 +198,6 @@ const forgotLimiter = rateLimit({
   max: 5,
   standardHeaders: true,
   legacyHeaders: false,
-  message: {
-    status: "error",
-    message: "ขออีเมลรีเซ็ตรัวเกิน ระบบป้องกัน brute-force ทำงานอยู่",
-  },
 });
 
 // ============ AUTH ============
@@ -205,32 +205,12 @@ const forgotLimiter = rateLimit({
 // REGISTER + send verify email
 app.post("/api/auth/register", registerLimiter, async (req, res) => {
   try {
-    const rawUsername = (req.body?.username || "").trim();
-    const rawEmail = (req.body?.email || "").trim().toLowerCase();
-    const rawPassword = (req.body?.password || "").trim();
+    const { username = "", email = "", password = "" } = req.body || {};
 
-    const username = rawUsername;
-    const email = rawEmail;
-    const password = rawPassword;
-
-    if (!username || !email || !password) {
+    if (!email || !password) {
       return res.json({
         status: "error",
-        message: "กรุณากรอกชื่อผู้ใช้ อีเมล และรหัสผ่านให้ครบ",
-      });
-    }
-
-    if (username.length < 4 || username.length > 16) {
-      return res.json({
-        status: "error",
-        message: "ชื่อผู้ใช้ต้องมีความยาว 4–16 ตัวอักษร",
-      });
-    }
-
-    if (!/^[A-Za-z0-9_.]+$/.test(username)) {
-      return res.json({
-        status: "error",
-        message: "ชื่อผู้ใช้ใช้ได้เฉพาะ A-Z, 0-9, _ และ .",
+        message: "กรุณากรอกอีเมลและรหัสผ่านให้ครบ",
       });
     }
 
@@ -238,13 +218,6 @@ app.post("/api/auth/register", registerLimiter, async (req, res) => {
       return res.json({
         status: "error",
         message: "รูปแบบอีเมลไม่ถูกต้อง!",
-      });
-    }
-
-    if (!isStrongPassword(password)) {
-      return res.json({
-        status: "error",
-        message: "รหัสผ่านควรยาว ≥ 8 ตัว มีตัวใหญ่ ≥ 1 ตัว และตัวเลข ≥ 1 ตัว",
       });
     }
 
@@ -352,27 +325,7 @@ app.post("/api/auth/verify-email", async (req, res) => {
 // LOGIN (บังคับต้อง verify ก่อน)
 app.post("/api/auth/login", loginLimiter, async (req, res) => {
   try {
-    const rawEmail = (req.body?.email || "").trim().toLowerCase();
-    const rawPassword = (req.body?.password || "").trim();
-
-    const email = rawEmail;
-    const password = rawPassword;
-
-    if (!email || !password) {
-      return res.json({
-        status: "error",
-        message: "กรุณากรอกอีเมลและรหัสผ่าน",
-      });
-    }
-
-    if (!emailRegex.test(email)) {
-      // ยังตอบรวมเพื่อไม่ให้เดาอีเมลได้ง่าย
-      return res.json({
-        status: "error",
-        message: "อีเมลหรือรหัสผ่านไม่ถูกต้อง",
-      });
-    }
-
+    const { email = "", password = "" } = req.body || {};
     const u = await User.findOne({ email });
 
     if (!u) {
@@ -382,8 +335,8 @@ app.post("/api/auth/login", loginLimiter, async (req, res) => {
       });
     }
 
+    // ถ้า emailVerified ไม่มี (user เก่า) หรือ false → ให้ถือว่ายังไม่ยืนยัน
     if (u.emailVerified !== true) {
-      // ส่งเมลยืนยันซ้ำให้อัตโนมัติ (ignore error เพื่อไม่ให้บล็อก login flow)
       try {
         const token = jwt.sign({ uid: u._id }, VERIFY_EMAIL_SECRET, {
           expiresIn: "1d",
@@ -452,9 +405,7 @@ app.post("/api/auth/login", loginLimiter, async (req, res) => {
 // FORGOT
 app.post("/api/auth/forgot", forgotLimiter, async (req, res) => {
   try {
-    const rawEmail = (req.body?.email || "").trim().toLowerCase();
-    const email = rawEmail;
-
+    const { email = "" } = req.body || {};
     if (!email) {
       return res.json({ status: "error", message: "กรุณากรอกอีเมล" });
     }
@@ -509,21 +460,11 @@ app.post("/api/auth/forgot", forgotLimiter, async (req, res) => {
 // RESET
 app.post("/api/auth/reset", async (req, res) => {
   try {
-    const token = (req.body?.token || "").trim();
-    const password = (req.body?.password || "").trim();
-
+    const { token = "", password = "" } = req.body || {};
     if (!token || !password) {
       return res.json({
         status: "error",
         message: "ข้อมูลไม่ครบ",
-      });
-    }
-
-    if (!isStrongPassword(password)) {
-      return res.json({
-        status: "error",
-        message:
-          "รหัสผ่านใหม่ควรยาว ≥ 8 ตัว มีตัวใหญ่ ≥ 1 ตัว และตัวเลข ≥ 1 ตัว",
       });
     }
 
@@ -567,14 +508,7 @@ app.put(
       }
 
       if (req.body.username && req.body.username.trim()) {
-        const newName = req.body.username.trim();
-        if (
-          newName.length >= 4 &&
-          newName.length <= 16 &&
-          /^[A-Za-z0-9_.]+$/.test(newName)
-        ) {
-          user.username = newName;
-        }
+        user.username = req.body.username.trim();
       }
 
       if (req.file && req.file.path) {
