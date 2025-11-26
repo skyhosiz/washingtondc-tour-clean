@@ -2,7 +2,10 @@
 <html lang="th">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
 
     <title>Profile | Washington D.C.</title>
 
@@ -127,7 +130,6 @@
   </head>
 
   <body>
-    
     <div class="card" id="profileCard">
       <img
         id="profileImg"
@@ -153,8 +155,18 @@
           ? "http://localhost:3000"
           : "https://washingtondc-tour-clean-1.onrender.com";
 
+      // กัน cache รูปเก่า เวลาเปลี่ยนรูปโปรไฟล์ใหม่
+      function withCacheBust(url) {
+        const fallback = "pic/default.png";
+        if (!url) return fallback;
+        const sep = url.includes("?") ? "&" : "?";
+        return url + sep + "v=" + Date.now();
+      }
+
       document.addEventListener("DOMContentLoaded", () => {
+        // ใช้ข้อมูลใน localStorage แสดงก่อน (เร็ว)
         showCachedIfAny();
+        // แล้วค่อยยิงไปเอาข้อมูลล่าสุดจาก server มาอัปเดตทับ
         fetchProfile();
       });
 
@@ -165,13 +177,22 @@
 
       async function fetchProfile() {
         const card = document.getElementById("profileCard");
-        card.style.opacity = "0.35";
         const token = localStorage.getItem("token");
+        if (!token) return;
+
+        card.style.opacity = "0.35";
 
         try {
           const res = await fetch(`${API_BASE}/api/auth/profile`, {
+            method: "GET",
             headers: { Authorization: "Bearer " + token },
           });
+
+          if (!res.ok) {
+            console.warn("Profile API not OK:", res.status);
+            return;
+          }
+
           const data = await res.json().catch(() => null);
           if (data && data.status === "success" && data.user) {
             localStorage.setItem("user", JSON.stringify(data.user));
@@ -186,12 +207,22 @@
 
       function showProfile(u) {
         const img = document.getElementById("profileImg");
-        document.getElementById("profileName").textContent = u.username || "-";
-        document.getElementById("profileEmail").textContent = u.email || "-";
-        document.getElementById("usernameTop").textContent =
-          u.username || "User";
-        img.src = u.profileImg || "pic/default.png";
-        img.onerror = () => (img.src = "pic/default.png");
+        const nameEl = document.getElementById("profileName");
+        const emailEl = document.getElementById("profileEmail");
+        const usernameTopEl = document.getElementById("usernameTop"); // บางหน้ามี บางหน้าไม่มี
+
+        nameEl.textContent = u.username || "-";
+        emailEl.textContent = u.email || "-";
+
+        // อัปเดตชื่อบน navbar ถ้ามี element นี้
+        if (usernameTopEl) {
+          usernameTopEl.textContent = u.username || "User";
+        }
+
+        img.src = withCacheBust(u.profileImg);
+        img.onerror = () => {
+          img.src = "pic/default.png";
+        };
       }
 
       function logout() {
@@ -200,6 +231,7 @@
         window.location.href = "index.html";
       }
     </script>
+
     <script src="js/auth.js" defer></script>
     <script src="js/nav.js" defer></script>
   </body>
