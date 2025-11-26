@@ -165,7 +165,7 @@ const forgotLimiter = rateLimit({
 
 // ============ AUTH ============
 
-// REGISTER + send verify email
+// REGISTER + send verify email (fire-and-forget)
 app.post("/api/auth/register", registerLimiter, async (req, res) => {
   try {
     const { username = "", email = "", password = "" } = req.body || {};
@@ -222,12 +222,14 @@ app.post("/api/auth/register", registerLimiter, async (req, res) => {
       </div>
     `;
 
-    // ถ้า Brevo ใช้ไม่ได้ตอนนี้ก็จะ error ที่นี่ (แล้วจะไป catch ด้านล่าง)
-    await sendMailBrevo({
+    // ยิงเมลแบบไม่รอ เพื่อลด latency
+    sendMailBrevo({
       to: email,
       subject: "ยืนยันอีเมล | Washington D.C. Tour",
       html,
-    });
+    }).catch((err) =>
+      console.error("REGISTER VERIFY EMAIL ERROR:", err.message)
+    );
 
     return res.json({
       status: "success",
@@ -300,7 +302,6 @@ app.post("/api/auth/login", async (req, res) => {
 
     // ถ้า emailVerified ไม่มี (user เก่า) หรือ false → ให้ถือว่ายังไม่ยืนยัน
     if (u.emailVerified !== true) {
-      // ส่งเมลยืนยันซ้ำให้อัตโนมัติ
       try {
         const token = jwt.sign({ uid: u._id }, VERIFY_EMAIL_SECRET, {
           expiresIn: "1d",
@@ -322,13 +323,17 @@ app.post("/api/auth/login", async (req, res) => {
             <p>หากปุ่มกดไม่ได้ ให้คัดลอกลิงก์นี้ไปวางในเบราว์เซอร์:<br>${verifyUrl}</p>
           </div>
         `;
-        await sendMailBrevo({
+
+        // resend เมลแบบ fire-and-forget
+        sendMailBrevo({
           to: u.email,
           subject: "กรุณายืนยันอีเมลเพื่อเข้าสู่ระบบ | Washington D.C. Tour",
           html,
-        });
+        }).catch((err) =>
+          console.error("RESEND VERIFY ERROR:", err.message)
+        );
       } catch (mailErr) {
-        console.error("RESEND VERIFY ERROR:", mailErr.message);
+        console.error("RESEND VERIFY BUILD ERROR:", mailErr.message);
       }
 
       return res.json({
@@ -366,7 +371,7 @@ app.post("/api/auth/login", async (req, res) => {
   }
 });
 
-// FORGOT
+// FORGOT (fire-and-forget email)
 app.post("/api/auth/forgot", forgotLimiter, async (req, res) => {
   try {
     const { email = "" } = req.body || {};
@@ -405,11 +410,11 @@ app.post("/api/auth/forgot", forgotLimiter, async (req, res) => {
       </div>
     `;
 
-    await sendMailBrevo({
+    sendMailBrevo({
       to: email,
       subject: "ตั้งรหัสผ่านใหม่ | Washington D.C. Tour",
       html,
-    });
+    }).catch((err) => console.error("FORGOT EMAIL ERROR:", err.message));
 
     res.json({ status: "success" });
   } catch (e) {
