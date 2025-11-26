@@ -9,8 +9,7 @@
     "npm": "10.x"
   },
   "scripts": {
-    "start": "node server.js",
-    "prepare": "husky"
+    "start": "node server.js"
   },
   "dependencies": {
     "bcryptjs": "^3.0.2",
@@ -40,11 +39,5 @@
     "husky": "^9.1.7",
     "lint-staged": "^16.2.6",
     "prettier": "^3.6.2"
-  },
-  "lint-staged": {
-    "*.js": [
-      "eslint --fix",
-      "prettier --write"
-    ]
   }
 }

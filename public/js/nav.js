@@ -1,4 +1,3 @@
-// 🌎 Universal Navbar — FlukeTON Glass Edition (Responsive + Profile Friendly)
 (function () {
   if (window.__NAV_LOADED__) return;
   window.__NAV_LOADED__ = true;
@@ -9,7 +8,6 @@
   const HIDE_ON = new Set(["login.html", "register.html", "forgot.html", "reset.html"]);
   if (HIDE_ON.has(current)) return;
 
-  // 🧊 Navbar container
   const nav = document.createElement("nav");
   nav.style.cssText = `
     width:100%;
@@ -53,7 +51,6 @@
   });
   left += `</div>`;
 
-  // 👤 User info (highlighted bubble)
   let right = `<div id="nav-right" style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">`;
   if (token) {
     right += `
@@ -85,7 +82,6 @@
   }
   right += `</div>`;
 
-  // 🍔 Hamburger (mobile)
   const burger = document.createElement("div");
   burger.innerHTML = `
     <div style="width:26px;height:3px;background:#fff;margin:4px 0;border-radius:2px;"></div>
@@ -97,7 +93,6 @@
   nav.appendChild(burger);
   document.body.prepend(nav);
 
-  // 📱 Mobile responsive menu
   const media = window.matchMedia("(max-width: 768px)");
   function handleMobile(e) {
     const leftDiv = document.getElementById("nav-left");
@@ -126,7 +121,6 @@
   handleMobile(media);
   media.addEventListener("change", handleMobile);
 
-  // 🔒 Logout
   if (token) {
     document.getElementById("logoutBtn").onclick = () => {
       localStorage.removeItem("token");
@@ -135,7 +129,6 @@
     };
   }
 
-  // ⬆️ Smooth hide on scroll
   let lastY = 0;
   window.addEventListener("scroll", () => {
     const now = window.scrollY;

@@ -47,7 +47,6 @@
   document.body.appendChild(host);
   const root = host.attachShadow({ mode: "open" });
 
-  // 🎨 Style
   const css = `
   *{box-sizing:border-box;font-family:'Kanit',system-ui,sans-serif;}
   .fab{
@@ -86,7 +85,6 @@
   }`;
   root.appendChild(Object.assign(document.createElement("style"), { textContent: css }));
 
-  // 🧩 Elements
   const fab = Object.assign(document.createElement("div"), {
     className: "fab",
     innerHTML: "📍",
@@ -108,7 +106,6 @@
   const body = box.querySelector(".body");
   const closeBtn = box.querySelector(".close");
 
-  // 📚 Updated & Verified Links
   const LINKS = [
     {
       title: "🏛️ พิพิธภัณฑ์ที่ควรไป",
@@ -166,7 +163,6 @@
     }
   ];
 
-  // 🪄 Render Cards
   LINKS.forEach(item => {
     const card = document.createElement("div");
     card.className = "link-card";
@@ -179,7 +175,6 @@
     body.appendChild(card);
   });
 
-  // 🎬 Events
   fab.onclick = () => box.classList.toggle("show");
   closeBtn.onclick = () => box.classList.remove("show");
 })();

@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="th">
   <head>
+    <!-- GA -->
     <script
       async
       src="https://www.googletagmanager.com/gtag/js?id=G-VGBZS316J9"
@@ -14,11 +15,19 @@
       gtag("config", "G-VGBZS316J9");
     </script>
 
-    <script src="js/auth.js"></script>
+    <!-- ปิด nav auth เหมือน login / verify -->
+    <script>
+      window.DISABLE_NAV_AUTH = true;
+    </script>
+
+    <script src="js/auth.js" defer></script>
     <script src="js/nav.js" defer></script>
 
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
 
     <title>Register | Washington D.C.</title>
 
@@ -33,41 +42,68 @@
         padding: 0;
         box-sizing: border-box;
       }
+
       body {
         font-family: "Kanit", sans-serif;
         height: 100svh;
         display: flex;
         justify-content: center;
         align-items: center;
+        padding: 20px;
         background: url("pic/dc_sunset.png") no-repeat center/cover;
+        -webkit-tap-highlight-color: transparent;
       }
+
       .reg-container {
-        width: 420px;
-        background: rgba(10, 0, 25, 0.83);
+        width: 100%;
+        max-width: 420px;
+        background: rgba(10, 0, 25, 0.86);
         border-radius: 26px;
-        padding: 38px;
+        padding: 34px 30px 26px;
         text-align: center;
-        color: white;
-        box-shadow: 0 0 38px rgba(255, 140, 30, 0.28);
+        color: #fff;
+        box-shadow: 0 0 38px rgba(255, 140, 30, 0.32);
+        animation: fadeIn 0.6s ease-out;
       }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(18px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
       h2 {
-        font-size: 34px;
-        margin-bottom: 20px;
+        font-size: 32px;
+        margin-bottom: 6px;
         font-weight: 800;
         background: linear-gradient(90deg, #ffd089, #ff8a25);
         -webkit-background-clip: text;
         background-clip: text;
         color: transparent;
+        text-shadow: 0 0 14px rgba(255, 150, 30, 0.45);
       }
+
+      .subtitle {
+        font-size: 13px;
+        color: #ffdba0;
+        margin-bottom: 18px;
+      }
+
       input {
         width: 100%;
         padding: 12px;
         border-radius: 10px;
         border: none;
-        font-size: 17px;
-        margin: 10px 0;
-        color: #333;
+        font-size: 16px;
+        margin: 8px 0;
+        color: #222;
       }
+
       button {
         width: 100%;
         padding: 12px;
@@ -75,28 +111,34 @@
         background: linear-gradient(90deg, #ffe29c, #ff8522);
         border: none;
         border-radius: 12px;
-        font-size: 18px;
-        font-weight: bold;
+        font-size: 17px;
+        font-weight: 800;
         cursor: pointer;
         transition: 0.25s;
         color: #222;
       }
+
       button:hover {
         transform: scale(1.05);
+        box-shadow: 0 0 24px rgba(255, 140, 30, 0.75);
       }
+
       .login-box {
         margin-top: 18px;
-        font-size: 15px;
+        font-size: 14px;
+        color: #ffdba0;
       }
+
       .login-box a {
         margin-left: 6px;
         padding: 4px 12px;
         background: #ff7a00;
         border-radius: 8px;
         text-decoration: none;
-        color: white;
+        color: #fff;
         font-weight: 700;
       }
+
       .login-box a:hover {
         background: #ff9831;
       }
@@ -106,9 +148,17 @@
   <body>
     <div class="reg-container">
       <h2>สร้างบัญชี</h2>
+      <div class="subtitle">
+        สมัครเสร็จแล้ว ระบบจะส่งอีเมลให้คุณกดลิงก์เพื่อยืนยันก่อนเข้าสู่ระบบ
+      </div>
 
       <input type="text" id="username" placeholder="ชื่อผู้ใช้ (4–16 ตัว)" />
-      <input type="email" id="email" placeholder="อีเมล" autocomplete="email" />
+      <input
+        type="email"
+        id="email"
+        placeholder="อีเมล"
+        autocomplete="email"
+      />
       <input
         type="password"
         id="password"
@@ -116,10 +166,11 @@
         autocomplete="new-password"
       />
 
-      <button id="regBtn" onclick="register()">สมัครสมาชิก</button>
+      <button id="regBtn" type="button">สมัครสมาชิก</button>
 
       <div class="login-box">
-        มีบัญชีแล้ว? <a href="login.html">เข้าสู่ระบบ</a>
+        มีบัญชีแล้ว?
+        <a href="login.html">เข้าสู่ระบบ</a>
       </div>
     </div>
 
@@ -257,7 +308,6 @@
         "easytrashmail.com",
         "dudmail.com",
         "deadaddress.com",
-        "0815.ru",
         "ezstest.com",
         "litedrop.com",
         "nowmymail.com",
@@ -316,7 +366,7 @@
         "mailmoat.com",
         "uroid.com",
         "mailnesia.com",
-        "spammotel.com",
+        "spammotel.com"
       ];
 
       function strongPass(p) {
@@ -325,6 +375,10 @@
 
       async function register() {
         const btn = document.getElementById("regBtn");
+        const usernameInput = document.getElementById("username");
+        const emailInput = document.getElementById("email");
+        const passwordInput = document.getElementById("password");
+
         const username = usernameInput.value.trim();
         const email = emailInput.value.trim().toLowerCase();
         const password = passwordInput.value.trim();
@@ -362,11 +416,13 @@
           const data = await res.json().catch(() => null);
 
           if (res.ok && data.status === "success") {
-            alert("✅ สมัครสำเร็จ!");
+            alert(
+              "✅ สมัครสำเร็จ!\nกรุณาเช็กอีเมลแล้วกดลิงก์ยืนยันก่อนเข้าสู่ระบบ"
+            );
             return (location.href = "login.html");
           }
 
-          alert(data?.message || "❌ อีเมลนี้ถูกใช้แล้ว!");
+          alert(data?.message || "❌ ไม่สามารถสมัครสมาชิกได้");
         } catch (err) {
           console.error(err);
           alert("🚨 ระบบมีปัญหา กรุณาลองใหม่");
@@ -375,12 +431,8 @@
         btn.disabled = false;
         btn.textContent = oldText;
       }
-    </script>
 
-    <script>
-      const usernameInput = document.getElementById("username");
-      const emailInput = document.getElementById("email");
-      const passwordInput = document.getElementById("password");
+      document.getElementById("regBtn").addEventListener("click", register);
     </script>
   </body>
 </html>

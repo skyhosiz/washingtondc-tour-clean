@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="th">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+
+    <title>Verify Email | Washington D.C.</title>
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <script>
+      // ไม่ให้ navbar auth โผล่ (เหมือนหน้า login / register)
+      window.DISABLE_NAV_AUTH = true;
+    </script>
+    <script src="js/auth.js" defer></script>
+
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        height: 100%;
+      }
+      body {
+        font-family: "Kanit", sans-serif;
+        background: url("pic/dc_sunset.png") center/cover no-repeat fixed;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      .verify-box {
+        width: 100%;
+        max-width: 420px;
+        padding: 32px 26px 24px;
+        text-align: left;
+        background: rgba(10, 0, 25, 0.88);
+        border-radius: 26px;
+        box-shadow: 0 0 38px rgba(255, 140, 30, 0.35);
+        animation: fadeIn 0.6s ease-out;
+        color: #ffe9c9;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(18px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      h2 {
+        font-size: 30px;
+        margin-bottom: 8px;
+        font-weight: 800;
+        background: linear-gradient(90deg, #ffd089, #ff8a25);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        text-shadow: 0 0 14px rgba(255, 150, 30, 0.45);
+      }
+
+      .subtitle {
+        font-size: 14px;
+        color: #ffdba0;
+        margin-bottom: 18px;
+      }
+
+      .status-row {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        margin-bottom: 12px;
+      }
+
+      .dot {
+        width: 16px;
+        height: 16px;
+        border-radius: 999px;
+        margin-top: 3px;
+      }
+      .dot-loading {
+        background: #ffb347;
+        box-shadow: 0 0 14px rgba(255, 179, 71, 0.9);
+        animation: pulse 1s infinite;
+      }
+      .dot-success {
+        background: #42e37b;
+        box-shadow: 0 0 14px rgba(66, 227, 123, 0.9);
+      }
+      .dot-error {
+        background: #ff4b4b;
+        box-shadow: 0 0 14px rgba(255, 75, 75, 0.9);
+      }
+
+      .status-main {
+        font-size: 15px;
+        font-weight: 600;
+        margin-bottom: 3px;
+      }
+      .status-sub {
+        font-size: 13px;
+        color: #f2d3a8;
+      }
+
+      .hint {
+        font-size: 12px;
+        color: #f0c58c;
+        margin-top: 10px;
+      }
+
+      .actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+        margin-top: 20px;
+      }
+
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 8px 18px;
+        border-radius: 12px;
+        font-size: 14px;
+        font-weight: 700;
+        border: none;
+        cursor: pointer;
+        text-decoration: none;
+        transition: 0.2s;
+        white-space: nowrap;
+      }
+
+      .btn-primary {
+        background: linear-gradient(90deg, #ffe29c, #ff8522);
+        color: #222;
+        box-shadow: 0 0 24px rgba(255, 140, 30, 0.8);
+      }
+      .btn-primary:hover {
+        transform: scale(1.04);
+        box-shadow: 0 0 30px rgba(255, 140, 30, 1);
+      }
+
+      .btn-secondary {
+        background: rgba(0, 0, 0, 0.1);
+        color: #ffdba0;
+        border: 1px solid rgba(255, 210, 150, 0.55);
+      }
+      .btn-secondary:hover {
+        background: rgba(0, 0, 0, 0.25);
+      }
+
+      .token-debug {
+        margin-top: 8px;
+        font-size: 11px;
+        color: #e9ba7d;
+        word-break: break-all;
+        opacity: 0.7;
+        display: none; /* ถ้าอยาก debug ค่อยเปลี่ยนเป็น block */
+      }
+
+      @keyframes pulse {
+        0% {
+          transform: scale(1);
+          opacity: 1;
+        }
+        50% {
+          transform: scale(1.16);
+          opacity: 0.75;
+        }
+        100% {
+          transform: scale(1);
+          opacity: 1;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="verify-box">
+      <h2>ยืนยันอีเมล</h2>
+      <div class="subtitle">กำลังตรวจสอบลิงก์ยืนยันจากอีเมลของคุณ...</div>
+
+      <div class="status-row">
+        <div class="dot dot-loading" id="status-dot"></div>
+        <div>
+          <div class="status-main" id="status-main">
+            กำลังประมวลผล กรุณารอสักครู่
+          </div>
+          <div class="status-sub" id="status-sub">
+            ระบบกำลังเชื่อมต่อกับเซิร์ฟเวอร์และตรวจสอบ token
+          </div>
+        </div>
+      </div>
+
+      <div class="hint" id="hint">
+        หากหน้านี้ค้างนาน ลองรีเฟรชอีกครั้ง หรือกลับไปขออีเมลยืนยันใหม่จากหน้า
+        สมัครสมาชิก / ลืมรหัสผ่าน
+      </div>
+
+      <div class="actions" id="actions" style="display: none">
+        <a href="index.html" class="btn btn-secondary"> หน้าแรก </a>
+        <a href="login.html" class="btn btn-primary" id="btn-login">
+          ไปหน้าเข้าสู่ระบบ
+        </a>
+      </div>
+
+      <div class="token-debug" id="token-info"></div>
+    </div>
+
+    <script>
+      function getTokenFromQuery() {
+        const params = new URLSearchParams(window.location.search);
+        return params.get("token") || "";
+      }
+
+      async function verifyEmail() {
+        const token = getTokenFromQuery();
+        const dot = document.getElementById("status-dot");
+        const main = document.getElementById("status-main");
+        const sub = document.getElementById("status-sub");
+        const hint = document.getElementById("hint");
+        const actions = document.getElementById("actions");
+        const tokenInfo = document.getElementById("token-info");
+
+        if (!token) {
+          dot.className = "dot dot-error";
+          main.textContent = "ไม่พบ token สำหรับยืนยันอีเมล";
+          sub.textContent =
+            "ตรวจสอบให้แน่ใจว่าคุณเปิดลิงก์จากอีเมลล่าสุด หรือคัดลอกลิงก์มาครบถ้วน";
+          hint.textContent =
+            "ลองกลับไปขออีเมลยืนยันใหม่อีกครั้งจากหน้า สมัครสมาชิก หรือ ลืมรหัสผ่าน";
+          actions.style.display = "flex";
+          return;
+        }
+
+        // ถ้าอยาก debug token ก็เปิดบรรทัดนี้
+        // tokenInfo.style.display = "block";
+        // tokenInfo.textContent = "Token: " + token;
+
+        try {
+          const res = await fetch("/api/auth/verify-email", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ token }),
+          });
+
+          const data = await res.json();
+
+          if (data.status === "success") {
+            dot.className = "dot dot-success";
+            main.textContent = "ยืนยันอีเมลสำเร็จแล้ว 🎉";
+            sub.textContent =
+              data.message ||
+              "ตอนนี้คุณสามารถเข้าสู่ระบบด้วยบัญชีนี้ได้เลย";
+            hint.textContent = "คลิกปุ่ม “ไปหน้าเข้าสู่ระบบ” ด้านล่างเพื่อเข้าใช้งาน";
+            actions.style.display = "flex";
+          } else {
+            dot.className = "dot dot-error";
+            main.textContent = "ไม่สามารถยืนยันอีเมลได้";
+            sub.textContent =
+              data.message ||
+              "Token ไม่ถูกต้องหรือหมดอายุ ลองขออีเมลยืนยันใหม่อีกครั้ง";
+            hint.textContent =
+              "กลับไปหน้าแรกหรือไปหน้าล็อกอิน แล้วใช้ฟังก์ชันลืมรหัสผ่านหรือสมัครใหม่";
+            actions.style.display = "flex";
+          }
+        } catch (err) {
+          console.error("Verify Error:", err);
+          dot.className = "dot dot-error";
+          main.textContent = "เกิดข้อผิดพลาดในการเชื่อมต่อเซิร์ฟเวอร์";
+          sub.textContent =
+            "อาจเป็นปัญหาจากเครือข่ายหรือเซิร์ฟเวอร์ กรุณาลองใหม่ภายหลัง";
+          hint.textContent =
+            "ลองรีเฟรชหน้า หรือเข้าใช้งานอีกครั้งในภายหลัง ถ้ายังไม่ได้ให้ติดต่อผู้ดูแลระบบ";
+          actions.style.display = "flex";
+        }
+      }
+
+      verifyEmail();
+    </script>
+  </body>
+</html>
