@@ -1,265 +1,140 @@
 <!DOCTYPE html>
 <html lang="th">
-  <head>
-    <meta charset="UTF-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
-    />
-    <title>Verify Email | Washington D.C.</title>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+  <title>ยืนยันอีเมล | Washington D.C.</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600;800&display=swap"
+    rel="stylesheet"
+  />
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      font-family:"Kanit",sans-serif;
+      min-height:100vh;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      background:url("pic/dc_sunset.png") no-repeat center/cover;
+    }
+    .box {
+      width: min(560px, 92vw);
+      background: rgba(10,0,25,0.9);
+      border-radius: 32px;
+      padding: 32px 28px 26px;
+      color: #fff;
+      box-shadow: 0 0 40px rgba(0,0,0,.6);
+      text-align: center;
+    }
+    h1 {
+      font-size: 30px;
+      margin-bottom: 10px;
+      background: linear-gradient(90deg,#ffd089,#ff8a25);
+      -webkit-background-clip:text;
+      background-clip:text;
+      color:transparent;
+      font-weight:800;
+    }
+    p {
+      font-size: 16px;
+      margin-bottom: 12px;
+    }
+    .ok {
+      font-size: 18px;
+      font-weight:700;
+      margin: 12px 0 6px;
+    }
+    .btn-row {
+      margin-top: 18px;
+      display:flex;
+      gap:14px;
+      justify-content:center;
+      flex-wrap:wrap;
+    }
+    button {
+      padding: 10px 24px;
+      border-radius: 999px;
+      border:none;
+      font-size: 16px;
+      font-weight:700;
+      cursor:pointer;
+      transition:.2s;
+    }
+    .btn-secondary {
+      background: transparent;
+      color:#ffd089;
+      border:1px solid #ffd089;
+    }
+    .btn-primary {
+      background: linear-gradient(90deg,#ffe29c,#ff8a25);
+      color:#222;
+    }
+    button:hover { transform: translateY(-1px); }
+  </style>
+</head>
+<body>
+  <div class="box">
+    <h1 id="title">กำลังยืนยันอีเมล…</h1>
+    <p id="desc">โปรดรอสักครู่ ระบบกำลังตรวจสอบลิงก์ของคุณ</p>
 
-    <link
-      href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600;800&display=swap"
-      rel="stylesheet"
-    />
-
-    <script>
-      // ปิด nav auto ถ้ามีสคริปต์อื่นมา inject
-      window.DISABLE_NAV_AUTH = true;
-    </script>
-
-    <style>
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-      }
-      html,
-      body {
-        height: 100%;
-      }
-      body {
-        font-family: "Kanit", sans-serif;
-        background: url("pic/dc_sunset.png") center/cover no-repeat fixed;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        padding: 20px;
-        -webkit-tap-highlight-color: transparent;
-      }
-      .verify-box {
-        width: 100%;
-        max-width: 520px;
-        padding: 34px 32px 28px;
-        background: rgba(10, 0, 25, 0.9);
-        border-radius: 26px;
-        box-shadow: 0 0 38px rgba(255, 140, 30, 0.35);
-        color: #ffd9a0;
-        animation: fadeIn 0.6s ease-out;
-      }
-      @keyframes fadeIn {
-        from {
-          opacity: 0;
-          transform: translateY(18px);
-        }
-        to {
-          opacity: 1;
-          transform: translateY(0);
-        }
-      }
-      h1 {
-        font-size: 30px;
-        margin-bottom: 10px;
-        font-weight: 800;
-        background: linear-gradient(90deg, #ffd089, #ff8a25);
-        -webkit-background-clip: text;
-        background-clip: text;
-        color: transparent;
-        text-shadow: 0 0 14px rgba(255, 150, 30, 0.45);
-      }
-      .subtitle {
-        font-size: 15px;
-        color: #ffe3b7;
-        margin-bottom: 18px;
-      }
-      .status-row {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        margin-bottom: 8px;
-      }
-      .dot {
-        width: 12px;
-        height: 12px;
-        border-radius: 50%;
-        background: #ff595e;
-        box-shadow: 0 0 10px rgba(255, 89, 94, 0.8);
-      }
-      .dot.ok {
-        background: #4ade80;
-        box-shadow: 0 0 12px rgba(74, 222, 128, 0.9);
-      }
-      .status-label {
-        font-weight: 700;
-        font-size: 15px;
-      }
-      .msg {
-        font-size: 14px;
-        color: #ffe7c3;
-        line-height: 1.5;
-        margin-bottom: 12px;
-      }
-      .msg strong {
-        color: #ffffff;
-      }
-      .note {
-        font-size: 13px;
-        color: #ffcf8f;
-        margin-top: 8px;
-      }
-      .btn-row {
-        margin-top: 18px;
-        display: flex;
-        justify-content: flex-end;
-        gap: 10px;
-        flex-wrap: wrap;
-      }
-      .btn {
-        min-width: 120px;
-        padding: 9px 16px;
-        border-radius: 999px;
-        border: none;
-        font-size: 15px;
-        font-weight: 700;
-        cursor: pointer;
-        transition: 0.2s;
-        font-family: "Kanit", sans-serif;
-      }
-      .btn-ghost {
-        background: transparent;
-        color: #ffd9a0;
-        border: 1px solid rgba(255, 179, 95, 0.6);
-      }
-      .btn-main {
-        background: linear-gradient(90deg, #ffe29c, #ff8522);
-        color: #1b0a02;
-        box-shadow: 0 0 18px rgba(255, 140, 30, 0.9);
-      }
-      .btn:hover {
-        transform: translateY(-1px) scale(1.03);
-        filter: brightness(1.03);
-      }
-      .token-text {
-        font-size: 11px;
-        color: #ffbda0;
-        word-break: break-all;
-        margin-top: 4px;
-        opacity: 0.85;
-      }
-      @media (max-width: 480px) {
-        .verify-box {
-          padding: 26px 20px 20px;
-        }
-        h1 {
-          font-size: 24px;
-        }
-      }
-    </style>
-  </head>
-
-  <body>
-    <div class="verify-box">
-      <h1>ยืนยันอีเมล</h1>
-      <p class="subtitle" id="subtitle">
-        กำลังตรวจสอบลิงก์ยืนยันอีเมลของคุณ…
-      </p>
-
-      <div class="status-row">
-        <div class="dot" id="dot"></div>
-        <div class="status-label" id="statusLabel">กำลังตรวจสอบ token…</div>
-      </div>
-
-      <p class="msg" id="mainMsg">
-        ระบบกำลังตรวจสอบความถูกต้องของลิงก์ โปรดรอสักครู่
-      </p>
-      <p class="note" id="noteMsg">
-        หากหน้านี้แสดงข้อผิดพลาด เช่น token ไม่ถูกต้อง หรือหมดอายุ
-        คุณสามารถลองสมัครสมาชิกใหม่ หรือกดขอรับลิงก์ยืนยันใหม่จากหน้าเข้าสู่ระบบได้
-      </p>
-      <p class="token-text" id="tokenInfo"></p>
-
-      <div class="btn-row">
-        <button class="btn btn-ghost" id="homeBtn">หน้าแรก</button>
-        <button class="btn btn-main" id="loginBtn">ไปหน้าเข้าสู่ระบบ</button>
-      </div>
+    <div class="btn-row" id="btnRow" style="display:none">
+      <button class="btn-secondary" onclick="location.href='intro.html'">
+        หน้าแรก
+      </button>
+      <button class="btn-primary" onclick="location.href='login.html'">
+        ไปหน้าเข้าสู่ระบบ
+      </button>
     </div>
+  </div>
 
-    <script>
-      const dotEl = document.getElementById("dot");
-      const statusLabel = document.getElementById("statusLabel");
-      const mainMsg = document.getElementById("mainMsg");
-      const noteMsg = document.getElementById("noteMsg");
-      const subtitle = document.getElementById("subtitle");
-      const tokenInfo = document.getElementById("tokenInfo");
+  <script>
+    const API_BASE =
+      location.hostname === "localhost"
+        ? "http://localhost:3000"
+        : "https://washingtondc-tour-clean-1.onrender.com";
 
-      document
-        .getElementById("homeBtn")
-        .addEventListener("click", () => (location.href = "index.html"));
-      document
-        .getElementById("loginBtn")
-        .addEventListener("click", () => (location.href = "login.html"));
+    const params = new URLSearchParams(location.search);
+    const token = params.get("token");
 
-      function getTokenFromQuery() {
-        const params = new URLSearchParams(location.search);
-        return params.get("token") || "";
+    const titleEl = document.getElementById("title");
+    const descEl  = document.getElementById("desc");
+    const btnRow  = document.getElementById("btnRow");
+
+    async function verifyEmail() {
+      if (!token) {
+        titleEl.textContent = "ลิงก์ยืนยันไม่ถูกต้อง";
+        descEl.textContent = "ลิงก์นี้อาจไม่ถูกต้องหรือหมดอายุแล้ว";
+        btnRow.style.display = "flex";
+        return;
       }
 
-      async function verifyEmail() {
-        const token = getTokenFromQuery();
+      try {
+        const res = await fetch(`${API_BASE}/api/auth/verify-email`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ token })
+        });
+        const data = await res.json().catch(() => ({}));
 
-        if (!token) {
-          dotEl.classList.remove("ok");
-          statusLabel.textContent = "ไม่พบ token สำหรับยืนยันอีเมล";
-          mainMsg.innerHTML =
-            "ลิงก์นี้อาจไม่ถูกต้อง หรือคุณเปิดหน้านี้โดยตรงโดยไม่มีลิงก์จากอีเมล.";
-          noteMsg.textContent =
-            "โปรดลองกลับไปที่หน้าเข้าสู่ระบบ แล้วกดสมัครสมาชิกใหม่ หรือใช้ฟังก์ชันส่งลิงก์ยืนยันอีกครั้ง.";
-          subtitle.textContent = "ไม่สามารถตรวจสอบลิงก์ยืนยันอีเมลได้";
-          tokenInfo.textContent = "";
-          return;
+        if (data.status === "success") {
+          // ✅ ตรงนี้คือข้อความสั้น ๆ ที่นายอยากได้
+          titleEl.textContent = "ยืนยันอีเมลสำเร็จแล้ว ✅";
+          descEl.textContent = "ตอนนี้คุณสามารถเข้าสู่ระบบด้วยอีเมลนี้ได้ทันที";
+        } else {
+          titleEl.textContent = "ลิงก์ยืนยันไม่ถูกต้อง";
+          descEl.textContent = data.message || "ลิงก์นี้อาจหมดอายุแล้ว";
         }
-
-        tokenInfo.textContent = `Token: ${token.slice(0, 32)}...`;
-
-        try {
-          const res = await fetch("/api/auth/verify-email", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ token }),
-          });
-
-          const data = await res.json().catch(() => null);
-
-          if (data?.status === "success") {
-            dotEl.classList.add("ok");
-            statusLabel.textContent = "ยืนยันอีเมลสำเร็จ ✅";
-            mainMsg.textContent = data.message || "คุณสามารถเข้าสู่ระบบได้ทันที";
-            subtitle.textContent = "อีเมลของคุณได้รับการยืนยันเรียบร้อยแล้ว";
-            noteMsg.textContent =
-              "ตอนนี้คุณสามารถกดปุ่ม “ไปหน้าเข้าสู่ระบบ” เพื่อเข้าสู่ระบบด้วยบัญชีที่ยืนยันแล้ว.";
-          } else {
-            dotEl.classList.remove("ok");
-            statusLabel.textContent = "ยืนยันอีเมลไม่สำเร็จ ❌";
-            mainMsg.textContent =
-              data?.message ||
-              "ลิงก์ยืนยันไม่ถูกต้อง หรืออาจหมดอายุ กรุณาลองใหม่อีกครั้ง.";
-            subtitle.textContent = "ไม่สามารถยืนยันอีเมลจากลิงก์นี้ได้";
-            noteMsg.textContent =
-              "หากปัญหายังคงอยู่ ให้ลองสมัครบัญชีใหม่ หรือติดต่อผู้ดูแลระบบ.";
-          }
-        } catch (err) {
-          console.error("Verify error:", err);
-          dotEl.classList.remove("ok");
-          statusLabel.textContent = "เกิดข้อผิดพลาดในการเชื่อมต่อเซิร์ฟเวอร์";
-          mainMsg.textContent =
-            "ไม่สามารถติดต่อเซิร์ฟเวอร์ได้ในขณะนี้ กรุณาลองโหลดหน้าใหม่หรือลองอีกครั้งภายหลัง.";
-          subtitle.textContent = "ระบบตรวจสอบลิงก์มีปัญหา";
-          noteMsg.textContent =
-            "ถ้าเกิดปัญหาบ่อยครั้ง อาจมีปัญหาที่เซิร์ฟเวอร์หรือเครือข่ายของคุณ.";
-        }
+      } catch (err) {
+        console.error(err);
+        titleEl.textContent = "ระบบมีปัญหา";
+        descEl.textContent = "กรุณาลองเปิดลิงก์นี้ใหม่อีกครั้งภายหลัง";
+      } finally {
+        btnRow.style.display = "flex";
       }
+    }
 
-      verifyEmail();
-    </script>
-  </body>
+    verifyEmail();
+  </script>
+</body>
 </html>
