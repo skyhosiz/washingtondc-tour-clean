@@ -10,6 +10,8 @@ const jwt = require("jsonwebtoken");
 const cloudinary = require("cloudinary").v2;
 const { CloudinaryStorage } = require("multer-storage-cloudinary");
 const rateLimit = require("express-rate-limit");
+const helmet = require("helmet");
+const mongoSanitize = require("express-mongo-sanitize");
 const fetch = (...args) =>
   import("node-fetch").then(({ default: f }) => f(...args));
 
@@ -129,6 +131,10 @@ async function sendMailBrevo({ to, subject, html }) {
   }
 }
 
+function isStrongPassword(p = "") {
+  return p.length >= 8 && /[A-Z]/.test(p) && /\d/.test(p);
+}
+
 // ---------- Middleware ----------
 app.disable("x-powered-by");
 const allowed = [CLIENT_URL, "http://localhost:3000"];
@@ -144,6 +150,18 @@ app.use(
   })
 );
 
+// security middlewares
+app.use(
+  helmet({
+    crossOriginResourcePolicy: false, // กันรูป/ไฟล์ static พัง
+  })
+);
+app.use(
+  mongoSanitize({
+    replaceWith: "_",
+  })
+);
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "public")));
@@ -154,6 +172,21 @@ const registerLimiter = rateLimit({
   max: 5,
   standardHeaders: true,
   legacyHeaders: false,
+  message: {
+    status: "error",
+    message: "สมัครบ่อยเกินไป กรุณาลองใหม่ภายหลัง",
+  },
+});
+
+const loginLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 10,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: {
+    status: "error",
+    message: "พยายามล็อกอินบ่อยเกินไป กรุณาลองใหม่อีกสักพัก",
+  },
 });
 
 const forgotLimiter = rateLimit({
@@ -161,19 +194,43 @@ const forgotLimiter = rateLimit({
   max: 5,
   standardHeaders: true,
   legacyHeaders: false,
+  message: {
+    status: "error",
+    message: "ขออีเมลรีเซ็ตรัวเกิน ระบบป้องกัน brute-force ทำงานอยู่",
+  },
 });
 
 // ============ AUTH ============
 
-// REGISTER + send verify email (fire-and-forget)
+// REGISTER + send verify email
 app.post("/api/auth/register", registerLimiter, async (req, res) => {
   try {
-    const { username = "", email = "", password = "" } = req.body || {};
+    const rawUsername = (req.body?.username || "").trim();
+    const rawEmail = (req.body?.email || "").trim().toLowerCase();
+    const rawPassword = (req.body?.password || "").trim();
 
-    if (!email || !password) {
+    const username = rawUsername;
+    const email = rawEmail;
+    const password = rawPassword;
+
+    if (!username || !email || !password) {
       return res.json({
         status: "error",
-        message: "กรุณากรอกอีเมลและรหัสผ่านให้ครบ",
+        message: "กรุณากรอกชื่อผู้ใช้ อีเมล และรหัสผ่านให้ครบ",
+      });
+    }
+
+    if (username.length < 4 || username.length > 16) {
+      return res.json({
+        status: "error",
+        message: "ชื่อผู้ใช้ต้องมีความยาว 4–16 ตัวอักษร",
+      });
+    }
+
+    if (!/^[A-Za-z0-9_.]+$/.test(username)) {
+      return res.json({
+        status: "error",
+        message: "ชื่อผู้ใช้ใช้ได้เฉพาะ A-Z, 0-9, _ และ .",
       });
     }
 
@@ -181,6 +238,13 @@ app.post("/api/auth/register", registerLimiter, async (req, res) => {
       return res.json({
         status: "error",
         message: "รูปแบบอีเมลไม่ถูกต้อง!",
+      });
+    }
+
+    if (!isStrongPassword(password)) {
+      return res.json({
+        status: "error",
+        message: "รหัสผ่านควรยาว ≥ 8 ตัว มีตัวใหญ่ ≥ 1 ตัว และตัวเลข ≥ 1 ตัว",
       });
     }
 
@@ -222,18 +286,16 @@ app.post("/api/auth/register", registerLimiter, async (req, res) => {
       </div>
     `;
 
-    // ยิงเมลแบบไม่รอ เพื่อลด latency
-    sendMailBrevo({
+    await sendMailBrevo({
       to: email,
       subject: "ยืนยันอีเมล | Washington D.C. Tour",
       html,
-    }).catch((err) =>
-      console.error("REGISTER VERIFY EMAIL ERROR:", err.message)
-    );
+    });
 
     return res.json({
       status: "success",
-      message: "สมัครสำเร็จ! กรุณาเช็กอีเมลแล้วกดลิงก์ยืนยันก่อนเข้าสู่ระบบ",
+      message:
+        "สมัครสำเร็จ! กรุณาเช็กอีเมลแล้วกดลิงก์ยืนยันก่อนเข้าสู่ระบบ",
     });
   } catch (e) {
     console.error("REGISTER error:", e.message);
@@ -288,9 +350,29 @@ app.post("/api/auth/verify-email", async (req, res) => {
 });
 
 // LOGIN (บังคับต้อง verify ก่อน)
-app.post("/api/auth/login", async (req, res) => {
+app.post("/api/auth/login", loginLimiter, async (req, res) => {
   try {
-    const { email = "", password = "" } = req.body || {};
+    const rawEmail = (req.body?.email || "").trim().toLowerCase();
+    const rawPassword = (req.body?.password || "").trim();
+
+    const email = rawEmail;
+    const password = rawPassword;
+
+    if (!email || !password) {
+      return res.json({
+        status: "error",
+        message: "กรุณากรอกอีเมลและรหัสผ่าน",
+      });
+    }
+
+    if (!emailRegex.test(email)) {
+      // ยังตอบรวมเพื่อไม่ให้เดาอีเมลได้ง่าย
+      return res.json({
+        status: "error",
+        message: "อีเมลหรือรหัสผ่านไม่ถูกต้อง",
+      });
+    }
+
     const u = await User.findOne({ email });
 
     if (!u) {
@@ -300,8 +382,8 @@ app.post("/api/auth/login", async (req, res) => {
       });
     }
 
-    // ถ้า emailVerified ไม่มี (user เก่า) หรือ false → ให้ถือว่ายังไม่ยืนยัน
     if (u.emailVerified !== true) {
+      // ส่งเมลยืนยันซ้ำให้อัตโนมัติ (ignore error เพื่อไม่ให้บล็อก login flow)
       try {
         const token = jwt.sign({ uid: u._id }, VERIFY_EMAIL_SECRET, {
           expiresIn: "1d",
@@ -323,17 +405,13 @@ app.post("/api/auth/login", async (req, res) => {
             <p>หากปุ่มกดไม่ได้ ให้คัดลอกลิงก์นี้ไปวางในเบราว์เซอร์:<br>${verifyUrl}</p>
           </div>
         `;
-
-        // resend เมลแบบ fire-and-forget
-        sendMailBrevo({
+        await sendMailBrevo({
           to: u.email,
           subject: "กรุณายืนยันอีเมลเพื่อเข้าสู่ระบบ | Washington D.C. Tour",
           html,
-        }).catch((err) =>
-          console.error("RESEND VERIFY ERROR:", err.message)
-        );
+        });
       } catch (mailErr) {
-        console.error("RESEND VERIFY BUILD ERROR:", mailErr.message);
+        console.error("RESEND VERIFY ERROR:", mailErr.message);
       }
 
       return res.json({
@@ -371,10 +449,12 @@ app.post("/api/auth/login", async (req, res) => {
   }
 });
 
-// FORGOT (fire-and-forget email)
+// FORGOT
 app.post("/api/auth/forgot", forgotLimiter, async (req, res) => {
   try {
-    const { email = "" } = req.body || {};
+    const rawEmail = (req.body?.email || "").trim().toLowerCase();
+    const email = rawEmail;
+
     if (!email) {
       return res.json({ status: "error", message: "กรุณากรอกอีเมล" });
     }
@@ -410,11 +490,11 @@ app.post("/api/auth/forgot", forgotLimiter, async (req, res) => {
       </div>
     `;
 
-    sendMailBrevo({
+    await sendMailBrevo({
       to: email,
       subject: "ตั้งรหัสผ่านใหม่ | Washington D.C. Tour",
       html,
-    }).catch((err) => console.error("FORGOT EMAIL ERROR:", err.message));
+    });
 
     res.json({ status: "success" });
   } catch (e) {
@@ -429,11 +509,21 @@ app.post("/api/auth/forgot", forgotLimiter, async (req, res) => {
 // RESET
 app.post("/api/auth/reset", async (req, res) => {
   try {
-    const { token = "", password = "" } = req.body || {};
+    const token = (req.body?.token || "").trim();
+    const password = (req.body?.password || "").trim();
+
     if (!token || !password) {
       return res.json({
         status: "error",
         message: "ข้อมูลไม่ครบ",
+      });
+    }
+
+    if (!isStrongPassword(password)) {
+      return res.json({
+        status: "error",
+        message:
+          "รหัสผ่านใหม่ควรยาว ≥ 8 ตัว มีตัวใหญ่ ≥ 1 ตัว และตัวเลข ≥ 1 ตัว",
       });
     }
 
@@ -477,7 +567,14 @@ app.put(
       }
 
       if (req.body.username && req.body.username.trim()) {
-        user.username = req.body.username.trim();
+        const newName = req.body.username.trim();
+        if (
+          newName.length >= 4 &&
+          newName.length <= 16 &&
+          /^[A-Za-z0-9_.]+$/.test(newName)
+        ) {
+          user.username = newName;
+        }
       }
 
       if (req.file && req.file.path) {
