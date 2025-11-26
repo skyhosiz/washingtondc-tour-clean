@@ -18,6 +18,10 @@ const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 const app = express();
 
+// ✅ บอก Express ว่าอยู่หลัง proxy (Render / Cloudflare ฯลฯ)
+// แก้ปัญหา ERR_ERL_UNEXPECTED_X_FORWARDED_FOR ของ express-rate-limit
+app.set("trust proxy", 1);
+
 [
   "JWT_SECRET",
   "RESET_PASSWORD_SECRET",
@@ -152,8 +156,10 @@ app.use(
   })
 );
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+// ✅ จำกัดขนาด body กันยิง payload ยักษ์ ๆ
+app.use(express.json({ limit: "200kb" }));
+app.use(express.urlencoded({ extended: true, limit: "200kb" }));
+
 app.use(express.static(path.join(__dirname, "public")));
 
 // ---------- Custom Mongo sanitize (แทน express-mongo-sanitize) ----------
