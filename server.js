@@ -18,8 +18,7 @@ const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 const app = express();
 
-// ✅ บอก Express ว่าอยู่หลัง proxy (Render / Cloudflare ฯลฯ)
-// แก้ปัญหา ERR_ERL_UNEXPECTED_X_FORWARDED_FOR ของ express-rate-limit
+// อยู่หลัง proxy (Render / Cloudflare ฯลฯ) → ให้ rate-limit อ่าน IP จาก X-Forwarded-For ได้ถูก
 app.set("trust proxy", 1);
 
 [
@@ -74,7 +73,12 @@ const storage = new CloudinaryStorage({
       req.uid ? `${req.uid}_${Date.now()}` : `anon_${Date.now()}`,
   },
 });
-const upload = multer({ storage });
+
+// จำกัดขนาดไฟล์โปรไฟล์ไม่ให้บ้าเลือด (3MB พอ)
+const upload = multer({
+  storage,
+  limits: { fileSize: 3 * 1024 * 1024 },
+});
 
 // ---------- Mongo ----------
 mongoose
@@ -139,7 +143,7 @@ app.disable("x-powered-by");
 
 app.use(
   helmet({
-    contentSecurityPolicy: false, // กัน CSP ไปชน inline script ของเว็บ
+    contentSecurityPolicy: false, // กัน CSP ไปชน inline script ที่มีอยู่
   })
 );
 
@@ -156,7 +160,7 @@ app.use(
   })
 );
 
-// ✅ จำกัดขนาด body กันยิง payload ยักษ์ ๆ
+// จำกัดขนาด body กันยิง payload ยักษ์ ๆ
 app.use(express.json({ limit: "200kb" }));
 app.use(express.urlencoded({ extended: true, limit: "200kb" }));
 
@@ -224,6 +228,14 @@ app.post("/api/auth/register", registerLimiter, async (req, res) => {
       return res.json({
         status: "error",
         message: "รูปแบบอีเมลไม่ถูกต้อง!",
+      });
+    }
+
+    // เช็ค password ฝั่ง server ให้มีความยาวขั้นต่ำ
+    if (password.length < 6) {
+      return res.json({
+        status: "error",
+        message: "รหัสผ่านควรยาวอย่างน้อย 6 ตัวอักษร",
       });
     }
 
@@ -332,6 +344,14 @@ app.post("/api/auth/verify-email", async (req, res) => {
 app.post("/api/auth/login", loginLimiter, async (req, res) => {
   try {
     const { email = "", password = "" } = req.body || {};
+
+    if (!emailRegex.test(email)) {
+      return res.json({
+        status: "error",
+        message: "อีเมลหรือรหัสผ่านไม่ถูกต้อง",
+      });
+    }
+
     const u = await User.findOne({ email });
 
     if (!u) {
@@ -499,7 +519,38 @@ app.post("/api/auth/reset", async (req, res) => {
   }
 });
 
-// PROFILE
+// PROFILE (GET – ดึงข้อมูลล่าสุดให้ profile.html ใช้)
+app.get("/api/auth/profile", authRequired, async (req, res) => {
+  try {
+    const user = await User.findById(req.uid).select(
+      "username email profileImg"
+    );
+    if (!user) {
+      return res.status(404).json({
+        status: "error",
+        message: "ไม่พบผู้ใช้",
+      });
+    }
+
+    res.json({
+      status: "success",
+      user: {
+        id: user._id,
+        username: user.username,
+        email: user.email,
+        profileImg: user.profileImg,
+      },
+    });
+  } catch (err) {
+    console.error("GET PROFILE ERROR:", err.message);
+    res.status(500).json({
+      status: "error",
+      message: "ดึงข้อมูลโปรไฟล์ล้มเหลว",
+    });
+  }
+});
+
+// PROFILE (PUT – อัปเดตชื่อ / รูป)
 app.put(
   "/api/auth/profile",
   authRequired,

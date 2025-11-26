@@ -155,52 +155,59 @@
           ? "http://localhost:3000"
           : "https://washingtondc-tour-clean-1.onrender.com";
 
-      // กัน cache รูปเก่า เวลาเปลี่ยนรูปโปรไฟล์ใหม่
-      function withCacheBust(url) {
-        const fallback = "pic/default.png";
-        if (!url) return fallback;
-        const sep = url.includes("?") ? "&" : "?";
-        return url + sep + "v=" + Date.now();
-      }
-
       document.addEventListener("DOMContentLoaded", () => {
-        // ใช้ข้อมูลใน localStorage แสดงก่อน (เร็ว)
+        // 1) ใช้ cache แสดงก่อน จะได้ไม่ว่าง
         showCachedIfAny();
-        // แล้วค่อยยิงไปเอาข้อมูลล่าสุดจาก server มาอัปเดตทับ
+        // 2) ดึงข้อมูลสดจาก server มาอัปเดต + sync localStorage
         fetchProfile();
       });
 
       function showCachedIfAny() {
-        const cached = JSON.parse(localStorage.getItem("user") || "null");
-        if (cached) showProfile(cached);
+        try {
+          const cached = JSON.parse(localStorage.getItem("user") || "null");
+          if (cached) showProfile(cached);
+        } catch (e) {
+          console.warn("parse cached user fail:", e);
+        }
       }
 
       async function fetchProfile() {
         const card = document.getElementById("profileCard");
         const token = localStorage.getItem("token");
-        if (!token) return;
+
+        if (!token) {
+          // ไม่มี token = ไม่ได้ล็อกอิน ส่งกลับหน้า login
+          window.location.href = "login.html";
+          return;
+        }
 
         card.style.opacity = "0.35";
+
+        // กันเคส request ค้างนาน ๆ
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 10000); // 10s
 
         try {
           const res = await fetch(`${API_BASE}/api/auth/profile`, {
             method: "GET",
             headers: { Authorization: "Bearer " + token },
+            signal: controller.signal,
           });
 
-          if (!res.ok) {
-            console.warn("Profile API not OK:", res.status);
-            return;
-          }
-
           const data = await res.json().catch(() => null);
+
           if (data && data.status === "success" && data.user) {
+            // sync localStorage ให้รูป & ชื่อใหม่กระจายไปทุกหน้า
             localStorage.setItem("user", JSON.stringify(data.user));
             showProfile(data.user);
+          } else if (res.status === 401) {
+            // token ดับแล้ว
+            logout();
           }
         } catch (err) {
           console.error("Fetch profile failed:", err);
         } finally {
+          clearTimeout(timeout);
           card.style.opacity = "1";
         }
       }
@@ -209,17 +216,16 @@
         const img = document.getElementById("profileImg");
         const nameEl = document.getElementById("profileName");
         const emailEl = document.getElementById("profileEmail");
-        const usernameTopEl = document.getElementById("usernameTop"); // บางหน้ามี บางหน้าไม่มี
+        const topName = document.getElementById("usernameTop"); // จาก nav
 
         nameEl.textContent = u.username || "-";
         emailEl.textContent = u.email || "-";
 
-        // อัปเดตชื่อบน navbar ถ้ามี element นี้
-        if (usernameTopEl) {
-          usernameTopEl.textContent = u.username || "User";
+        if (topName) {
+          topName.textContent = u.username || "User";
         }
 
-        img.src = withCacheBust(u.profileImg);
+        img.src = u.profileImg || "pic/default.png";
         img.onerror = () => {
           img.src = "pic/default.png";
         };
